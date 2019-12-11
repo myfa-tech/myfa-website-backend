@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 8080
 
 const app = express()
 
-var whitelist = ['http://localhost:3000', 'https://www.myfa.fr', 'https://myfa.fr']
+var whitelist = ['http://localhost:8000', 'https://www.myfa.fr', 'https://myfa.fr']
 
 var corsOptions = {
   origin: function (origin, callback) {
