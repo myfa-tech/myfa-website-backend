@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 
 import { confirmPayment, requestPayment } from './services/lydia'
-import { saveBasket } from './services/baskets'
+import { findBasket, saveBasket } from './services/baskets'
 import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
 
 dotenv.config()
@@ -47,6 +47,8 @@ const run = () => {
     await saveBasket(req)
     await requestPayment(req, res, next)
   })
+
+  app.get('/baskets', findBasket)
 
   app.get('/lydia/confirm', confirmPayment)
 
