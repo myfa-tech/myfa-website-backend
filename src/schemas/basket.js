@@ -10,7 +10,7 @@ const Basket = mongoose.Schema({
 	recipientPhone: String,
 	price: Number,
 	avatar: String,
-	dateCreated: Number,
+	createdAt: Number,
 })
 
 export default Basket
