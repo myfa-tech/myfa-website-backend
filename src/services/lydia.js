@@ -1,16 +1,23 @@
 
 import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 
 import basketSchema from '../schemas/basket'
 import Lydia from '../utils/Lydia'
+
+dotenv.config()
+
+const VENDOR_TOKEN = process.env.VENDOR_TOKEN
 
 const requestPayment = async (req, res, next) => {
 	try {
 		const lydia = new Lydia()
 
 		delete req.body.basket
-		
-		const result = await lydia.requestPayment(req.body)
+
+		const paymentRequest = { ...req.body, vendor_token: VENDOR_TOKEN }
+
+		const result = await lydia.requestPayment(paymentRequest)
 
 		res.status(200)
 		res.json(result.data)
