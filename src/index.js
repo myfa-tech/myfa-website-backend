@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 
 import { confirmPayment, requestPayment } from './services/lydia'
+import { saveBasket } from './services/baskets'
 import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
 
 dotenv.config()
@@ -42,7 +43,10 @@ db.on('error', console.error.bind(console, 'connection error:')) // Add Sentry
 const run = () => {
   app.use(express.static('public'))
 
-  app.post('/lydia/pay', requestPayment)
+  app.post('/lydia/pay', async (req, res, next) => {
+    await saveBasket(req)
+    await requestPayment(req, res, next)
+  })
 
   app.get('/lydia/confirm', confirmPayment)
 

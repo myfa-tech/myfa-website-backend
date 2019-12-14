@@ -7,6 +7,9 @@ import Lydia from '../utils/Lydia'
 const requestPayment = async (req, res, next) => {
 	try {
 		const lydia = new Lydia()
+
+		delete req.body.basket
+		
 		const result = await lydia.requestPayment(req.body)
 
 		res.status(200)

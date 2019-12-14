@@ -7,6 +7,7 @@ const Basket = mongoose.Schema({
 	reason: String,
 	userEmail: String,
 	paid: Boolean,
+	recipientPhone: String,
 	price: Number,
 	avatar: String,
 	dateCreated: Number,
