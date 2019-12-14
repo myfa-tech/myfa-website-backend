@@ -5,7 +5,8 @@ import BasketSchema from '../schemas/basket'
 
 const saveBasket = async (req) => {
 	try {
-		const { basket } = req.body
+    const { basket } = req.body
+    console.log(basket)
 		const basketsModel = mongoose.model('baskets', BasketSchema)
 
 		basket.createdAt = Date.now()
