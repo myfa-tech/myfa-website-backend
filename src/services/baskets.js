@@ -1,6 +1,8 @@
 
 import mongoose from 'mongoose'
 
+import BasketSchema from '../schemas/basket'
+
 const saveBasket = async (req) => {
 	try {
 		const { basket } = req.body
