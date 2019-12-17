@@ -18,7 +18,7 @@ var whitelist = [
   'http://localhost:8000',
   'https://www.myfa.fr',
   'https://myfa.fr',
-  'https://5df3d930145fec0009b49a3f--compassionate-varahamihira-d667c0.netlify.com/',
+  'https://5df6501be2f134000a2e5ecf--compassionate-varahamihira-d667c0.netlify.com/',
 ]
 
 var corsOptions = {
