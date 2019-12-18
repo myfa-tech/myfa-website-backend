@@ -18,7 +18,7 @@ var whitelist = [
   'http://localhost:8000',
   'https://www.myfa.fr',
   'https://myfa.fr',
-  /compassionate-varahamihira-d667c0\.netlify\.com$/
+  'https://5dfa6324ed9aea0008a28ebb--compassionate-varahamihira-d667c0.netlify.com',
 ]
 
 var corsOptions = {
@@ -26,7 +26,7 @@ var corsOptions = {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
-      callback('Blocked by CORS')
+      callback(`${origin} was blocked by CORS`)
     }
   }
 }
