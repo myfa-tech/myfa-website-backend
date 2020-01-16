@@ -1,0 +1,59 @@
+import mongoose from 'mongoose';
+import shajs from 'sha.js';
+
+import UserSchema from '../schemas/dashboardUser';
+
+const getUserByEmail = async (req, res, next) => {
+  try {
+    if (!req.query.email) {
+      res.status(400);
+      res.send('missing param');
+    }
+
+    const { email } = req.query;
+		const usersModel = mongoose.model('dashboardusers', UserSchema);
+
+    const user = await usersModel.findOne({ email }, usersModel);
+
+    if (!!user) {
+      res.status(200);
+      res.json({ user });
+    } else {
+      res.status(404);
+      res.send('not found');
+    }
+	} catch (e) {
+		console.log(e);
+		throw new Error('something went wrong');
+	}
+};
+
+const login = async (req, res, next) => {
+  try {
+    if (!req.body.email || !req.body.password) {
+      res.status(400);
+      res.send('missing param');
+    }
+
+    const { email } = req.body;
+    const password = shajs('sha256').update(req.body.password).digest('hex');
+
+    const usersModel = mongoose.model('dashboardusers', UserSchema);
+
+    const user = await usersModel.findOne({ email, password }, usersModel);
+
+    if (!!user) {
+      delete user.password;
+      res.status(200);
+      res.json({ user });
+    } else {
+      res.status(404);
+      res.send('wrong creds');
+    }
+  } catch (e) {
+    console.log(e);
+    throw new Error('something went wrong');
+  }
+}
+
+export { getUserByEmail, login };

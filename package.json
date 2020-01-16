@@ -23,7 +23,8 @@
     "express": "^4.17.1",
     "form-data": "^3.0.0",
     "mailchimp-api-v3": "^1.13.1",
-    "mongoose": "^5.8.1"
+    "mongoose": "^5.8.1",
+    "sha.js": "^2.4.11"
   },
   "devDependencies": {
     "@babel/node": "^7.7.4",

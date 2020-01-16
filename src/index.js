@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 import { confirmPayment, requestPayment } from './services/lydia'
 import { findBasket, saveBasket } from './services/baskets'
 import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
+import { login } from './services/dashboardUsers'
 
 dotenv.config()
 
@@ -53,6 +54,8 @@ const run = () => {
   app.get('/lydia/confirm', confirmPayment)
 
   app.post('/mailchimp', saveMemberOnMailchimp)
+
+  app.post('/dashboard/login', login)
 
   app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`))
 }
