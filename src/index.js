@@ -7,6 +7,7 @@ import { confirmPayment, requestPayment } from './services/lydia'
 import { findBasket, saveBasket } from './services/baskets'
 import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
 import { login } from './services/dashboardUsers'
+import { fetchKPIs } from './services/kpis'
 
 dotenv.config()
 
@@ -32,7 +33,7 @@ var corsOptions = {
   }
 }
 
-app.use(cors(corsOptions))
+// app.use(cors(corsOptions))
 
 app.use(express.json())
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
@@ -56,6 +57,8 @@ const run = () => {
   app.post('/mailchimp', saveMemberOnMailchimp)
 
   app.post('/dashboard/login', login)
+
+  app.get('/dashboard/kpis', fetchKPIs)
 
   app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`))
 }
