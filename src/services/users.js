@@ -6,7 +6,11 @@ const getUsers = async (req, res, next) => {
   try {
 		const usersModel = mongoose.model('users', UserSchema);
 
-    const users = await usersModel.find({}, usersModel);
+    const query = usersModel.find();
+    query.collection(usersModel.collection);
+    query.select({ password: 0 });
+
+    const users = await query.exec();
 
     if (!!users) {
       res.status(200);
