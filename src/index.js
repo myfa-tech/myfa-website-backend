@@ -8,6 +8,7 @@ import { findBasket, saveBasket } from './services/baskets'
 import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
+import { getUsers } from './services/users'
 
 dotenv.config()
 
@@ -59,6 +60,8 @@ const run = () => {
   app.post('/dashboard/login', login)
 
   app.get('/dashboard/kpis', fetchKPIs)
+
+  app.get('/dashboard/users', getUsers)
 
   app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`))
 }
