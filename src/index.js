@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 
 import { confirmPayment, requestPayment } from './services/lydia'
-import { findBasket, saveBasket } from './services/baskets'
+import { findBasket, saveBasket, getBaskets } from './services/baskets'
 import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
@@ -62,6 +62,8 @@ const run = () => {
   app.get('/dashboard/kpis', fetchKPIs)
 
   app.get('/dashboard/users', getUsers)
+
+  app.get('/dashboard/baskets', getBaskets)
 
   app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`))
 }

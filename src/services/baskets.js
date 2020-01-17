@@ -29,7 +29,7 @@ const findBasket = async (req, res, next) => {
 		const basketsModel = mongoose.model('baskets', BasketSchema)
 
     const basket = await basketsModel.findOne({ orderRef }, basketsModel)
-    
+
     if (basket) {
       res.status(200)
       res.json({ basket })
@@ -43,4 +43,23 @@ const findBasket = async (req, res, next) => {
 	}
 }
 
-export { findBasket, saveBasket }
+const getBaskets = async (req, res, next) => {
+  try {
+		const basketsModel = mongoose.model('baskets', BasketSchema);
+
+    const baskets = await basketsModel.find({}, basketsModel);
+
+    if (!!baskets) {
+      res.status(200);
+      res.json({ baskets });
+    } else {
+      res.status(404);
+      res.send('not found');
+    }
+	} catch (e) {
+		console.log(e);
+		throw new Error('something went wrong');
+	}
+}
+
+export { findBasket, getBaskets, saveBasket }
