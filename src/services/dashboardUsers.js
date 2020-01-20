@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
 import shajs from 'sha.js';
+import jwt from 'jsonwebtoken';
 
 import UserSchema from '../schemas/dashboardUser';
+
+const JWT_SECRET = process.env.JWT_SECRET
 
 const getUserByEmail = async (req, res, next) => {
   try {
@@ -44,8 +47,11 @@ const login = async (req, res, next) => {
 
     if (!!user) {
       delete user.password;
+
+      let token = jwt.sign({ email }, JWT_SECRET);
+
       res.status(200);
-      res.json({ user });
+      res.json({ user, token });
     } else {
       res.status(404);
       res.send('wrong creds');
