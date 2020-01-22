@@ -10,6 +10,7 @@ const Basket = mongoose.Schema({
 	recipientPhone: String,
 	price: Number,
 	avatar: String,
+	zone: String,
 	createdAt: Number,
 })
 
