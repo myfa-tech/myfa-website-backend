@@ -10,6 +10,7 @@ import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
 import { getUsers } from './services/users'
 import verifyJWT from './utils/verifyJWT'
+import { saveMember as saveMemberOnMailJet } from './services/mailjet'
 
 dotenv.config()
 
@@ -38,7 +39,7 @@ var corsOptions = {
   }
 }
 
-app.use(cors(corsOptions))
+// app.use(cors(corsOptions))
 
 app.use(express.json())
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
@@ -60,6 +61,8 @@ const run = () => {
   app.get('/lydia/confirm', confirmPayment)
 
   app.post('/mailchimp', saveMemberOnMailchimp)
+
+  app.post('/mailjet', saveMemberOnMailJet)
 
   app.post('/dashboard/login', login)
 
