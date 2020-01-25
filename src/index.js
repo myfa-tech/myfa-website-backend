@@ -8,7 +8,7 @@ import { findBasket, saveBasket, getBaskets } from './services/baskets'
 import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
-import { getUsers } from './services/users'
+import { getUsers, saveUser } from './services/users'
 import verifyJWT from './utils/verifyJWT'
 
 dotenv.config()
@@ -62,6 +62,8 @@ const run = () => {
   app.post('/mailchimp', saveMemberOnMailchimp)
 
   app.post('/dashboard/login', login)
+
+  app.post('/users', saveUser)
 
   app.use(verifyJWT)
 
