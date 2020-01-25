@@ -2,7 +2,9 @@
 import mongoose from 'mongoose'
 
 import BasketSchema from '../schemas/basket'
-import verifyJWT from '../utils/verifyJWT'
+import jwt from 'jsonwebtoken'
+
+const JWT_SECRET = process.env.JWT_SECRET
 
 const saveBasket = async (req) => {
 	try {
@@ -82,7 +84,9 @@ const getBasketsByEmail = async (req, res, next) => {
         res.send('not found');
       }
     } else {
-      throw new Error('forbidden');
+      console.log('forbidden token');
+      res.status(403);
+      res.send('forbidden');
     }
 	} catch (e) {
 		console.log(e);
