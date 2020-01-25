@@ -62,4 +62,12 @@ const getBaskets = async (req, res, next) => {
 	}
 }
 
-export { findBasket, getBaskets, saveBasket }
+const countBaskets = async (req, res, next) => {
+  const basketsModel = mongoose.model('baskets', BasketSchema);
+  const count = await basketsModel.estimatedDocumentCount();
+
+  res.status(200);
+  res.send({ count });
+}
+
+export { countBaskets, findBasket, getBaskets, saveBasket }
