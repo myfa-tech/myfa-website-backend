@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
 import shajs from 'sha.js';
+import jwt from 'jsonwebtoken';
 
 import UserSchema from '../schemas/user';
+
+const JWT_SECRET = process.env.JWT_SECRET
 
 const getUsers = async (req, res, next) => {
   try {
@@ -41,8 +44,10 @@ const saveUser = async (req, res, next) => {
 
     delete user.password;
 
+    let token = jwt.sign({ email: user.email }, JWT_SECRET);
+
     res.status(201);
-    res.send({ user });
+    res.send({ user, token });
 	} catch (e) {
 		console.log(e)
 		throw new Error('something went wrong')

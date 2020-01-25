@@ -2,6 +2,7 @@
 import mongoose from 'mongoose'
 
 import BasketSchema from '../schemas/basket'
+import verifyJWT from '../utils/verifyJWT'
 
 const saveBasket = async (req) => {
 	try {
@@ -46,8 +47,9 @@ const findBasket = async (req, res, next) => {
 const getBaskets = async (req, res, next) => {
   try {
 		const basketsModel = mongoose.model('baskets', BasketSchema);
+    const params = req.query || {};
 
-    const baskets = await basketsModel.find({}, basketsModel);
+    const baskets = await basketsModel.find(params, basketsModel);
 
     if (!!baskets) {
       res.status(200);
@@ -55,6 +57,32 @@ const getBaskets = async (req, res, next) => {
     } else {
       res.status(404);
       res.send('not found');
+    }
+	} catch (e) {
+		console.log(e);
+		throw new Error('something went wrong');
+	}
+}
+
+const getBasketsByEmail = async (req, res, next) => {
+  try {
+		const basketsModel = mongoose.model('baskets', BasketSchema);
+    const email = req.query.email || '';
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    if (userInfo.email === email || userInfo.admin) {
+      const baskets = await basketsModel.find({ userEmail: email }, basketsModel);
+
+      if (!!baskets) {
+        res.status(200);
+        res.json({ baskets });
+      } else {
+        res.status(404);
+        res.send('not found');
+      }
+    } else {
+      throw new Error('forbidden');
     }
 	} catch (e) {
 		console.log(e);
@@ -70,4 +98,4 @@ const countBaskets = async (req, res, next) => {
   res.send({ count });
 }
 
-export { countBaskets, findBasket, getBaskets, saveBasket }
+export { countBaskets, findBasket, getBaskets, getBasketsByEmail, saveBasket }

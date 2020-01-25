@@ -48,7 +48,7 @@ const login = async (req, res, next) => {
     if (!!user) {
       delete user.password;
 
-      let token = jwt.sign({ email }, JWT_SECRET);
+      let token = jwt.sign({ email, admin: true }, JWT_SECRET);
 
       res.status(200);
       res.json({ user, token });
