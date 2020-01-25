@@ -5,6 +5,7 @@ const Basket = mongoose.Schema({
 	orderRef: String,
 	name: String,
 	reason: String,
+	count: String,
 	userEmail: String,
 	paid: Boolean,
 	recipientPhone: String,
