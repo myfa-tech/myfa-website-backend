@@ -39,8 +39,10 @@ const saveUser = async (req, res, next) => {
 
     console.log({ 'user created': user });
 
+    delete user.password;
+
     res.status(201);
-    res.send('user created');
+    res.send({ user });
 	} catch (e) {
 		console.log(e)
 		throw new Error('something went wrong')
