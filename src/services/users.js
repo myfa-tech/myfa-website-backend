@@ -54,4 +54,32 @@ const saveUser = async (req, res, next) => {
 	}
 }
 
-export { getUsers, saveUser };
+const updateUserByEmail = async (req, res, next) => {
+  try {
+		const usersModel = mongoose.model('users', UserSchema);
+    const email = req.body.email || '';
+    let token = (req.headers.authorization || '').split(' ')[1];
+    if (!token) {
+      res.status(403);
+      res.send('forbidden');
+    }
+
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    if (userInfo.email === email || userInfo.admin) {
+      await usersModel.updateOne({ email }, req.body);
+      res.status(201);
+      res.send({ updated: req.body });
+    } else {
+      console.log('forbidden token');
+      res.status(403);
+      res.send('forbidden');
+    }
+	} catch (e) {
+		console.log(e);
+		res.status(500);
+    res.send('something went wrong');
+	}
+}
+
+export { getUsers, saveUser, updateUserByEmail };
