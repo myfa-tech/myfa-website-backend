@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 
+import Recipient from './recipient';
+
 const Basket = mongoose.Schema({
 	// default id
 	orderRef: String,
@@ -7,9 +9,8 @@ const Basket = mongoose.Schema({
 	reason: String,
 	count: String,
 	userEmail: String,
-	paid: Boolean,
 	status: String,
-	recipientPhone: String,
+	recipient: Recipient,
 	price: Number,
 	avatar: String,
 	zone: String,
