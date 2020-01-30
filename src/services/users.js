@@ -56,9 +56,41 @@ const saveUser = async (req, res, next) => {
     res.status(201);
     res.send({ user, token });
 	} catch (e) {
-		console.log(e)
-		throw new Error('something went wrong')
+		console.log(e);
+		throw new Error('something went wrong');
 	}
+}
+
+const loginUser = async (req, res, next) => {
+  try {
+    const creds = req.body;
+    const userModel = mongoose.model('users', UserSchema);
+
+    if (!creds.email || !creds.password) {
+      res.status(400);
+      res.send('missing field(s)');
+      return;
+    }
+
+    creds.password = shajs('sha256').update(creds.password).digest('hex');
+
+    const user = await userModel.findOne({ email: creds.email, password: creds.password });
+
+    if (!!user) {
+      let token = jwt.sign({ email: user.email }, JWT_SECRET);
+
+      delete user.password;
+
+      res.status(200);
+      res.send({ user, token });
+    } else {
+      res.status(404);
+      res.send('wrong email or password');
+    }
+  } catch (e) {
+    console.log(e);
+		throw new Error('something went wrong');
+  }
 }
 
 const updateUserByEmail = async (req, res, next) => {
@@ -89,4 +121,4 @@ const updateUserByEmail = async (req, res, next) => {
 	}
 }
 
-export { getUsers, saveUser, updateUserByEmail };
+export { getUsers, loginUser, saveUser, updateUserByEmail };
