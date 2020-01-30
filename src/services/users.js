@@ -31,10 +31,17 @@ const getUsers = async (req, res, next) => {
 
 const saveUser = async (req, res, next) => {
 	try {
-    const { user } = req.body;
+    const user = req.body;
 		const usersModel = mongoose.model('users', UserSchema);
 
-    delete user.passwordConfirm;
+    const userExists = await usersModel.exists({ email: user.email });
+
+    if (userExists) {
+      res.status(409);
+      res.send('user already exists');
+      return;
+    }
+
     user.password = shajs('sha256').update(user.password).digest('hex')
 		user.createdAt = Date.now();
 
