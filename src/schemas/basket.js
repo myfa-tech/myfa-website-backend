@@ -15,6 +15,7 @@ const Basket = mongoose.Schema({
 	avatar: String,
 	zone: String,
 	createdAt: Number,
+	deliveredAt: Number,
 })
 
 export default Basket
