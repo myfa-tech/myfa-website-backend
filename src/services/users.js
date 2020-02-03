@@ -3,12 +3,24 @@ import shajs from 'sha.js';
 import jwt from 'jsonwebtoken';
 
 import UserSchema from '../schemas/user';
+import BasketSchema from '../schemas/basket';
 
 const JWT_SECRET = process.env.JWT_SECRET
 
 const getUsers = async (req, res, next) => {
   try {
-		const usersModel = mongoose.model('users', UserSchema);
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+    const promises = [];
+
+    if (!userInfo.admin) {
+      res.status(403);
+      res.send('forbidden');
+      return;
+    }
+
+    const usersModel = mongoose.model('users', UserSchema);
+    const basketsModel = mongoose.model('baskets', BasketSchema);
 
     const query = usersModel.find();
     query.collection(usersModel.collection);
@@ -16,9 +28,20 @@ const getUsers = async (req, res, next) => {
 
     const users = await query.exec();
 
-    if (!!users) {
+    users.forEach(user => {
+      promises.push(basketsModel.countDocuments({ userEmail: user.email }));
+    });
+
+    const counts = await Promise.all(promises);
+
+    const enhancedUsers = users.map((user, index) => ({
+      ...user._doc,
+      qtyPaidBaskets: counts[index],
+    }));
+
+    if (!!enhancedUsers) {
       res.status(200);
-      res.json({ users });
+      res.json({ users: enhancedUsers });
     } else {
       res.status(404);
       res.send('not found');
