@@ -23,4 +23,13 @@ const getSundayOfCurrentWeek = (d) => {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (day == 0?1:8)-day );
 }
 
-export { getMondayOfCurrentWeek, getSundayOfCurrentWeek };
+const getFirstDayOfCurrentMonth = (d) => {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
+const getLastDayOfCurrentMonth = (d) => {
+  let month = d.getMonth();
+  return new Date(d.getFullYear(), month, monthsDays[month]);
+}
+
+export { getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth, getMondayOfCurrentWeek, getSundayOfCurrentWeek };
