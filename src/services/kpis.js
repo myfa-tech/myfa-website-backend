@@ -3,16 +3,22 @@ import mongoose from 'mongoose';
 import UserSchema from '../schemas/user';
 import BasketSchema from '../schemas/basket';
 
+import { getMondayOfCurrentWeek, getSundayOfCurrentWeek } from '../utils/dates';
+
 const userModel = mongoose.model('users', UserSchema);
 const basketModel = mongoose.model('baskets', BasketSchema);
 
 const fetchKPIs = async (req, res, next) => {
   try {
     const promises = [];
+    const weekMonday = getMondayOfCurrentWeek(new Date());
+    const weekSunday = getSundayOfCurrentWeek(new Date());
+
     const rules = [
-      { collection: 'users', filter: {}, type: 'count', id: 'nb_users', label: 'nombre d\'utilisateurs', model: userModel },
-      { collection: 'baskets', filter: {}, type: 'count', id: 'nb_baskets', label: 'nombre de paniers', model: basketModel },
-      { collection: 'baskets', filter: { paid: true }, id: 'nb_paid_baskets', type: 'count', label: 'nombre de paniers payés', model: basketModel },
+      { section: 'general', collection: 'users', filter: {}, type: 'count', id: 'nb_users', label: 'nombre d\'utilisateurs', model: userModel },
+      { section: 'general', collection: 'baskets', filter: {}, type: 'count', id: 'nb_baskets', label: 'nombre de paniers', model: basketModel },
+      { section: 'general', collection: 'baskets', filter: { status: 'paid' }, id: 'nb_paid_baskets', type: 'count', label: 'nombre de paniers payés', model: basketModel },
+      { section: 'week', collection: 'baskets', filter: { status: 'paid', createdAt: { $gte: weekMonday, $lte: weekSunday } }, id: 'nb_paid_baskets', type: 'count', label: 'nombre de paniers payés', model: basketModel },
     ];
 
     rules.forEach(rule => {
@@ -27,6 +33,7 @@ const fetchKPIs = async (req, res, next) => {
     const enhancedResponses = responses.reduce((acc, curr) => ({ ...acc, ...curr[0] }), {});
 
     const result = rules.map(rule => ({
+      section: rule.section,
       label: rule.label,
       type: rule.type,
       result: enhancedResponses[rule.id] || 0,
