@@ -28,12 +28,19 @@ const findBasket = async (req, res, next) => {
       res.send('missing param')
     }
 
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
     const orderRef = req.query.ref
 		const basketsModel = mongoose.model('baskets', BasketSchema)
 
     const basket = await basketsModel.findOne({ orderRef }, basketsModel)
 
-    if (basket) {
+    if (basket && !(basket.userEmail === userInfo.email || userInfo.admin)) {
+      console.log('forbidden token');
+      res.status(401);
+      res.send('wrong token');
+    } else if (basket) {
       res.status(200)
       res.json({ basket })
     } else {

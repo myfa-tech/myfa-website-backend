@@ -9,7 +9,7 @@ import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
 import { getUsers, loginUser, saveUser, updateUserByEmail } from './services/users'
-import verifyJWT from './utils/verifyJWT'
+import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT'
 
 dotenv.config()
 
@@ -43,7 +43,7 @@ var corsOptions = {
   }
 }
 
-app.use(cors(corsOptions))
+// app.use(cors(corsOptions))
 
 app.use(express.json())
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
@@ -54,15 +54,6 @@ db.on('error', console.error.bind(console, 'connection error:')) // Add Sentry
 
 const run = () => {
   app.use(express.static('public'))
-
-  app.post('/lydia/pay', async (req, res, next) => {
-    await saveBasket(req)
-    await requestPayment(req, res, next)
-  })
-
-  app.get('/baskets', findBasket)
-
-  app.get('/baskets/count', countBaskets)
 
   app.get('/lydia/confirm', confirmPayment)
 
@@ -76,9 +67,20 @@ const run = () => {
 
   app.use(verifyJWT)
 
+  app.post('/lydia/pay', async (req, res, next) => {
+    await saveBasket(req)
+    await requestPayment(req, res, next)
+  })
+
+  app.get('/baskets', findBasket)
+
   app.put('/users', updateUserByEmail)
 
   app.get('/users/baskets', getBasketsByEmail)
+
+  app.use(verifyAdminJWT)
+
+  app.get('/baskets/count', countBaskets)
 
   app.get('/dashboard/kpis', fetchKPIs)
 
