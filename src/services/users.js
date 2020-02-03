@@ -14,7 +14,7 @@ const getUsers = async (req, res, next) => {
     const promises = [];
 
     if (!userInfo.admin) {
-      res.status(403);
+      res.status(401);
       res.send('forbidden');
       return;
     }
@@ -122,7 +122,7 @@ const updateUserByEmail = async (req, res, next) => {
     const email = req.body.email || '';
     let token = (req.headers.authorization || '').split(' ')[1];
     if (!token) {
-      res.status(403);
+      res.status(401);
       res.send('forbidden');
     }
 
@@ -144,4 +144,73 @@ const updateUserByEmail = async (req, res, next) => {
 	}
 }
 
-export { getUsers, loginUser, saveUser, updateUserByEmail };
+const updateUserPassword = async (req, res, next) => {
+  try {
+		const usersModel = mongoose.model('users', UserSchema);
+    const email = req.body.email || '';
+    let password = req.body.password || '';
+    let token = (req.headers.authorization || '').split(' ')[1];
+
+    if (!token) {
+      res.status(401);
+      res.send('forbidden');
+    }
+
+    password = shajs('sha256').update(password).digest('hex');
+
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    if (userInfo.email === email || userInfo.admin) {
+      await usersModel.updateOne({ email }, { password });
+      res.status(201);
+      res.send({ updated: { email, password }});
+    } else {
+      console.log('forbidden token');
+      res.status(401);
+      res.send('forbidden');
+    }
+	} catch (e) {
+		console.log(e);
+		res.status(500);
+    res.send('something went wrong');
+	}
+}
+
+const verifyUserPassword = async (req, res, next) => {
+  try {
+		const usersModel = mongoose.model('users', UserSchema);
+    const email = req.body.email || '';
+    let password = req.body.password || '';
+    let token = (req.headers.authorization || '').split(' ')[1];
+
+    if (!token) {
+      res.status(401);
+      res.send('forbidden');
+    }
+
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    if (userInfo.email !== email && !userInfo.admin) {
+      res.status(401);
+      res.send('forbidden');
+    }
+
+    password = shajs('sha256').update(password).digest('hex');
+
+    const user = await usersModel.findOne({ email, password });
+
+    if (!!user) {
+      res.status(200);
+      res.send({ success: true });
+    } else {
+      res.status(404);
+      res.send('user not found');
+    }
+	} catch (e) {
+		console.log(e);
+		res.status(500);
+    res.send('something went wrong');
+	}
+}
+
+export { getUsers, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };

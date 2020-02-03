@@ -24,7 +24,7 @@ const verifyAdminJWT = (req, res, next) => {
     let userInfo = jwt.verify(token, JWT_SECRET);
 
     if (!userInfo.admin) {
-      throw new Error('wronf token');
+      throw new Error('wrong token');
     }
 
     next();
