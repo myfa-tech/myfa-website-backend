@@ -31,6 +31,8 @@ var whitelist = [
   'https://5e32b84ddae0a1000855589f--compassionate-varahamihira-d667c0.netlify.com',
   'https://5e3454d014dbe800088cdd0d--compassionate-varahamihira-d667c0.netlify.com',
   'https://5e36c14af3a2520009634276--compassionate-varahamihira-d667c0.netlify.com',
+  'https://5e394f7911c1fe0008f0608e--compassionate-varahamihira-d667c0.netlify.com',
+  'https://5e399df91dfec00009a137ac--compassionate-varahamihira-d667c0.netlify.com',
 ]
 
 var corsOptions = {
