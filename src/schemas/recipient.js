@@ -4,6 +4,7 @@ const RecipientSchema = mongoose.Schema({
   firstname: String,
   lastname: String,
   relation: String,
+  address: String,
   email: String,
   country: String,
   zone: String,
