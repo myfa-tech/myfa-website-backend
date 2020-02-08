@@ -1,8 +1,9 @@
 
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-import BasketSchema from '../schemas/basket'
-import jwt from 'jsonwebtoken'
+import BasketSchema from '../schemas/basket';
+import Basket from '../utils/basketFactory';
+import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -15,6 +16,34 @@ const saveBasket = async (req) => {
 		basket.createdAt = Date.now()
 
 		await basketsModel.create(basket)
+	} catch (e) {
+		console.log(e)
+		throw new Error('something went wrong')
+	}
+}
+
+const saveBasketsFromOrder = async (req) => {
+	try {
+    const { order } = req.body;
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    const baskets = [];
+
+    Object.keys(order.baskets).forEach(basketType => {
+      for (let i=0; i<order.baskets[basketType].qty; i++) {
+        baskets.push(new Basket(basketType, userInfo, order.recipient, order.ref).getBasket());
+      }
+    });
+
+		const basketsModel = mongoose.model('baskets', BasketSchema);
+    let promises = [];
+
+    baskets.forEach(basket => {
+      promises.push(basketsModel.create(basket));
+    });
+
+    await Promise.all(promises);
 	} catch (e) {
 		console.log(e)
 		throw new Error('something went wrong')
@@ -109,4 +138,4 @@ const countBaskets = async (req, res, next) => {
   res.send({ count });
 }
 
-export { countBaskets, findBasket, getBaskets, getBasketsByEmail, saveBasket }
+export { countBaskets, findBasket, getBaskets, getBasketsByEmail, saveBasket, saveBasketsFromOrder };

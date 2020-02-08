@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 
 import { confirmPayment, requestPayment } from './services/lydia'
-import { findBasket, saveBasket, getBaskets, getBasketsByEmail, countBaskets } from './services/baskets'
+import { findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, countBaskets } from './services/baskets'
 import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
@@ -74,7 +74,7 @@ const run = () => {
   app.use(verifyJWT)
 
   app.post('/lydia/pay', async (req, res, next) => {
-    await saveBasket(req)
+    await saveBasketsFromOrder(req)
     await requestPayment(req, res, next)
   })
 
