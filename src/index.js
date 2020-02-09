@@ -3,7 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 
-import { confirmPayment, requestPayment } from './services/lydia'
+import { cancelPayment, confirmPayment, requestPayment } from './services/lydia'
 import { findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, countBaskets } from './services/baskets'
 import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
 import { login } from './services/dashboardUsers'
@@ -52,8 +52,6 @@ var corsOptions = {
   }
 }
 
-app.use(cors(corsOptions))
-
 app.use(express.json())
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
 
@@ -64,7 +62,11 @@ db.on('error', console.error.bind(console, 'connection error:')) // Add Sentry
 const run = () => {
   app.use(express.static('public'))
 
-  app.get('/lydia/confirm', confirmPayment)
+  app.get('/lydia/confirm_payment', confirmPayment)
+
+  app.get('/lydia/cancel_payment', cancelPayment)
+
+  app.use(cors(corsOptions))
 
   app.post('/mailchimp', saveMemberOnMailchimp)
 
