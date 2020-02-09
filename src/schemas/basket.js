@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 import Recipient from './recipient';
 
@@ -9,6 +9,7 @@ const Basket = mongoose.Schema({
 	reason: String,
 	count: String,
 	userEmail: String,
+	type: String,
 	status: String,
 	recipient: Recipient,
 	price: Number,
@@ -16,6 +17,6 @@ const Basket = mongoose.Schema({
 	zone: String,
 	createdAt: Date,
 	deliveredAt: Date,
-})
+});
 
-export default Basket
+export default Basket;
