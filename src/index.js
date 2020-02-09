@@ -42,15 +42,25 @@ var whitelist = [
   'https://5e4040952cc1ae000703914e--compassionate-varahamihira-d667c0.netlify.com',
 ]
 
-var corsOptions = {
-  origin: function (origin, callback) {
+const corsOptions = {
+  origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
+      callback(null, true);
     } else {
-      callback(`${origin} was blocked by CORS`)
+      callback(`${origin} was blocked by CORS`);
     }
   }
 }
+
+const unless = (paths, middleware) => {
+  return (req, res, next) => {
+      if (paths.includes(req.path)) {
+          return next();
+      } else {
+          return middleware(req, res, next);
+      }
+  };
+};
 
 app.use(express.json())
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
@@ -59,14 +69,17 @@ const db = mongoose.connection
 
 db.on('error', console.error.bind(console, 'connection error:')) // Add Sentry
 
+app.use(unless([
+  '/lydia/confirm_payment',
+  '/lydia/cancel_payment',
+], cors(corsOptions)));
+
 const run = () => {
   app.use(express.static('public'))
 
-  app.get('/lydia/confirm_payment', confirmPayment)
+  app.post('/lydia/confirm_payment', confirmPayment)
 
-  app.get('/lydia/cancel_payment', cancelPayment)
-
-  app.use(cors(corsOptions))
+  app.post('/lydia/cancel_payment', cancelPayment)
 
   app.post('/mailchimp', saveMemberOnMailchimp)
 

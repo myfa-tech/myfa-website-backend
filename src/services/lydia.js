@@ -38,7 +38,7 @@ const requestPayment = async (req, res, next) => {
 const confirmPayment = async (req, res, next) => {
 	try {
 		if (!req.query.order_ref) {
-			throw new Error()
+			throw new Error('Missing order_ref');
 		}
 
 		let orderRef = req.query.order_ref
