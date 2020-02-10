@@ -25,6 +25,7 @@
     "jsonwebtoken": "^8.5.1",
     "mailchimp-api-v3": "^1.13.1",
     "mongoose": "^5.8.1",
+    "nexmo": "^2.6.0",
     "sha.js": "^2.4.11"
   },
   "devDependencies": {

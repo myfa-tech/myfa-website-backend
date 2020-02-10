@@ -4,6 +4,8 @@ import dotenv from 'dotenv'
 
 import basketSchema from '../schemas/basket'
 import Lydia from '../utils/Lydia'
+import { getUserByEmail } from './users'
+import { sendMessage } from './nexmo';
 
 dotenv.config()
 
@@ -19,8 +21,8 @@ const requestPayment = async (req, res, next) => {
 
 		let payload = {
 			...req.body,
-			confirm_url: `${BACKEND_URL}/confirm_payment?order_ref=${orderRef}`,
-			cancel_url: `${BACKEND_URL}/cancel_payment?order_ref=${orderRef}`,
+			confirm_url: `${BACKEND_URL}/confirm_payment_xx?order_ref=${orderRef}`,
+			cancel_url: `${BACKEND_URL}/cancel_payment_xx?order_ref=${orderRef}`,
 			vendor_token: VENDOR_TOKEN,
 		};
 
@@ -41,24 +43,33 @@ const confirmPayment = async (req, res, next) => {
 			throw new Error('Missing order_ref');
 		}
 
-		let orderRef = req.query.order_ref
+		let orderRef = req.query.order_ref;
 
-		const basketsModel = mongoose.model('baskets', basketSchema)
-		const result = await basketsModel.updateMany({ orderRef }, { status: 'paid' })
+		const basketsModel = mongoose.model('baskets', basketSchema);
+		const result = await basketsModel.updateMany({ orderRef }, { status: 'paid' });
 
 		if (result.nModified) {
-			res.status(201)
-			res.send('Document updated')
+			notifyOfPayment(orderRef);
+			res.status(201);
+			res.send('Document updated');
 		} else {
-			res.status(204)
-			res.send('Document not updated')
+			res.status(204);
+			res.send('Document not updated');
 		}
 	} catch (e) {
-		console.log(e)
-		res.status(500)
-		res.send('Something went wrong while trying to update document')
+		console.log(e);
+		res.status(500);
+		res.send('Something went wrong while trying to update document');
 	}
-}
+};
+
+const notifyOfPayment = async (orderRef) => {
+	const basketsModel = mongoose.model('baskets', basketSchema);
+	const basket = await basketsModel.findOne({ orderRef });
+	const user = await getUserByEmail(basket.userEmail);
+
+	await sendMessage(user, basket.recipient, 'paid-basket');
+};
 
 const cancelPayment = async (req, res, next) => {
 	try {

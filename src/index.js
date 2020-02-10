@@ -72,16 +72,16 @@ const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:')) // Add Sentry
 
 app.use(unless([
-  '/lydia/confirm_payment',
-  '/lydia/cancel_payment',
+  '/lydia/confirm_payment_xx',
+  '/lydia/cancel_payment_xx',
 ], cors(corsOptions)));
 
 const run = () => {
   app.use(express.static('public'))
 
-  app.post('/lydia/confirm_payment', confirmPayment)
+  app.post('/lydia/confirm_payment_xx', confirmPayment)
 
-  app.post('/lydia/cancel_payment', cancelPayment)
+  app.post('/lydia/cancel_payment_xx', cancelPayment)
 
   app.post('/mailchimp', saveMemberOnMailchimp)
 

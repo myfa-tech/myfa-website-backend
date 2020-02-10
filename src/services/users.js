@@ -52,6 +52,18 @@ const getUsers = async (req, res, next) => {
 	}
 };
 
+const getUserByEmail = async (email) => {
+  try {
+    const usersModel = mongoose.model('users', UserSchema);
+    const user = await usersModel.findOne({ email });
+
+    return user;
+	} catch (e) {
+		console.log(e);
+		throw new Error('something went wrong');
+	}
+};
+
 const saveUser = async (req, res, next) => {
 	try {
     const user = req.body;
@@ -213,4 +225,4 @@ const verifyUserPassword = async (req, res, next) => {
 	}
 }
 
-export { getUsers, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };
+export { getUserByEmail, getUsers, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };
