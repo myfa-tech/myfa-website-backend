@@ -15,7 +15,7 @@ const nexmo = new Nexmo({
 
 const makeNumber = (recipient) => {
   let prefix = recipient.country.substr(1);
-  let phone = recipient.phone;
+  let phone = recipient.phone.replace(/ /g,'');
 
   if (prefix === '33' && phone.length > 9) {
     phone = phone.substr(phone.length - 9);

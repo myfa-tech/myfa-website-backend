@@ -6,6 +6,7 @@ import basketSchema from '../schemas/basket'
 import Lydia from '../utils/Lydia'
 import { getUserByEmail } from './users'
 import { sendMessage } from './nexmo';
+import { sendOrderConfirmationEmail } from './mailjet'
 
 dotenv.config()
 
@@ -65,10 +66,11 @@ const confirmPayment = async (req, res, next) => {
 
 const notifyOfPayment = async (orderRef) => {
 	const basketsModel = mongoose.model('baskets', basketSchema);
-	const basket = await basketsModel.findOne({ orderRef });
-	const user = await getUserByEmail(basket.userEmail);
+	const baskets = await basketsModel.find({ orderRef });
+	const user = await getUserByEmail(baskets[0].userEmail);
 
-	await sendMessage(user, basket.recipient, 'paid-basket');
+	await sendOrderConfirmationEmail(user, baskets);
+	await sendMessage(user, baskets[0].recipient, 'paid-basket');
 };
 
 const cancelPayment = async (req, res, next) => {

@@ -32,6 +32,40 @@ const sendWelcomeEmail = async (recipient) => {
   }
 };
 
+const sendOrderConfirmationEmail = async (user, baskets) => {
+  try {
+    let orderPrice = baskets.reduce((acc, curr) => acc + curr.price, 0);
+    let date = new Date(baskets[0].createdAt).toLocaleDateString('fr-FR');
+
+    await mailjet.post("send", {'version': 'v3.1'})
+      .request({
+        "Messages": [
+          {
+            "From": {
+              "Email": "infos@myfa.fr",
+              "Name": "MYFA"
+            },
+            "To": [{ "Email": baskets[0].userEmail }],
+            "TemplateID": 1224159,
+            "TemplateLanguage": true,
+            "Subject": "Merci pour votre commande !",
+            "Variables": {
+              "customerName": user.firstname,
+              "price": `${orderPrice} €`,
+              "createdAt": `${date}`,
+              "ref": `${baskets[0].orderRef}`,
+            }
+          }
+        ]
+      });
+
+    console.log('Confirmation email sent to :', baskets[0].userEmail);
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+  }
+};
+
 const addContactToList = async (req, res, listName) => {
   try {
     if (!req.body.email) {
@@ -60,4 +94,4 @@ const addContactToList = async (req, res, listName) => {
   }
 }
 
-export { addContactToList, sendWelcomeEmail };
+export { addContactToList, sendOrderConfirmationEmail, sendWelcomeEmail };
