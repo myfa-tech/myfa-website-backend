@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 
 import { cancelPayment, confirmPayment, requestPayment } from './services/lydia'
 import { findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, countBaskets } from './services/baskets'
-import { saveMember as saveMemberOnMailchimp } from './services/mailchimp'
+import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
 import { getUsers, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
@@ -58,11 +58,11 @@ const corsOptions = {
 
 const unless = (paths, middleware) => {
   return (req, res, next) => {
-      if (paths.includes(req.path)) {
-          return next();
-      } else {
-          return middleware(req, res, next);
-      }
+    if (paths.includes(req.path)) {
+      return next();
+    } else {
+      return middleware(req, res, next);
+    }
   };
 };
 
@@ -85,7 +85,7 @@ const run = () => {
 
   app.post('/lydia/cancel_payment_xx', cancelPayment)
 
-  app.post('/mailchimp', saveMemberOnMailchimp)
+  app.post('/newsletter/member', (req, res, next) => addContactToList(req, res, 'newsletter'))
 
   app.post('/dashboard/login', login)
 
