@@ -1,9 +1,14 @@
 import mongoose from 'mongoose';
 import shajs from 'sha.js';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+import { sendWelcomeEmail } from './mailjet';
 
 import UserSchema from '../schemas/user';
 import BasketSchema from '../schemas/basket';
+
+dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -87,6 +92,8 @@ const saveUser = async (req, res, next) => {
     delete user.password;
 
     let token = jwt.sign({ email: user.email }, JWT_SECRET);
+
+    sendWelcomeEmail(user);
 
     res.status(201);
     res.send({ user, token });
