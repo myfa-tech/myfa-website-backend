@@ -15,6 +15,7 @@ const Basket = mongoose.Schema({
 	price: Number,
 	avatar: String,
 	zone: String,
+	items: Object,
 	createdAt: Date,
 	deliveredAt: Date,
 });

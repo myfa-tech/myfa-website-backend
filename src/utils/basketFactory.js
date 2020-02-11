@@ -34,13 +34,14 @@ class BasketFactory {
     }
   };
 
-  constructor (basketType, userInfo, recipient, ref) {
+  constructor (basketType, userInfo, order) {
     this.basket = {
       ...this.baskets[basketType],
       createdAt: Date.now(),
-      recipient,
+      recipient: order.recipient,
       status: 'pending',
-      orderRef: ref,
+      orderRef: order.ref,
+      items: order.baskets[basketType].items || {},
       userEmail: userInfo.email,
     }
   }

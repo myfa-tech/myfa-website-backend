@@ -32,7 +32,7 @@ const saveBasketsFromOrder = async (req) => {
 
     Object.keys(order.baskets).forEach(basketType => {
       for (let i=0; i<order.baskets[basketType].qty; i++) {
-        baskets.push(new Basket(basketType, userInfo, order.recipient, order.ref).getBasket());
+        baskets.push(new Basket(basketType, userInfo, order).getBasket());
       }
     });
 
