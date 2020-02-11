@@ -8,14 +8,14 @@ class BasketFactory {
       name: 'Fruits',
       type: 'fruits',
       realPrice: 5.99,
-      reduction: 20,
+      reduction: 16,
       price: 4.99,
     },
     legumes: {
       name: 'Légumes',
       type: 'legumes',
       realPrice: 11.99,
-      reduction: 20,
+      reduction: 16,
       price: 9.99,
     },
     sauces: {
@@ -23,7 +23,7 @@ class BasketFactory {
       type: 'sauces',
       realPrice: 23.99,
       reduction: 8,
-      price: 0.99, // 21.99,
+      price: 21.99,
     },
     myfa: {
       name: 'MYFA',
