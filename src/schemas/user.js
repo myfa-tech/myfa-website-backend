@@ -12,6 +12,7 @@ const UserSchema = mongoose.Schema({
   createdAt: Date, // should be a timestamp
   bday: Date, // should be a timestamp
   country: String,
+  FBAccess: Boolean,
   cgu: Boolean,
   recipients: [Recipient],
 });

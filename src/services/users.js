@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import shajs from 'sha.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { Facebook } from 'fb';
 
 import { sendWelcomeEmail } from './mailjet';
 
@@ -10,7 +11,11 @@ import BasketSchema from '../schemas/basket';
 
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET;
+const FB_APP_SECRET = process.env.FB_APP_SECRET;
+const FB_APP_ID = process.env.FB_APP_ID;
+
+const FB = new Facebook({ appId: FB_APP_ID, appSecret: FB_APP_SECRET, version: 'v2.4' });
 
 const getUsers = async (req, res, next) => {
   try {
@@ -103,6 +108,36 @@ const saveUser = async (req, res, next) => {
 	}
 }
 
+const createFBUser = async (creds) => {
+  const user = { ...creds };
+  const usersModel = mongoose.model('users', UserSchema);
+
+  user.createdAt = Date.now();
+  user.FBAccess = true;
+
+  await usersModel.create(user);
+
+  console.log({ 'user created': user });
+
+  sendWelcomeEmail(user);
+
+  return user;
+};
+
+const verifyFBUser = async (creds) => {
+  try {
+    if (!!creds.fbToken) {
+      const res = await FB.api('me', { fields: 'id, name', access_token: creds.fbToken });
+      return (!!res.name);
+    } else {
+      throw new Error('missing FB token');
+    }
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
 const loginUser = async (req, res, next) => {
   try {
     const creds = req.body;
@@ -134,6 +169,43 @@ const loginUser = async (req, res, next) => {
 		throw new Error('something went wrong');
   }
 }
+
+const loginFBUser = async (req, res, next) => {
+  try {
+    const creds = req.body;
+    const userModel = mongoose.model('users', UserSchema);
+
+    if (!creds.email) {
+      res.status(400);
+      res.send('missing field(s)');
+      return;
+    }
+
+    let isFBUserSafe = await verifyFBUser(creds);
+
+    if (!isFBUserSafe) {
+      res.status(400);
+      res.send('wrong FB login');
+      return;
+    }
+
+    let token = jwt.sign({ email: creds.email }, JWT_SECRET);
+
+    let user = await userModel.findOne({ email: creds.email });
+
+    if (!!user) {
+      delete user.password;
+    } else {
+      user = await createFBUser(creds);
+    }
+
+    res.status(200);
+    res.send({ user, token });
+  } catch (e) {
+    console.log(e);
+		throw new Error('something went wrong');
+  }
+};
 
 const updateUserByEmail = async (req, res, next) => {
   try {
@@ -232,4 +304,4 @@ const verifyUserPassword = async (req, res, next) => {
 	}
 }
 
-export { getUserByEmail, getUsers, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };
+export { getUserByEmail, getUsers, loginFBUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };

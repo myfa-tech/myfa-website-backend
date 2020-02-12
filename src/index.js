@@ -8,7 +8,7 @@ import { findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, countB
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
-import { getUsers, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
+import { getUsers, loginFBUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT'
 
 dotenv.config()
@@ -18,11 +18,16 @@ const MONGODB_URI = process.env.MONGODB_URI
 
 const app = express()
 
-var whitelist = [
+const whitelist = [
   'https://www.myfa.fr',
   'https://myfa.fr',
   'https://5e43b7b9798dfd000a9f6501--myfa.netlify.com',
-]
+  'https://5e43efaf96c6180007ef8f60--myfa.netlify.com',
+];
+
+if (process.env.NODE_ENV === 'development') {
+  whitelist.push('http://localhost:8000');
+}
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -70,6 +75,8 @@ const run = () => {
   app.post('/users', saveUser)
 
   app.post('/users/login', loginUser)
+
+  app.post('/users/facebook-login', loginFBUser)
 
   app.use(verifyJWT)
 
