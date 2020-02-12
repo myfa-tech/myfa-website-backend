@@ -124,6 +124,22 @@ const createFBUser = async (creds) => {
   return user;
 };
 
+const createGoogleUser = async (creds) => {
+  const user = { ...creds };
+  const usersModel = mongoose.model('users', UserSchema);
+
+  user.createdAt = Date.now();
+  user.GoogleAccess = true;
+
+  await usersModel.create(user);
+
+  console.log({ 'user created': user });
+
+  sendWelcomeEmail(user);
+
+  return user;
+};
+
 const verifyFBUser = async (creds) => {
   try {
     if (!!creds.fbToken) {
@@ -131,6 +147,20 @@ const verifyFBUser = async (creds) => {
       return (!!res.name);
     } else {
       throw new Error('missing FB token');
+    }
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
+const verifyGoogleUser = async (creds) => {
+  try {
+    if (!!creds.googleToken) {
+      // @TODO: maybe verify a bit more...
+      return true;
+    } else {
+      throw new Error('missing Google token');
     }
   } catch (e) {
     console.log(e);
@@ -197,6 +227,43 @@ const loginFBUser = async (req, res, next) => {
       delete user.password;
     } else {
       user = await createFBUser(creds);
+    }
+
+    res.status(200);
+    res.send({ user, token });
+  } catch (e) {
+    console.log(e);
+		throw new Error('something went wrong');
+  }
+};
+
+const loginGoogleUser = async (req, res, next) => {
+  try {
+    const creds = req.body;
+    const userModel = mongoose.model('users', UserSchema);
+
+    if (!creds.email) {
+      res.status(400);
+      res.send('missing field(s)');
+      return;
+    }
+
+    let isGoogleUserSafe = await verifyGoogleUser(creds);
+
+    if (!isGoogleUserSafe) {
+      res.status(400);
+      res.send('wrong Google login');
+      return;
+    }
+
+    let token = jwt.sign({ email: creds.email }, JWT_SECRET);
+
+    let user = await userModel.findOne({ email: creds.email });
+
+    if (!!user) {
+      delete user.password;
+    } else {
+      user = await createGoogleUser(creds);
     }
 
     res.status(200);
@@ -304,4 +371,4 @@ const verifyUserPassword = async (req, res, next) => {
 	}
 }
 
-export { getUserByEmail, getUsers, loginFBUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };
+export { getUserByEmail, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };

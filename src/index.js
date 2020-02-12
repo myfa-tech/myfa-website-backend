@@ -8,7 +8,7 @@ import { findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, countB
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
-import { getUsers, loginFBUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
+import { getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT'
 
 dotenv.config()
@@ -23,10 +23,12 @@ const whitelist = [
   'https://myfa.fr',
   'https://5e43b7b9798dfd000a9f6501--myfa.netlify.com',
   'https://5e43efaf96c6180007ef8f60--myfa.netlify.com',
+  'https://5e44308a8a8a1e000879730c--myfa.netlify.com',
 ];
 
 if (process.env.NODE_ENV === 'development') {
   whitelist.push('http://localhost:8000');
+  whitelist.push('http://myfa.africa:8000');
 }
 
 const corsOptions = {
@@ -77,6 +79,8 @@ const run = () => {
   app.post('/users/login', loginUser)
 
   app.post('/users/facebook-login', loginFBUser)
+
+  app.post('/users/google-login', loginGoogleUser)
 
   app.use(verifyJWT)
 

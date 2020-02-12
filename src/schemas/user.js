@@ -13,6 +13,7 @@ const UserSchema = mongoose.Schema({
   bday: Date, // should be a timestamp
   country: String,
   FBAccess: Boolean,
+  GoogleAccess: Boolean,
   cgu: Boolean,
   recipients: [Recipient],
 });
