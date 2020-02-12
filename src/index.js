@@ -19,34 +19,9 @@ const MONGODB_URI = process.env.MONGODB_URI
 const app = express()
 
 var whitelist = [
-  'http://localhost:8000',
   'https://www.myfa.fr',
   'https://myfa.fr',
-  'https://5e01bf4592a2100007bfb71d--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e258e3b02b1b6000c4e8718--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e2835038fdcd800080eed79--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e29cad38ea070000ab41718--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e2f20b3938ba3000c04754e--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e32aa3b83cd120008e07f50--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e32b84ddae0a1000855589f--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e3454d014dbe800088cdd0d--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e36c14af3a2520009634276--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e394f7911c1fe0008f0608e--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e399df91dfec00009a137ac--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e3a8f87c35f380008e2590b--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e3bfe6fe3f7ae000836d73a--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e3c4f0fbf1296000845ba79--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e3c526c5bb1a50009a0725e--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e3e9a8a2cc1ae00070300ed--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e3eb106ef3b03000aae18df--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e4040952cc1ae000703914e--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e4083fff5c5430008b59585--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e41242ca1d1cc00099c18cb--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e415e53dd93350008492aa6--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e4172ef4c0d9800081b3c72--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e418384b32c4f0007e2bcf8--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e419ec939bc0a00071364e5--compassionate-varahamihira-d667c0.netlify.com',
-  'https://5e4263480ed6d60008293e30--compassionate-varahamihira-d667c0.netlify.com',
+  'https://5e43b7b9798dfd000a9f6501--myfa.netlify.com',
 ]
 
 const corsOptions = {
