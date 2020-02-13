@@ -25,6 +25,7 @@ const whitelist = [
   'https://5e43efaf96c6180007ef8f60--myfa.netlify.com',
   'https://5e44308a8a8a1e000879730c--myfa.netlify.com',
   'https://5e451908774de80007aa5300--myfa.netlify.com',
+  'https://5e452a1482a0a5000b5413c4--myfa.netlify.com',
 ];
 
 if (process.env.NODE_ENV === 'development') {
