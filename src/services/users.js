@@ -62,6 +62,42 @@ const getUsers = async (req, res, next) => {
 	}
 };
 
+const deleteUser = async (req, res, next) => {
+  try {
+    const usersModel = mongoose.model('users', UserSchema);
+    const userEmail = req.body.email;
+
+    let token = (req.headers.authorization || '').split(' ')[1];
+
+    if (!token) {
+      res.status(401);
+      res.send('forbidden');
+      return;
+    }
+
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    if (!userInfo) {
+      res.status(404);
+      res.send('user not found');
+      return;
+    } else if (userEmail !== userInfo.email) {
+      res.status(401);
+      res.send('forbidden');
+      return;
+    }
+
+    await usersModel.deleteOne({ email: userInfo.email });
+
+    res.status(200);
+    res.send('success');
+  } catch (e) {
+    console.log(e);
+    res.status(500);
+    res.send('something went wrong');
+  }
+};
+
 const getUserByEmail = async (email) => {
   try {
     const usersModel = mongoose.model('users', UserSchema);
@@ -371,4 +407,4 @@ const verifyUserPassword = async (req, res, next) => {
 	}
 }
 
-export { getUserByEmail, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };
+export { deleteUser, getUserByEmail, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };

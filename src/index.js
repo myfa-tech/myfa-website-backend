@@ -8,7 +8,7 @@ import { findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, countB
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
-import { getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
+import { deleteUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT'
 
 dotenv.config()
@@ -27,6 +27,7 @@ const whitelist = [
   'https://5e451908774de80007aa5300--myfa.netlify.com',
   'https://5e452a1482a0a5000b5413c4--myfa.netlify.com',
   'https://5e45711fe4418a000807fba8--myfa.netlify.com',
+  'https://5e45829664439b0008916534--myfa.netlify.com',
 ];
 
 if (process.env.NODE_ENV === 'development') {
@@ -101,6 +102,8 @@ const run = () => {
   app.put('/users/password', updateUserPassword)
 
   app.get('/users/baskets', getBasketsByEmail)
+
+  app.put('/users/delete', deleteUser)
 
   app.use(verifyAdminJWT)
 
