@@ -15,6 +15,8 @@ const fetchKPIs = async (req, res, next) => {
     const weekSunday = getSundayOfCurrentWeek(new Date());
     const monthFirstDay = getFirstDayOfCurrentMonth(new Date());
     const monthLastDay = getLastDayOfCurrentMonth(new Date());
+    const today = new Date(new Date().setHours(0, 0, 0, 0));
+    const tomorrow = new Date(new Date(today).setDate(new Date().getDate() + 1));
 
     const rules = [
       { section: 'general', collection: 'users', filter: {}, type: 'count', id: 'nb_users', label: 'utilisateurs', model: userModel },
@@ -32,6 +34,11 @@ const fetchKPIs = async (req, res, next) => {
       { section: 'month', collection: 'baskets', filter: { status: 'paid', type: 'legumes', createdAt: { $gte: monthFirstDay, $lte: monthLastDay } }, id: 'month_nb_paid_legumes_baskets', type: 'count', label: 'paniers legumes', model: basketModel },
       { section: 'month', collection: 'baskets', filter: { status: 'paid', type: 'sauces', createdAt: { $gte: monthFirstDay, $lte: monthLastDay } }, id: 'month_nb_paid_sauces_baskets', type: 'count', label: 'paniers sauces', model: basketModel },
       { section: 'month', collection: 'baskets', filter: { status: 'paid', type: 'myfa', createdAt: { $gte: monthFirstDay, $lte: monthLastDay } }, id: 'month_nb_paid_myfa_baskets', type: 'count', label: 'paniers myfa', model: basketModel },
+
+      { section: 'today', collection: 'baskets', filter: { status: 'paid', type: 'fruits', createdAt: { $gte: today, $lte: tomorrow } }, id: 'today_nb_paid_fruits_baskets', type: 'count', label: 'paniers fruits', model: basketModel },
+      { section: 'today', collection: 'baskets', filter: { status: 'paid', type: 'legumes', createdAt: { $gte: today, $lte: tomorrow } }, id: 'today_nb_paid_legumes_baskets', type: 'count', label: 'paniers legumes', model: basketModel },
+      { section: 'today', collection: 'baskets', filter: { status: 'paid', type: 'sauces', createdAt: { $gte: today, $lte: tomorrow } }, id: 'today_nb_paid_sauces_baskets', type: 'count', label: 'paniers sauces', model: basketModel },
+      { section: 'today', collection: 'baskets', filter: { status: 'paid', type: 'myfa', createdAt: { $gte: today, $lte: tomorrow } }, id: 'today_nb_paid_myfa_baskets', type: 'count', label: 'paniers myfa', model: basketModel },
     ];
 
     rules.forEach(rule => {
