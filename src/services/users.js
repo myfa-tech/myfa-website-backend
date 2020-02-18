@@ -39,7 +39,12 @@ const getUsers = async (req, res, next) => {
     const users = await query.exec();
 
     users.forEach(user => {
-      promises.push(basketsModel.countDocuments({ userEmail: user.email }));
+      promises.push(basketsModel.countDocuments({
+        $and: [
+          { userEmail: user.email },
+          { status: { $ne: 'pending' }},
+        ]
+      }));
     });
 
     const counts = await Promise.all(promises);
