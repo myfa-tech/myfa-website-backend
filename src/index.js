@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 
 import { cancelPayment, confirmPayment, requestPayment } from './services/lydia'
-import { findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, countBaskets } from './services/baskets'
+import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, updateBasketById } from './services/baskets'
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
@@ -32,6 +32,7 @@ const whitelist = [
   'https://5e458a94c89e210008ac8c51--myfa.netlify.com',
   'https://5e47b8b43fad81000818746f--myfa.netlify.com',
   'https://5e47d826c7c7ec000814e64d--myfa.netlify.com',
+  'https://5e4c0c147f94030008a9d3b1--myfa.netlify.com',
 ];
 
 if (process.env.NODE_ENV === 'development') {
@@ -118,6 +119,8 @@ const run = () => {
   app.get('/dashboard/users', getUsers)
 
   app.get('/dashboard/baskets', getBaskets)
+
+  app.put('/dashboard/baskets', updateBasketById)
 
   app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`))
 }

@@ -22,6 +22,34 @@ const saveBasket = async (req) => {
 	}
 }
 
+const updateBasketById = async (req, res, next) => {
+	try {
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    if (!userInfo.admin) {
+      res.status(401);
+      res.send('wrong token');
+    }
+
+    const { id, editFields } = req.body;
+		const basketsModel = mongoose.model('baskets', BasketSchema);
+
+    const result = await basketsModel.updateOne({ _id: id }, editFields);
+
+    if (result.nModified) {
+			res.status(201);
+			res.send('Document updated');
+		} else {
+			res.status(204);
+			res.send('Document not updated');
+		}
+	} catch (e) {
+		console.log(e)
+		throw new Error('something went wrong');
+	}
+};
+
 const saveBasketsFromOrder = async (req) => {
 	try {
     const { order } = req.body;
@@ -138,4 +166,4 @@ const countBaskets = async (req, res, next) => {
   res.send({ count });
 }
 
-export { countBaskets, findBasket, getBaskets, getBasketsByEmail, saveBasket, saveBasketsFromOrder };
+export { countBaskets, findBasket, getBaskets, getBasketsByEmail, saveBasket, saveBasketsFromOrder, updateBasketById };
