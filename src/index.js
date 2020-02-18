@@ -22,6 +22,7 @@ const whitelist = [
   'https://www.myfa.fr',
   'https://myfa.fr',
   'chrome-extension://jddpdjamaalalhlegkelkmckfhhiiijl',
+  'chrome-extension://mbgaenpdobndgmhfbcomnghmlnfnhdcn',
   'https://5e43b7b9798dfd000a9f6501--myfa.netlify.com',
   'https://5e43efaf96c6180007ef8f60--myfa.netlify.com',
   'https://5e44308a8a8a1e000879730c--myfa.netlify.com',
