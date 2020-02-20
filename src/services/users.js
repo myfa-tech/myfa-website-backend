@@ -14,6 +14,7 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const FB_APP_SECRET = process.env.FB_APP_SECRET;
 const FB_APP_ID = process.env.FB_APP_ID;
+const NODE_ENV = process.env.NODE_ENV;
 
 const FB = new Facebook({ appId: FB_APP_ID, appSecret: FB_APP_SECRET, version: 'v2.4' });
 
@@ -139,7 +140,11 @@ const saveUser = async (req, res, next) => {
 
     let token = jwt.sign({ email: user.email }, JWT_SECRET);
 
-    sendWelcomeEmail(user);
+    if (NODE_ENV !== 'development') {
+      sendWelcomeEmail(user);
+    } else {
+      console.log('NODE_ENV is development - welcome email not sent');
+    }
 
     res.status(201);
     res.send({ user, token });
