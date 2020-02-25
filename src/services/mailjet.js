@@ -92,6 +92,11 @@ const addContactToList = async (req, res, listName) => {
     // @TODO: deal with error
     console.log(e);
   }
-}
+};
 
-export { addContactToList, sendOrderConfirmationEmail, sendWelcomeEmail };
+const sendEmailToFinance = () => {
+  // @TODO
+  console.log('SHOULD SEND EMAIL TO FINANCE');
+};
+
+export { addContactToList, sendEmailToFinance, sendOrderConfirmationEmail, sendWelcomeEmail };

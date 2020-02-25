@@ -11,6 +11,7 @@ import { fetchKPIs } from './services/kpis'
 import { deleteUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT'
 import { fetchGoals, updateGoalById } from './services/kpiGoals'
+import { getFinanceRequests, updateFinanceRequestById, saveRequest } from './services/finance';
 
 dotenv.config()
 
@@ -118,6 +119,12 @@ const run = () => {
   app.get('/dashboard/baskets', getBaskets)
 
   app.put('/dashboard/baskets', updateBasketById)
+
+  app.get('/dashboard/finance/requests', getFinanceRequests)
+
+  app.post('/dashboard/finance/requests', saveRequest)
+
+  app.put('/dashboard/finance/requests', updateFinanceRequestById)
 
   app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`))
 }
