@@ -94,9 +94,24 @@ const addContactToList = async (req, res, listName) => {
   }
 };
 
-const sendEmailToFinance = () => {
-  // @TODO
-  console.log('SHOULD SEND EMAIL TO FINANCE');
+const sendEmailToFinance = async () => {
+  try {
+    const recipientEmail = 'tanohzana@gmail.com';
+
+    await mailjet.post('send').request({
+      FromEmail: 'infos@myfa.fr',
+      FromName: 'MYFA',
+      Subject: 'Alexandre, tu as une demande en attente sur le dashboard 🔔',
+      'Mj-TemplateID': '1258515',
+      'Mj-TemplateLanguage': 'true',
+      Recipients: [{ Email: recipientEmail }],
+    });
+
+    console.log('Finance request sent to Alex');
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+  }
 };
 
 export { addContactToList, sendEmailToFinance, sendOrderConfirmationEmail, sendWelcomeEmail };

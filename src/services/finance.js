@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 import FinanceRequestSchema from '../schemas/financeRequest';
+import { sendEmailToFinance } from './mailjet';
 
 dotenv.config();
 
@@ -30,6 +31,11 @@ const updateFinanceRequestById = async (req, res, next) => {
     }
 
     await financeRequestsModel.updateOne({ _id: id }, req.body);
+
+    if (req.body.status === 'pinged' && process.env.NODE_ENV !== 'development') {
+      sendEmailToFinance();
+    }
+
     res.status(201);
     res.send('request updated');
   } catch (e) {
