@@ -5,6 +5,12 @@ import dotenv from 'dotenv';
 import { Facebook } from 'fb';
 
 import { sendWelcomeEmail } from './mailjet';
+import {
+  getFirstDayOfCurrentMonth,
+  getLastDayOfCurrentMonth,
+  getMondayOfCurrentWeek,
+  getSundayOfCurrentWeek,
+} from '../utils/dates';
 
 import UserSchema from '../schemas/user';
 import BasketSchema from '../schemas/basket';
@@ -20,20 +26,35 @@ const FB = new Facebook({ appId: FB_APP_ID, appSecret: FB_APP_SECRET, version: '
 
 const getUsers = async (req, res, next) => {
   try {
-    let token = (req.headers.authorization || '').split(' ')[1];
-    let userInfo = jwt.verify(token, JWT_SECRET);
     const promises = [];
-
-    if (!userInfo.admin) {
-      res.status(401);
-      res.send('forbidden');
-      return;
-    }
+    const httpQuery = req.query || {};
+    let filter = {};
 
     const usersModel = mongoose.model('users', UserSchema);
     const basketsModel = mongoose.model('baskets', BasketSchema);
 
-    const query = usersModel.find();
+    if (httpQuery.time_filter === 'month') {
+      const monthFirstDay = getFirstDayOfCurrentMonth(new Date());
+      const monthLastDay = getLastDayOfCurrentMonth(new Date());
+
+      filter.createdAt = { $gte: monthFirstDay, $lte: monthLastDay };
+    } else if (httpQuery.time_filter === 'week') {
+      const weekMonday = getMondayOfCurrentWeek(new Date());
+      const weekSunday = getSundayOfCurrentWeek(new Date());
+
+      filter.createdAt = { $gte: weekMonday, $lte: weekSunday };
+    } else if (httpQuery.time_filter === 'today') {
+      const today = new Date(new Date().setHours(0, 0, 0, 0));
+      const tomorrow = new Date(new Date(today).setDate(new Date().getDate() + 1));
+
+      filter.createdAt = { $gte: today, $lte: tomorrow };
+    } else if (!!httpQuery.time_filter) {
+      res.status(400);
+      res.send('wrong param');
+      return;
+    }
+
+    const query = usersModel.find(filter);
     query.collection(usersModel.collection);
     query.select({ password: 0 });
 
@@ -55,13 +76,8 @@ const getUsers = async (req, res, next) => {
       qtyPaidBaskets: counts[index],
     }));
 
-    if (!!enhancedUsers) {
-      res.status(200);
-      res.json({ users: enhancedUsers });
-    } else {
-      res.status(404);
-      res.send('not found');
-    }
+    res.status(200);
+    res.json({ users: enhancedUsers });
 	} catch (e) {
 		console.log(e);
 		throw new Error('something went wrong');

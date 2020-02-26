@@ -5,6 +5,13 @@ import BasketSchema from '../schemas/basket';
 import Basket from '../utils/basketFactory';
 import jwt from 'jsonwebtoken';
 
+import {
+  getFirstDayOfCurrentMonth,
+  getLastDayOfCurrentMonth,
+  getMondayOfCurrentWeek,
+  getSundayOfCurrentWeek,
+} from '../utils/dates';
+
 const JWT_SECRET = process.env.JWT_SECRET
 
 const saveBasket = async (req) => {
@@ -113,17 +120,34 @@ const findBasket = async (req, res, next) => {
 const getBaskets = async (req, res, next) => {
   try {
 		const basketsModel = mongoose.model('baskets', BasketSchema);
-    const params = req.query || {};
+    const query = req.query || {};
+    let filter = {};
 
-    const baskets = await basketsModel.find(params, basketsModel);
+    if (query.time_filter === 'month') {
+      const monthFirstDay = getFirstDayOfCurrentMonth(new Date());
+      const monthLastDay = getLastDayOfCurrentMonth(new Date());
 
-    if (!!baskets) {
-      res.status(200);
-      res.json({ baskets });
-    } else {
-      res.status(404);
-      res.send('not found');
+      filter.createdAt = { $gte: monthFirstDay, $lte: monthLastDay };
+    } else if (query.time_filter === 'week') {
+      const weekMonday = getMondayOfCurrentWeek(new Date());
+      const weekSunday = getSundayOfCurrentWeek(new Date());
+
+      filter.createdAt = { $gte: weekMonday, $lte: weekSunday };
+    } else if (query.time_filter === 'today') {
+      const today = new Date(new Date().setHours(0, 0, 0, 0));
+      const tomorrow = new Date(new Date(today).setDate(new Date().getDate() + 1));
+
+      filter.createdAt = { $gte: today, $lte: tomorrow };
+    } else if (!!query.time_filter) {
+      res.status(400);
+      res.send('wrong param');
+      return;
     }
+
+    const baskets = await basketsModel.find(filter, basketsModel);
+
+    res.status(200);
+    res.json({ baskets });
 	} catch (e) {
 		console.log(e);
 		throw new Error('something went wrong');
