@@ -96,7 +96,7 @@ const addContactToList = async (req, res, listName) => {
 
 const sendEmailToFinance = async () => {
   try {
-    const recipientEmail = 'tanohzana@gmail.com';
+    const recipientEmail = 'meschberger.alexandre@gmail.com';
 
     await mailjet.post('send').request({
       FromEmail: 'infos@myfa.fr',
