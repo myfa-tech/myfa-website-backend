@@ -8,7 +8,7 @@ import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsB
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
-import { deleteUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
+import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT'
 import { fetchGoals, updateGoalById } from './services/kpiGoals'
 import { getFinanceRequests, updateFinanceRequestById, saveRequest } from './services/finance';
@@ -30,6 +30,8 @@ const whitelist = [
   'https://5e554fb7418db30008037d17--myfa.netlify.com',
   'https://5e58bdb5b9040000085143ae--myfa.netlify.com',
   'https://5e58c3241e08360007514592--myfa.netlify.com',
+  'https://5e567b5dd9fd4d000819a910--myfa.netlify.com',
+  'https://5e57f98a109d79000748a8ae--myfa.netlify.com',
 ];
 
 if (process.env.NODE_ENV === 'development') {
@@ -88,6 +90,8 @@ const run = () => {
 
   app.post('/users/google-login', loginGoogleUser)
 
+  app.post('/users/email/confirm', confirmUserEmail)
+
   app.use(verifyJWT)
 
   app.post('/lydia/pay', async (req, res, next) => {
@@ -96,6 +100,8 @@ const run = () => {
   })
 
   app.get('/baskets', findBasket)
+
+  app.get('/users', fetchUser)
 
   app.put('/users', updateUserByEmail)
 

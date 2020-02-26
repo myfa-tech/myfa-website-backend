@@ -4,7 +4,13 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Facebook } from 'fb';
 
-import { sendWelcomeEmail } from './mailjet';
+import { sendEmailAddressConfirmationEmail, sendWelcomeEmail } from './mailjet';
+import {
+  getFirstDayOfCurrentMonth,
+  getLastDayOfCurrentMonth,
+  getMondayOfCurrentWeek,
+  getSundayOfCurrentWeek,
+} from '../utils/dates';
 
 import UserSchema from '../schemas/user';
 import BasketSchema from '../schemas/basket';
@@ -18,22 +24,60 @@ const NODE_ENV = process.env.NODE_ENV;
 
 const FB = new Facebook({ appId: FB_APP_ID, appSecret: FB_APP_SECRET, version: 'v2.4' });
 
-const getUsers = async (req, res, next) => {
+const fetchUser = async (req, res, next) => {
   try {
     let token = (req.headers.authorization || '').split(' ')[1];
     let userInfo = jwt.verify(token, JWT_SECRET);
-    const promises = [];
 
-    if (!userInfo.admin) {
-      res.status(401);
-      res.send('forbidden');
+    if (!userInfo) {
+      res.status(404);
+      res.send('user not found');
       return;
     }
 
     const usersModel = mongoose.model('users', UserSchema);
+    const user = await usersModel.findOne({ email: userInfo.email });
+
+    res.status(200);
+    res.send(user);
+  } catch(e) {
+    console.log(e);
+    res.status(500);
+    res.send('something went wrong');
+  }
+};
+
+const getUsers = async (req, res, next) => {
+  try {
+    const promises = [];
+    const httpQuery = req.query || {};
+    let filter = {};
+
+    const usersModel = mongoose.model('users', UserSchema);
     const basketsModel = mongoose.model('baskets', BasketSchema);
 
-    const query = usersModel.find();
+    if (httpQuery.time_filter === 'month') {
+      const monthFirstDay = getFirstDayOfCurrentMonth(new Date());
+      const monthLastDay = getLastDayOfCurrentMonth(new Date());
+
+      filter.createdAt = { $gte: monthFirstDay, $lte: monthLastDay };
+    } else if (httpQuery.time_filter === 'week') {
+      const weekMonday = getMondayOfCurrentWeek(new Date());
+      const weekSunday = getSundayOfCurrentWeek(new Date());
+
+      filter.createdAt = { $gte: weekMonday, $lte: weekSunday };
+    } else if (httpQuery.time_filter === 'today') {
+      const today = new Date(new Date().setHours(0, 0, 0, 0));
+      const tomorrow = new Date(new Date(today).setDate(new Date().getDate() + 1));
+
+      filter.createdAt = { $gte: today, $lte: tomorrow };
+    } else if (!!httpQuery.time_filter) {
+      res.status(400);
+      res.send('wrong param');
+      return;
+    }
+
+    const query = usersModel.find(filter);
     query.collection(usersModel.collection);
     query.select({ password: 0 });
 
@@ -55,13 +99,8 @@ const getUsers = async (req, res, next) => {
       qtyPaidBaskets: counts[index],
     }));
 
-    if (!!enhancedUsers) {
-      res.status(200);
-      res.json({ users: enhancedUsers });
-    } else {
-      res.status(404);
-      res.send('not found');
-    }
+    res.status(200);
+    res.json({ users: enhancedUsers });
 	} catch (e) {
 		console.log(e);
 		throw new Error('something went wrong');
@@ -116,6 +155,27 @@ const getUserByEmail = async (email) => {
 	}
 };
 
+const confirmUserEmail = async (req, res, next) => {
+  const { email, hash } = req.body;
+  const usersModel = mongoose.model('users', UserSchema);
+
+  try {
+    const user = await getUserByEmail(email);
+    user.hash = shajs('sha256').update(user.firstname).digest('hex');
+
+    if (hash === user.hash) {
+      await usersModel.updateOne({ email }, { emailConfirmed: true });
+      res.status(200);
+      res.send('email confirmed');
+    } else {
+      res.status(404);
+      res.send('wrong infos');
+    }
+  } catch(e) {
+
+  }
+};
+
 const saveUser = async (req, res, next) => {
 	try {
     const user = req.body;
@@ -131,6 +191,7 @@ const saveUser = async (req, res, next) => {
 
     user.password = shajs('sha256').update(user.password).digest('hex')
 		user.createdAt = Date.now();
+    user.emailConfirmed = false;
 
     await usersModel.create(user);
 
@@ -142,6 +203,7 @@ const saveUser = async (req, res, next) => {
 
     if (NODE_ENV !== 'development') {
       sendWelcomeEmail(user);
+      sendEmailAddressConfirmationEmail(user);
     } else {
       console.log('NODE_ENV is development - welcome email not sent');
     }
@@ -160,6 +222,7 @@ const createFBUser = async (creds) => {
 
   user.createdAt = Date.now();
   user.FBAccess = true;
+  user.emailConfirmed = true;
 
   await usersModel.create(user);
 
@@ -176,6 +239,7 @@ const createGoogleUser = async (creds) => {
 
   user.createdAt = Date.now();
   user.GoogleAccess = true;
+  user.emailConfirmed = true;
 
   await usersModel.create(user);
 
@@ -417,4 +481,4 @@ const verifyUserPassword = async (req, res, next) => {
 	}
 }
 
-export { deleteUser, getUserByEmail, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };
+export { confirmUserEmail, deleteUser, fetchUser, getUserByEmail, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };
