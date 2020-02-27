@@ -1,5 +1,6 @@
 import Mailjet from 'node-mailjet';
 import dotenv from 'dotenv';
+import shajs from 'sha.js';
 
 dotenv.config();
 
@@ -26,6 +27,38 @@ const sendWelcomeEmail = async (recipient) => {
       'Mj-TemplateLanguage': 'true',
       Recipients: [{ Email: recipient.email }],
     });
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+  }
+};
+
+const sendEmailAddressConfirmationEmail = async (user) => {
+  let hash = shajs('sha256').update(user.firstname).digest('hex')
+  let link = `https://www.myfa.fr/email_confirmation?${user.email}&${hash}`;
+
+  try {
+    await mailjet.post('send', {'version': 'v3.1'})
+      .request({
+        'Messages': [
+          {
+            'From': {
+              'Email': 'infos@myfa.fr',
+              'Name': 'MYFA'
+            },
+            'To': [{ 'Email': user.email }],
+            'TemplateID': 1255237,
+            'TemplateLanguage': true,
+            'Subject': `${user.firstname}, confirmez votre adresse email`,
+            'Variables': {
+              'firstname': user.firstname,
+              'confirmation_link': link,
+            },
+          },
+        ],
+      });
+
+    console.log('Email confirmation sent to :', user.email);
   } catch (e) {
     // @TODO: deal with error
     console.log(e);
@@ -114,4 +147,4 @@ const sendEmailToFinance = async () => {
   }
 };
 
-export { addContactToList, sendEmailToFinance, sendOrderConfirmationEmail, sendWelcomeEmail };
+export { addContactToList, sendEmailAddressConfirmationEmail, sendEmailToFinance, sendOrderConfirmationEmail, sendWelcomeEmail };

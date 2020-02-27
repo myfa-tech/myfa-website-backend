@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Facebook } from 'fb';
 
-import { sendWelcomeEmail } from './mailjet';
+import { sendEmailAddressConfirmationEmail, sendWelcomeEmail } from './mailjet';
 import {
   getFirstDayOfCurrentMonth,
   getLastDayOfCurrentMonth,
@@ -23,6 +23,29 @@ const FB_APP_ID = process.env.FB_APP_ID;
 const NODE_ENV = process.env.NODE_ENV;
 
 const FB = new Facebook({ appId: FB_APP_ID, appSecret: FB_APP_SECRET, version: 'v2.4' });
+
+const fetchUser = async (req, res, next) => {
+  try {
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    if (!userInfo) {
+      res.status(404);
+      res.send('user not found');
+      return;
+    }
+
+    const usersModel = mongoose.model('users', UserSchema);
+    const user = await usersModel.findOne({ email: userInfo.email });
+
+    res.status(200);
+    res.send(user);
+  } catch(e) {
+    console.log(e);
+    res.status(500);
+    res.send('something went wrong');
+  }
+};
 
 const getUsers = async (req, res, next) => {
   try {
@@ -132,6 +155,27 @@ const getUserByEmail = async (email) => {
 	}
 };
 
+const confirmUserEmail = async (req, res, next) => {
+  const { email, hash } = req.body;
+  const usersModel = mongoose.model('users', UserSchema);
+
+  try {
+    const user = await getUserByEmail(email);
+    user.hash = shajs('sha256').update(user.firstname).digest('hex');
+
+    if (hash === user.hash) {
+      await usersModel.updateOne({ email }, { emailConfirmed: true });
+      res.status(200);
+      res.send('email confirmed');
+    } else {
+      res.status(404);
+      res.send('wrong infos');
+    }
+  } catch(e) {
+
+  }
+};
+
 const saveUser = async (req, res, next) => {
 	try {
     const user = req.body;
@@ -147,6 +191,7 @@ const saveUser = async (req, res, next) => {
 
     user.password = shajs('sha256').update(user.password).digest('hex')
 		user.createdAt = Date.now();
+    user.emailConfirmed = false;
 
     await usersModel.create(user);
 
@@ -158,6 +203,7 @@ const saveUser = async (req, res, next) => {
 
     if (NODE_ENV !== 'development') {
       sendWelcomeEmail(user);
+      sendEmailAddressConfirmationEmail(user);
     } else {
       console.log('NODE_ENV is development - welcome email not sent');
     }
@@ -176,6 +222,7 @@ const createFBUser = async (creds) => {
 
   user.createdAt = Date.now();
   user.FBAccess = true;
+  user.emailConfirmed = true;
 
   await usersModel.create(user);
 
@@ -192,6 +239,7 @@ const createGoogleUser = async (creds) => {
 
   user.createdAt = Date.now();
   user.GoogleAccess = true;
+  user.emailConfirmed = true;
 
   await usersModel.create(user);
 
@@ -433,4 +481,4 @@ const verifyUserPassword = async (req, res, next) => {
 	}
 }
 
-export { deleteUser, getUserByEmail, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };
+export { confirmUserEmail, deleteUser, fetchUser, getUserByEmail, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };

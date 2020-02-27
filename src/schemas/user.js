@@ -15,6 +15,7 @@ const UserSchema = mongoose.Schema({
   FBAccess: Boolean,
   GoogleAccess: Boolean,
   cgu: Boolean,
+  emailConfirmed: Boolean,
   recipients: [Recipient],
 });
 
