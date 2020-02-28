@@ -1,9 +1,12 @@
 
 import mongoose from 'mongoose';
-
-import BasketSchema from '../schemas/basket';
-import Basket from '../utils/basketFactory';
 import jwt from 'jsonwebtoken';
+
+import { getUserByEmail } from './users';
+import { sendMessage } from './nexmo';
+
+import Basket from '../utils/basketFactory';
+import BasketSchema from '../schemas/basket';
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -35,9 +38,17 @@ const updateBasketById = async (req, res, next) => {
     const { id, editFields } = req.body;
 		const basketsModel = mongoose.model('baskets', BasketSchema);
 
-    const result = await basketsModel.updateOne({ _id: id }, editFields);
+    const basket = await basketsModel.findOneAndUpdate({ _id: id }, editFields);
 
-    if (result.nModified) {
+    if (editFields.status === 'delivered') {
+      const user = await getUserByEmail(basket.userEmail);
+
+      if (!!user.phone) {
+        await sendMessage(basket.recipient, user, 'delivered-basket');
+      }
+    }
+
+    if (!!basket) {
 			res.status(201);
 			res.send('Document updated');
 		} else {

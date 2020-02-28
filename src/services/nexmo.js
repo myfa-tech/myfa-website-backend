@@ -24,14 +24,18 @@ const makeNumber = (recipient) => {
   return prefix + phone;
 };
 
-const sendMessage = async (user, recipient, templateName) => {
+const sendMessage = async (infos, recipient, templateName) => {
   try {
-    let message = createMessage(templateName, user);
-    let recipientNumber = makeNumber(recipient);
+    if (process.env.NODE_ENV !== 'development') {
+      let message = createMessage(templateName, infos);
+      let recipientNumber = makeNumber(recipient);
 
-    console.log('SMS sent to :', recipientNumber);
+      console.log('SMS sent to :', recipientNumber);
 
-    await nexmo.message.sendSms('MYFA', recipientNumber, message);
+      await nexmo.message.sendSms('MYFA', recipientNumber, message);
+    } else {
+      console.log(`Dev mode. SMS to ${recipient.phone} not sent`);
+    }
   } catch (e) {
     // @TODO: deal with error
     console.log(e);
