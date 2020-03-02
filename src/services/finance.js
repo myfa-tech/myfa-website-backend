@@ -73,4 +73,26 @@ const saveRequest = async (req, res, next) => {
 	}
 };
 
-export { getFinanceRequests, saveRequest, updateFinanceRequestById };
+const removeFinanceRequest = async (req, res, next) => {
+  try {
+    const financeRequestsModel = mongoose.model('finance-requests', FinanceRequestSchema);
+    const { id } = req.query;
+
+    if (!id) {
+      res.status(400);
+      res.json('missing id field in query');
+      return;
+    }
+
+    await financeRequestsModel.deleteOne({ _id: id });
+
+    res.status(204);
+    res.send('request deleted');
+  } catch (e) {
+    console.log(e);
+    res.status(500);
+    res.json({ error: 'something failed on our side' });
+  }
+};
+
+export { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById };

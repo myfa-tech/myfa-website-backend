@@ -11,7 +11,7 @@ import { fetchKPIs } from './services/kpis'
 import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT'
 import { fetchGoals, updateGoalById } from './services/kpiGoals'
-import { getFinanceRequests, updateFinanceRequestById, saveRequest } from './services/finance';
+import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
 
 dotenv.config()
 
@@ -32,6 +32,7 @@ const whitelist = [
   'https://5e58c3241e08360007514592--myfa.netlify.com',
   'https://5e567b5dd9fd4d000819a910--myfa.netlify.com',
   'https://5e57f98a109d79000748a8ae--myfa.netlify.com',
+  'https://5e5d26cc18729c0008dd8e59--myfa.netlify.com',
 ];
 
 if (process.env.NODE_ENV === 'development') {
@@ -134,6 +135,8 @@ const run = () => {
   app.post('/dashboard/finance/requests', saveRequest)
 
   app.put('/dashboard/finance/requests', updateFinanceRequestById)
+
+  app.delete('/dashboard/finance/requests', removeFinanceRequest)
 
   app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`))
 }
