@@ -87,7 +87,7 @@ const getUsers = async (req, res, next) => {
       promises.push(basketsModel.countDocuments({
         $and: [
           { userEmail: user.email },
-          { status: { $ne: 'pending' }},
+          { status: { $in: ['paid', 'preparing', 'delivered'] }},
         ]
       }));
     });
