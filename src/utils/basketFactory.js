@@ -1,7 +1,4 @@
 
-import mongoose from 'mongoose';
-import BasketSchema from '../schemas/basket';
-
 class BasketFactory {
   baskets = {
     fruits: {

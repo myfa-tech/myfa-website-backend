@@ -12,6 +12,7 @@ import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGo
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT'
 import { fetchGoals, updateGoalById } from './services/kpiGoals'
 import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
+import { createPayment } from './services/stripe'
 
 dotenv.config()
 
@@ -69,10 +70,10 @@ const db = mongoose.connection
 
 db.on('error', console.error.bind(console, 'connection error:')) // Add Sentry
 
-app.use(unless([
-  '/lydia/confirm_payment_xx',
-  '/lydia/cancel_payment_xx',
-], cors(corsOptions)));
+// app.use(unless([
+//   '/lydia/confirm_payment_xx',
+//   '/lydia/cancel_payment_xx',
+// ], cors(corsOptions)));
 
 const run = () => {
   app.use(express.static('public'))
@@ -100,6 +101,10 @@ const run = () => {
   app.post('/lydia/pay', async (req, res, next) => {
     await saveBasketsFromOrder(req)
     await requestPayment(req, res, next)
+  })
+
+  app.post('/stripe/pay', async (req, res, next) => {
+    await createPayment(req, res, next);
   })
 
   app.get('/baskets', findBasket)
