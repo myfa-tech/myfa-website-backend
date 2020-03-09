@@ -1,9 +1,10 @@
-import express from 'express'
-import cors from 'cors'
-import dotenv from 'dotenv'
-import mongoose from 'mongoose'
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 
-import { cancelPayment, confirmPayment, requestPayment } from './services/lydia'
+import { confirmPayment } from './services/stripe'
 import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, updateBasketById } from './services/baskets'
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
@@ -63,6 +64,10 @@ const unless = (paths, middleware) => {
   };
 };
 
+app.use(unless([
+  '/stripe/confirm_payment',
+], cors(corsOptions)));
+
 app.use(express.json())
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
 
@@ -70,17 +75,10 @@ const db = mongoose.connection
 
 db.on('error', console.error.bind(console, 'connection error:')) // Add Sentry
 
-// app.use(unless([
-//   '/lydia/confirm_payment_xx',
-//   '/lydia/cancel_payment_xx',
-// ], cors(corsOptions)));
-
 const run = () => {
   app.use(express.static('public'))
 
-  app.post('/lydia/confirm_payment_xx', confirmPayment)
-
-  app.post('/lydia/cancel_payment_xx', cancelPayment)
+  app.post('/stripe/confirm_payment', bodyParser.text({ type: '*/*' }), confirmPayment)
 
   app.post('/newsletter/member', (req, res, next) => addContactToList(req, res, 'newsletter'))
 
@@ -98,14 +96,10 @@ const run = () => {
 
   app.use(verifyJWT)
 
-  app.post('/lydia/pay', async (req, res, next) => {
-    await saveBasketsFromOrder(req)
-    await requestPayment(req, res, next)
-  })
-
   app.post('/stripe/pay', async (req, res, next) => {
+    await saveBasketsFromOrder(req);
     await createPayment(req, res, next);
-  })
+  });
 
   app.get('/baskets', findBasket)
 
