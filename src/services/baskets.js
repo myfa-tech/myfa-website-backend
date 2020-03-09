@@ -15,7 +15,7 @@ import {
   getSundayOfCurrentWeek,
 } from '../utils/dates';
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const saveBasket = async (req) => {
 	try {
@@ -68,17 +68,13 @@ const updateBasketById = async (req, res, next) => {
 	}
 };
 
-const saveBasketsFromOrder = async (req) => {
+const saveBasketsFromOrder = async (order, userInfo, stripeIntentId) => {
 	try {
-    const { order } = req.body;
-    let token = (req.headers.authorization || '').split(' ')[1];
-    let userInfo = jwt.verify(token, JWT_SECRET);
-
     const baskets = [];
 
     Object.keys(order.baskets).forEach(basketType => {
       for (let i=0; i<order.baskets[basketType].qty; i++) {
-        baskets.push(new Basket(basketType, userInfo, order).getBasket());
+        baskets.push(new Basket(basketType, userInfo, order, stripeIntentId).getBasket());
       }
     });
 

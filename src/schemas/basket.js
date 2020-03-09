@@ -18,6 +18,7 @@ const Basket = mongoose.Schema({
 	items: Object,
 	createdAt: Date,
 	deliveredAt: Date,
+	stripeIntentId: String,
 });
 
 export default Basket;

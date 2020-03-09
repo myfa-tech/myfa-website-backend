@@ -68,7 +68,14 @@ app.use(unless([
   '/stripe/confirm_payment',
 ], cors(corsOptions)));
 
-app.use(express.json())
+app.use((req, res, next) => {
+  if (req.originalUrl === '/stripe/confirm_payment') {
+    next();
+  } else {
+    bodyParser.json()(req, res, next);
+  }
+});
+
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
 
 const db = mongoose.connection
@@ -78,7 +85,7 @@ db.on('error', console.error.bind(console, 'connection error:')) // Add Sentry
 const run = () => {
   app.use(express.static('public'))
 
-  app.post('/stripe/confirm_payment', bodyParser.text({ type: '*/*' }), confirmPayment)
+  app.post('/stripe/confirm_payment', bodyParser.raw({ type: 'application/json' }), confirmPayment)
 
   app.post('/newsletter/member', (req, res, next) => addContactToList(req, res, 'newsletter'))
 
@@ -96,10 +103,7 @@ const run = () => {
 
   app.use(verifyJWT)
 
-  app.post('/stripe/pay', async (req, res, next) => {
-    await saveBasketsFromOrder(req);
-    await createPayment(req, res, next);
-  });
+  app.post('/stripe/pay', createPayment);
 
   app.get('/baskets', findBasket)
 

@@ -31,7 +31,7 @@ class BasketFactory {
     }
   };
 
-  constructor (basketType, userInfo, order) {
+  constructor (basketType, userInfo, order, stripeIntentId) {
     this.basket = {
       ...this.baskets[basketType],
       createdAt: Date.now(),
@@ -40,6 +40,7 @@ class BasketFactory {
       orderRef: order.ref,
       items: order.baskets[basketType].items || {},
       userEmail: userInfo.email,
+      stripeIntentId,
     }
   }
 

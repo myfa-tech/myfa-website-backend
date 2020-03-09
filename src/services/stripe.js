@@ -1,15 +1,18 @@
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
 
 import { getUserByEmail } from './users';
 import { sendMessage } from './nexmo';;
 import { sendOrderConfirmationEmail } from './mailjet';
 import basketSchema from '../schemas/basket';
+import { saveBasketsFromOrder } from './baskets';
 
 dotenv.config();
 
 const stripe = Stripe(process.env.STRIPE_API_SECRET);
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const getPrice = (p) => {
   let literalPrice = String(p);
@@ -20,6 +23,8 @@ const getPrice = (p) => {
 
 const createPayment = async (req, res, next) => {
   try {
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
     const { order, user, success_url } = req.body;
 
     const session = await stripe.checkout.sessions.create({
@@ -37,6 +42,8 @@ const createPayment = async (req, res, next) => {
       cancel_url: 'https://www.myfa.fr',
     });
 
+    saveBasketsFromOrder(order, userInfo, session.payment_intent);
+
     res.status(201);
     res.send({ id: session.id });
   } catch (e) {
@@ -48,7 +55,7 @@ const createPayment = async (req, res, next) => {
 
 const confirmPayment = async (req, res, next) => {
 	try {
-    const endpointSecret = 'whsec_pIzKY0nhdnWryOJh7gveefwsyuidwwce';
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
     const sig = req.headers['stripe-signature'];
     const body = req.body;
 
@@ -64,17 +71,18 @@ const confirmPayment = async (req, res, next) => {
     }
 
     let intent = null;
-    switch (event['type']) {
-      case 'payment_intent.succeeded':
-        intent = event.data.object;
-        console.log("Succeeded:", intent.id);
-        console.log(intent);
-        break;
-      case 'payment_intent.payment_failed':
-        intent = event.data.object;
-        const message = intent.last_payment_error && intent.last_payment_error.message;
-        console.log('Failed:', intent.id, message);
-        break;
+
+    if (event['type'] === 'payment_intent.succeeded') {
+      intent = event.data.object;
+      const basketsModel = mongoose.model('baskets', basketSchema);
+      const result = await basketsModel.updateMany({ stripeIntentId: intent.id }, { status: 'paid' });
+
+      if (result.nModified) {
+        notifyOfPayment(intent.id);
+        res.status(201);
+        res.send('Document updated');
+        return;
+      }
     }
 
     res.sendStatus(200);
@@ -85,9 +93,9 @@ const confirmPayment = async (req, res, next) => {
 	}
 };
 
-const notifyOfPayment = async (orderRef) => {
+const notifyOfPayment = async (stripeIntentId) => {
 	const basketsModel = mongoose.model('baskets', basketSchema);
-	const baskets = await basketsModel.find({ orderRef });
+	const baskets = await basketsModel.find({ stripeIntentId });
 	const user = await getUserByEmail(baskets[0].userEmail);
 
 	await sendOrderConfirmationEmail(user, baskets);
