@@ -6,6 +6,7 @@ const DashboardUser = mongoose.Schema({
   lastname: String,
 	email: String,
 	password: String,
+	isEmployee: Boolean,
 });
 
 export default DashboardUser;
