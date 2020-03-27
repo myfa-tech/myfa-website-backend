@@ -61,7 +61,7 @@ const updateBasketById = async (req, res, next) => {
 
     if (!!basket) {
 			res.status(201);
-			res.send('Document updated');
+			res.send({ ...basket._doc, ...editFields });
 		} else {
 			res.status(204);
 			res.send('Document not updated');
