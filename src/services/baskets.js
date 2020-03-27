@@ -42,8 +42,12 @@ const updateBasketById = async (req, res, next) => {
       res.send('wrong token');
     }
 
-    const { id, editFields } = req.body;
+    let { id, editFields } = req.body;
 		const basketsModel = mongoose.model('baskets', BasketSchema);
+
+    if (editFields.status === 'delivered') {
+      editFields.deliveredAt = new Date();
+    }
 
     const basket = await basketsModel.findOneAndUpdate({ _id: id }, editFields);
 
