@@ -41,6 +41,7 @@ class BasketFactory {
       items: order.baskets[basketType].items || {},
       userEmail: userInfo.email,
       stripeIntentId,
+      message: order.message,
     }
   }
 

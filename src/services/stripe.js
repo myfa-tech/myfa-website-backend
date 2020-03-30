@@ -27,20 +27,24 @@ const createPayment = async (req, res, next) => {
     let userInfo = jwt.verify(token, JWT_SECRET);
     const { order, user, success_url } = req.body;
 
-    const session = await stripe.checkout.sessions.create({
-      customer_email: user.email,
-      payment_method_types: ['card'],
-      line_items: Object.keys(order.baskets).map(key => ({
-        name: order.baskets[key].label,
-        description: order.baskets[key].description,
-        images: [`https://www.myfa.fr/${order.baskets[key].img}`],
-        amount: getPrice(order.baskets[key].singlePrice),
-        currency: 'eur',
-        quantity: order.baskets[key].qty,
-      })),
-      success_url,
-      cancel_url: 'https://www.myfa.fr',
-    });
+    let session = { id: 'test' };
+
+    if (!order.isTest) {
+      session = await stripe.checkout.sessions.create({
+        customer_email: user.email,
+        payment_method_types: ['card'],
+        line_items: Object.keys(order.baskets).map(key => ({
+          name: order.baskets[key].label,
+          description: order.baskets[key].description,
+          images: [`https://www.myfa.fr/${order.baskets[key].img}`],
+          amount: getPrice(order.baskets[key].singlePrice),
+          currency: 'eur',
+          quantity: order.baskets[key].qty,
+        })),
+        success_url,
+        cancel_url: 'https://www.myfa.fr',
+      });
+    }
 
     saveBasketsFromOrder(order, userInfo, session.payment_intent);
 

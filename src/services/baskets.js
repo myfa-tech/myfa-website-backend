@@ -72,7 +72,7 @@ const updateBasketById = async (req, res, next) => {
 	}
 };
 
-const saveBasketsFromOrder = async (order, userInfo, stripeIntentId) => {
+const saveBasketsFromOrder = async (order, userInfo, stripeIntentId = 'test') => {
 	try {
     const baskets = [];
 
