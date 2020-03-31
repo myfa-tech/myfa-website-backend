@@ -20,6 +20,7 @@ const Basket = mongoose.Schema({
 	deliveredAt: Date,
 	stripeIntentId: String,
 	message: String,
+	comment: { type: String, default: ' ' },
 });
 
 export default Basket;
