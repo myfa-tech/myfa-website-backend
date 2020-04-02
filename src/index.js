@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 
 import { confirmPayment } from './services/stripe'
-import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, updateBasketById } from './services/baskets'
+import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket } from './services/baskets'
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
@@ -109,6 +109,10 @@ const run = () => {
   app.post('/users/google-login', loginGoogleUser)
 
   app.post('/users/email/confirm', confirmUserEmail)
+
+  app.get('/baskets/details', getHomeBaskets)
+
+  app.get('/baskets/custom-basket/details', getCustomBasket)
 
   app.use(verifyJWT)
 

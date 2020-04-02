@@ -15,6 +15,9 @@ import {
   getSundayOfCurrentWeek,
 } from '../utils/dates';
 
+import basketsInfos from '../assets/baskets';
+import customBasketInfos from '../assets/customBasket';
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const saveBasket = async (req) => {
@@ -201,4 +204,26 @@ const countBaskets = async (req, res, next) => {
   res.send({ count });
 }
 
-export { countBaskets, findBasket, getBaskets, getBasketsByEmail, saveBasket, saveBasketsFromOrder, updateBasketById };
+const getHomeBaskets = (req, res, next) => {
+  const baskets = [...basketsInfos, customBasketInfos];
+
+  res.status(200);
+  res.send({ baskets });
+};
+
+const getCustomBasket = (req, res, next) => {
+  res.status(200);
+  res.send({ basket: customBasketInfos });
+};
+
+export {
+  getHomeBaskets,
+  getCustomBasket,
+  countBaskets,
+  findBasket,
+  getBaskets,
+  getBasketsByEmail,
+  saveBasket,
+  saveBasketsFromOrder,
+  updateBasketById,
+};
