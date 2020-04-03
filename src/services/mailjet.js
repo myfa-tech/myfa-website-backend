@@ -65,6 +65,38 @@ const sendEmailAddressConfirmationEmail = async (user) => {
   }
 };
 
+const sendResetPasswordEmail = async (host, user) => {
+  try {
+    let hash = shajs('sha256').update(`${user.firstname}--${user.email}`).digest('hex');
+    let link = `https://${host}/reset_password/password?email=${user.email}&link=${hash}`;
+
+    await mailjet.post('send', {'version': 'v3.1'})
+      .request({
+        'Messages': [
+          {
+            'From': {
+              'Email': 'infos@myfa.fr',
+              'Name': 'MYFA'
+            },
+            'To': [{ 'Email': user.email }],
+            'TemplateID': 1336327,
+            'TemplateLanguage': true,
+            'Subject': 'Changez de mot de passe',
+            'Variables': {
+              'firstname': user.firstname,
+              'magic_link': link,
+            },
+          },
+        ],
+      });
+
+    console.log('Password reset email sent to :', user.email);
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+  }
+};
+
 const sendOrderConfirmationEmail = async (user, baskets) => {
   try {
     let orderPrice = baskets.reduce((acc, curr) => acc + curr.price, 0);
@@ -147,4 +179,11 @@ const sendEmailToFinance = async () => {
   }
 };
 
-export { addContactToList, sendEmailAddressConfirmationEmail, sendEmailToFinance, sendOrderConfirmationEmail, sendWelcomeEmail };
+export {
+  addContactToList,
+  sendEmailAddressConfirmationEmail,
+  sendEmailToFinance,
+  sendOrderConfirmationEmail,
+  sendWelcomeEmail,
+  sendResetPasswordEmail,
+};

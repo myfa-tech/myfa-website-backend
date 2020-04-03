@@ -4,13 +4,15 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Facebook } from 'fb';
 
-import { sendEmailAddressConfirmationEmail, sendWelcomeEmail } from './mailjet';
+import { sendEmailAddressConfirmationEmail, sendWelcomeEmail, sendResetPasswordEmail } from './mailjet';
 import {
   getFirstDayOfCurrentMonth,
   getLastDayOfCurrentMonth,
   getMondayOfCurrentWeek,
   getSundayOfCurrentWeek,
 } from '../utils/dates';
+import exploitMagicLink from '../utils/exploitMagicLink';
+import verifyMagicLink from '../utils/verifyMagicLink';
 
 import UserSchema from '../schemas/user';
 import BasketSchema from '../schemas/basket';
@@ -412,6 +414,74 @@ const updateUserByEmail = async (req, res, next) => {
 	}
 }
 
+const resetPasswordSendMagicLink = async (req, res, next) => {
+  try {
+    const usersModel = mongoose.model('users', UserSchema);
+
+    if (!req.body.email || !req.body.host) {
+      res.status(400);
+      res.send('missing param');
+      return;
+    }
+
+    const user = await usersModel.findOne({ email: req.body.email });
+
+    if (!user) {
+      res.status(404);
+      res.send('user not found');
+      return;
+    }
+
+    await sendResetPasswordEmail(req.body.host, user);
+
+    res.status(200);
+    res.send({ success: true });
+  } catch(e) {
+    console.log(e);
+    res.status(500);
+    res.send('something went wrong');
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { url, newPassword } = req.body;
+    const usersModel = mongoose.model('users', UserSchema);
+
+    if (!url || !newPassword) {
+      res.status(400);
+      res.send('missing param');
+      return;
+    }
+
+    const { email, magicLink } = exploitMagicLink(url);
+
+    const user = await usersModel.findOne({ email });
+
+    if (!user) {
+      res.status(404);
+      res.send('wrong email');
+      return;
+    }
+
+    if (!verifyMagicLink(user, magicLink)) {
+      res.status(400);
+      res.send('wrong params');
+      return;
+    }
+
+    let password = shajs('sha256').update(newPassword).digest('hex');
+
+    await usersModel.updateOne({ email }, { password });
+
+    res.status(201);
+    res.send({ updated: { email }});
+  } catch(e) {
+    res.status(500);
+    res.send('something went wrong');
+  }
+};
+
 const updateUserPassword = async (req, res, next) => {
   try {
 		const usersModel = mongoose.model('users', UserSchema);
@@ -422,6 +492,7 @@ const updateUserPassword = async (req, res, next) => {
     if (!token) {
       res.status(401);
       res.send('forbidden');
+      return;
     }
 
     password = shajs('sha256').update(password).digest('hex');
@@ -454,6 +525,7 @@ const verifyUserPassword = async (req, res, next) => {
     if (!token) {
       res.status(401);
       res.send('forbidden');
+      return;
     }
 
     let userInfo = jwt.verify(token, JWT_SECRET);
@@ -481,4 +553,19 @@ const verifyUserPassword = async (req, res, next) => {
 	}
 }
 
-export { confirmUserEmail, deleteUser, fetchUser, getUserByEmail, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword };
+export {
+  confirmUserEmail,
+  deleteUser,
+  fetchUser,
+  getUserByEmail,
+  getUsers,
+  loginFBUser,
+  loginGoogleUser,
+  loginUser,
+  saveUser,
+  updateUserByEmail,
+  updateUserPassword,
+  verifyUserPassword,
+  resetPassword,
+  resetPasswordSendMagicLink,
+};

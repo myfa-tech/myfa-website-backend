@@ -9,11 +9,11 @@ import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsB
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
-import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword } from './services/users'
-import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT'
-import { fetchGoals, updateGoalById } from './services/kpiGoals'
+import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword, resetPassword, resetPasswordSendMagicLink } from './services/users'
+import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
+import { fetchGoals, updateGoalById } from './services/kpiGoals';
 import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
-import { createPayment } from './services/stripe'
+import { createPayment } from './services/stripe';
 
 dotenv.config()
 
@@ -109,6 +109,10 @@ const run = () => {
   app.post('/users/google-login', loginGoogleUser)
 
   app.post('/users/email/confirm', confirmUserEmail)
+
+  app.post('/users/password/magic_link', resetPasswordSendMagicLink)
+
+  app.post('/users/password/reset', resetPassword)
 
   app.get('/baskets/details', getHomeBaskets)
 
