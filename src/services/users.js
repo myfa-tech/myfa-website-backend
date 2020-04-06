@@ -432,7 +432,11 @@ const resetPasswordSendMagicLink = async (req, res, next) => {
       return;
     }
 
-    await sendResetPasswordEmail(req.body.host, user);
+    if (NODE_ENV !== 'development') {
+      await sendResetPasswordEmail(req.body.host, user);
+    } else {
+      console.log('NODE_ENV is development - magic link email not sent');
+    }
 
     res.status(200);
     res.send({ success: true });
