@@ -30,14 +30,14 @@ const updateFinanceRequestById = async (req, res, next) => {
       return;
     }
 
-    await financeRequestsModel.updateOne({ _id: id }, req.body);
+    const updated = await financeRequestsModel.findOneAndUpdate({ _id: id }, req.body);
 
     if (req.body.status === 'pinged' && process.env.NODE_ENV !== 'development') {
       sendEmailToFinance();
     }
 
     res.status(201);
-    res.send('request updated');
+    res.send({ ...updated._doc, ...req.body });
   } catch (e) {
     console.log(e);
     res.status(500);

@@ -7,7 +7,7 @@ const FinanceRequest = mongoose.Schema({
   userEmail: String,
   createdAt: Date,
   comment: String,
-  status: String,
+  status: { type: String, default: 'pending' },
 });
 
 export default FinanceRequest;
