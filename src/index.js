@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 
 import { confirmPayment } from './services/stripe'
-import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket } from './services/baskets'
+import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef } from './services/baskets'
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
@@ -114,6 +114,8 @@ const run = () => {
 
   app.post('/users/password/reset', resetPassword)
 
+  app.get('/users/cart', getUserCart);
+
   app.get('/baskets/details', getHomeBaskets)
 
   app.get('/baskets/custom-basket/details', getCustomBasket)
@@ -133,6 +135,8 @@ const run = () => {
   app.put('/users/password', updateUserPassword)
 
   app.get('/users/baskets', getBasketsByEmail)
+
+  app.put('/users/baskets', updateBasketsByOrderRef)
 
   app.put('/users/delete', deleteUser)
 
