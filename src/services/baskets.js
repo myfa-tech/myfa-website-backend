@@ -129,32 +129,6 @@ const updateBasketsByOrderRef = async (req, res, next) => {
   }
 };
 
-const getUserCart = async (req, res, next) => {
-  try {
-    let token = (req.headers.authorization || '').split(' ')[1];
-    let userInfo = jwt.verify(token, JWT_SECRET);
-
-    if (!userInfo.email) {
-      res.status(401);
-      res.send('wrong token');
-    }
-
-    const basketsModel = mongoose.model('baskets', BasketSchema);
-
-    const lastPendingBasket = await basketsModel.findOne({ status: 'pending', userEmail: userInfo.email }, {}, { sort: { 'createdAt' : -1 } });
-
-    let baskets = await basketsModel.find({ orderRef: lastPendingBasket.orderRef });
-
-    baskets = baskets.map(b => new TranslatedBasket(b._doc).getBasket());
-
-    res.status(200);
-    res.send({ baskets });
-	} catch (e) {
-		console.log(e);
-		throw new Error('something went wrong');
-	}
-};
-
 const findBasket = async (req, res, next) => {
   try {
     if (!req.query.ref) {
@@ -282,6 +256,5 @@ export {
   saveBasket,
   saveBasketsFromOrder,
   updateBasketById,
-  getUserCart,
   updateBasketsByOrderRef,
 };

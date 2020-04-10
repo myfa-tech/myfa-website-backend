@@ -14,6 +14,7 @@ import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
 import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
 import { createPayment } from './services/stripe';
+import { getCart, createCart } from './services/cart';
 
 dotenv.config()
 
@@ -114,8 +115,6 @@ const run = () => {
 
   app.post('/users/password/reset', resetPassword)
 
-  app.get('/users/cart', getUserCart);
-
   app.get('/baskets/details', getHomeBaskets)
 
   app.get('/baskets/custom-basket/details', getCustomBasket)
@@ -127,6 +126,10 @@ const run = () => {
   app.get('/baskets', findBasket)
 
   app.get('/users', fetchUser)
+
+  app.get('/cart', getCart);
+
+  app.post('/cart', createCart);
 
   app.put('/users', updateUserByEmail)
 
