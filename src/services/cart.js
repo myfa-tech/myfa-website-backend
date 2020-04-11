@@ -51,7 +51,31 @@ const createCart = async (req, res, next) => {
   }
 };
 
+const updateCart = async (req, res, next) => {
+  try {
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    const editFields = req.body;
+
+    if (!userInfo.email) {
+      res.status(401);
+      res.send('wrong token');
+    }
+
+    const cartModel = mongoose.model('cart', CartSchema);
+    await cartModel.updateOne({ userEmail: userInfo.email }, editFields);
+
+    res.status(201);
+    res.send('updated');
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
+};
+
 export {
   createCart,
   getCart,
+  updateCart,
 };

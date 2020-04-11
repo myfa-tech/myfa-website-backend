@@ -14,14 +14,14 @@ import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
 import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
 import { createPayment } from './services/stripe';
-import { getCart, createCart } from './services/cart';
+import { getCart, createCart, updateCart } from './services/cart';
 
-dotenv.config()
+dotenv.config();
 
-const PORT = process.env.PORT || 8080
-const MONGODB_URI = process.env.MONGODB_URI
+const PORT = process.env.PORT || 8080;
+const MONGODB_URI = process.env.MONGODB_URI;
 
-const app = express()
+const app = express();
 
 const whitelist = [
   'https://www.myfa.fr',
@@ -130,6 +130,8 @@ const run = () => {
   app.get('/cart', getCart);
 
   app.post('/cart', createCart);
+
+  app.put('/cart', updateCart);
 
   app.put('/users', updateUserByEmail)
 
