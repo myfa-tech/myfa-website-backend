@@ -14,7 +14,7 @@ import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
 import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
 import { createPayment } from './services/stripe';
-import { getCart, createCart, updateCart } from './services/cart';
+import { deleteCart, getCart, createCart, updateCart } from './services/cart';
 
 dotenv.config();
 
@@ -133,7 +133,9 @@ const run = () => {
 
   app.put('/cart', updateCart);
 
-  app.put('/users', updateUserByEmail)
+  app.delete('/cart', deleteCart);
+
+  app.put('/users', updateUserByEmail);
 
   app.post('/users/password/verify', verifyUserPassword)
 

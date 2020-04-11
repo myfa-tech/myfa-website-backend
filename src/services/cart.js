@@ -74,8 +74,30 @@ const updateCart = async (req, res, next) => {
   }
 };
 
+const deleteCart = async (req, res, next) => {
+  try {
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    if (!userInfo.email) {
+      res.status(401);
+      res.send('wrong token');
+    }
+
+    const cartModel = mongoose.model('cart', CartSchema);
+    await cartModel.deleteOne({ userEmail: userInfo.email });
+
+    res.status(204);
+    res.send('deleted');
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
+};
+
 export {
   createCart,
+  deleteCart,
   getCart,
   updateCart,
 };
