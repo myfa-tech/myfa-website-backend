@@ -41,6 +41,7 @@ const createCart = async (req, res, next) => {
     }
 
     const cartModel = mongoose.model('cart', CartSchema);
+    await cartModel.deleteMany({ userEmail: userInfo.email });
     await cartModel.create(cart);
 
     res.status(201);
