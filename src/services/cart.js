@@ -26,6 +26,17 @@ const getCart = async (req, res, next) => {
 	}
 };
 
+const getAllCarts = async () => {
+  try {
+    const cartModel = mongoose.model('cart', CartSchema);
+    const carts = await cartModel.find();
+
+    return carts;
+	} catch (e) {
+    console.log(e);
+	}
+};
+
 const createCart = async (req, res, next) => {
   try {
     let token = (req.headers.authorization || '').split(' ')[1];
@@ -34,6 +45,7 @@ const createCart = async (req, res, next) => {
     const cart = req.body;
 
     cart.userEmail = userInfo.email;
+    cart.createdAt = new Date();
 
     if (!userInfo.email) {
       res.status(401);
@@ -96,9 +108,20 @@ const deleteCart = async (req, res, next) => {
   }
 };
 
+const deleteCarts = async (emailsToDelete) => {
+  try {
+    const cartModel = mongoose.model('cart', CartSchema);
+    await cartModel.deleteMany({ userEmail: { $in: emailsToDelete }});
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export {
   createCart,
   deleteCart,
+  deleteCarts,
+  getAllCarts,
   getCart,
   updateCart,
 };

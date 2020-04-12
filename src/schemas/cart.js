@@ -14,13 +14,8 @@ const Cart = mongoose.Schema({
 	status: String,
 	recipient: Recipient,
 	price: Number,
-	avatar: String,
-	zone: String,
 	baskets: [Basket],
 	createdAt: Date,
-	deliveredAt: Date,
-	stripeIntentId: String,
-	message: String,
 });
 
 export default Cart;

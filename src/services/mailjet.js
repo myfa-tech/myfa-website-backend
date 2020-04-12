@@ -131,6 +131,34 @@ const sendOrderConfirmationEmail = async (user, baskets) => {
   }
 };
 
+const sendCartReminders = async (emails) => {
+  try {
+    await mailjet.post("send", {'version': 'v3.1'})
+      .request({
+        "Messages": [
+          {
+            "From": {
+              "Email": "infos@myfa.fr",
+              "Name": "MYFA"
+            },
+            "To": emails,
+            "TemplateID": 1341411,
+            "TemplateLanguage": true,
+            "Subject": "Votre commande vous attend sur myfa.fr",
+            "Variables": {
+              "order_link": 'https://www.myfa.fr/cart/',
+            },
+          },
+        ],
+      });
+
+    console.log('Reminder emails sent to :', emails);
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+  }
+};
+
 const addContactToList = async (req, res, listName) => {
   try {
     if (!req.body.email) {
@@ -185,5 +213,6 @@ export {
   sendEmailToFinance,
   sendOrderConfirmationEmail,
   sendWelcomeEmail,
+  sendCartReminders,
   sendResetPasswordEmail,
 };
