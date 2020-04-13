@@ -162,7 +162,8 @@ db.once('open', run);
 
 // CRON Tasks
 
-cron.schedule('0 0 8 * * *', async () => {
+// seconds minutes heures jours ...
+cron.schedule('0 0 11 * * *', async () => {
   console.log('CRON task triggered at: ', new Date());
   await curateCartsAndSendReminders();
 }, {

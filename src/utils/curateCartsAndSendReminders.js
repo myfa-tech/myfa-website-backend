@@ -1,5 +1,6 @@
 import { getAllCarts, deleteCarts } from "../services/cart";
 import { sendCartReminders } from "../services/mailjet";
+import uniqBy from "./uniqBy";
 
 const curateCartsAndSendReminders = async () => {
   const carts = await getAllCarts();
@@ -16,14 +17,18 @@ const curateCartsAndSendReminders = async () => {
 
   await deleteCarts(emailsOfCartsToRemove);
 
-  const emailsToBeReminded = carts
-    .filter((c, index, self) => (!emailsOfCartsToRemove.includes(c.userEmail) && self.indexOf(c.userEmail) === index))
-    .map(c => ({ 'Email': c.userEmail}));
+  let emailsToBeReminded = carts
+    .filter(c => !emailsOfCartsToRemove.includes(c.userEmail))
+    .map(c => ({ 'Email': c.userEmail }));
+
+  emailsToBeReminded = uniqBy(emailsToBeReminded, 'Email');
 
   console.log('emails to be reminded: ');
   console.log(emailsToBeReminded);
 
-  await sendCartReminders(emailsToBeReminded);
+  if (!!emailsToBeReminded.length) {
+    await sendCartReminders(emailsToBeReminded);
+  }
 };
 
 export default curateCartsAndSendReminders;
