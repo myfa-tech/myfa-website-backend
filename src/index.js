@@ -3,9 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import cron from 'node-cron';
 
 import { confirmPayment } from './services/stripe'
-import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket } from './services/baskets'
+import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef } from './services/baskets'
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
@@ -14,37 +15,21 @@ import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
 import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
 import { createPayment } from './services/stripe';
+import { deleteCart, getCart, createCart, updateCart } from './services/cart';
+import curateCartsAndSendReminders from './utils/curateCartsAndSendReminders';
 
-dotenv.config()
+dotenv.config();
 
-const PORT = process.env.PORT || 8080
-const MONGODB_URI = process.env.MONGODB_URI
+const PORT = process.env.PORT || 8080;
+const MONGODB_URI = process.env.MONGODB_URI;
 
-const app = express()
+const app = express();
 
 const whitelist = [
   'https://www.myfa.fr',
   'https://myfa.fr',
   'chrome-extension://jddpdjamaalalhlegkelkmckfhhiiijl',
   'chrome-extension://mbgaenpdobndgmhfbcomnghmlnfnhdcn',
-  'https://5e54e542eb535600079d3f25--myfa.netlify.com',
-  'https://5e5525a442032c000886409f--myfa.netlify.com',
-  'https://5e554fb7418db30008037d17--myfa.netlify.com',
-  'https://5e58bdb5b9040000085143ae--myfa.netlify.com',
-  'https://5e58c3241e08360007514592--myfa.netlify.com',
-  'https://5e567b5dd9fd4d000819a910--myfa.netlify.com',
-  'https://5e57f98a109d79000748a8ae--myfa.netlify.com',
-  'https://5e5d26cc18729c0008dd8e59--myfa.netlify.com',
-  'https://5e5e6639023a180007e2cee0--myfa.netlify.com',
-  'https://5e5fc726350e620008f9acfa--myfa.netlify.com',
-  'https://5e6bcfdfecde450008a5363c--myfa.netlify.com',
-  'https://5e793e392bce160008e8a0e4--myfa.netlify.com',
-  'https://5e7b703779498a0008696beb--myfa.netlify.com',
-  'https://5e7b76a4c981360008cfcf38--myfa.netlify.com',
-  'https://5e7e21a5699a11000815791a--myfa.netlify.com',
-  'https://5e7e315cb0a7b9000af0a8c4--myfa.netlify.com',
-  'https://5e81e9e879dd5d0007d9de82--myfa.netlify.com',
-  'https://5e835dafa6b7240007ebd136--myfa.netlify.com',
   'https://myfa-staging.netlify.com',
 ];
 
@@ -85,82 +70,103 @@ app.use((req, res, next) => {
   }
 });
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
-const db = mongoose.connection
+const db = mongoose.connection;
 
-db.on('error', console.error.bind(console, 'connection error:')) // Add Sentry
+db.on('error', console.error.bind(console, 'connection error:')); // Add Sentry
 
 const run = () => {
-  app.use(express.static('public'))
+  app.use(express.static('public'));
 
-  app.post('/stripe/confirm_payment', bodyParser.raw({ type: 'application/json' }), confirmPayment)
+  app.post('/stripe/confirm_payment', bodyParser.raw({ type: 'application/json' }), confirmPayment);
 
-  app.post('/newsletter/member', (req, res, next) => addContactToList(req, res, 'newsletter'))
+  app.post('/newsletter/member', (req, res, next) => addContactToList(req, res, 'newsletter'));
 
-  app.post('/dashboard/login', login)
+  app.post('/dashboard/login', login);
 
-  app.post('/users', saveUser)
+  app.post('/users', saveUser);
 
-  app.post('/users/login', loginUser)
+  app.post('/users/login', loginUser);
 
-  app.post('/users/facebook-login', loginFBUser)
+  app.post('/users/facebook-login', loginFBUser);
 
-  app.post('/users/google-login', loginGoogleUser)
+  app.post('/users/google-login', loginGoogleUser);
 
-  app.post('/users/email/confirm', confirmUserEmail)
+  app.post('/users/email/confirm', confirmUserEmail);
 
-  app.post('/users/password/magic_link', resetPasswordSendMagicLink)
+  app.post('/users/password/magic_link', resetPasswordSendMagicLink);
 
-  app.post('/users/password/reset', resetPassword)
+  app.post('/users/password/reset', resetPassword);
 
-  app.get('/baskets/details', getHomeBaskets)
+  app.get('/baskets/details', getHomeBaskets);
 
-  app.get('/baskets/custom-basket/details', getCustomBasket)
+  app.get('/baskets/custom-basket/details', getCustomBasket);
 
-  app.use(verifyJWT)
+  app.use(verifyJWT);
 
   app.post('/stripe/pay', createPayment);
 
-  app.get('/baskets', findBasket)
+  app.get('/baskets', findBasket);
 
-  app.get('/users', fetchUser)
+  app.get('/users', fetchUser);
 
-  app.put('/users', updateUserByEmail)
+  app.get('/cart', getCart);
 
-  app.post('/users/password/verify', verifyUserPassword)
+  app.post('/cart', createCart);
 
-  app.put('/users/password', updateUserPassword)
+  app.put('/cart', updateCart);
 
-  app.get('/users/baskets', getBasketsByEmail)
+  app.delete('/cart', deleteCart);
 
-  app.put('/users/delete', deleteUser)
+  app.put('/users', updateUserByEmail);
 
-  app.use(verifyAdminJWT)
+  app.post('/users/password/verify', verifyUserPassword);
 
-  app.get('/baskets/count', countBaskets)
+  app.put('/users/password', updateUserPassword);
 
-  app.get('/dashboard/kpis', fetchKPIs)
+  app.get('/users/baskets', getBasketsByEmail);
 
-  app.get('/dashboard/goals', fetchGoals)
+  app.put('/users/baskets', updateBasketsByOrderRef);
 
-  app.put('/dashboard/goals', updateGoalById)
+  app.put('/users/delete', deleteUser);
 
-  app.get('/dashboard/users', getUsers)
+  app.use(verifyAdminJWT);
 
-  app.get('/dashboard/baskets', getBaskets)
+  app.get('/baskets/count', countBaskets);
 
-  app.put('/dashboard/baskets', updateBasketById)
+  app.get('/dashboard/kpis', fetchKPIs);
 
-  app.get('/dashboard/finance/requests', getFinanceRequests)
+  app.get('/dashboard/goals', fetchGoals);
 
-  app.post('/dashboard/finance/requests', saveRequest)
+  app.put('/dashboard/goals', updateGoalById);
 
-  app.put('/dashboard/finance/requests', updateFinanceRequestById)
+  app.get('/dashboard/users', getUsers);
 
-  app.delete('/dashboard/finance/requests', removeFinanceRequest)
+  app.get('/dashboard/baskets', getBaskets);
 
-  app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`))
-}
+  app.put('/dashboard/baskets', updateBasketById);
 
-db.once('open', run)
+  app.get('/dashboard/finance/requests', getFinanceRequests);
+
+  app.post('/dashboard/finance/requests', saveRequest);
+
+  app.put('/dashboard/finance/requests', updateFinanceRequestById);
+
+  app.delete('/dashboard/finance/requests', removeFinanceRequest);
+
+  app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`));
+};
+
+db.once('open', run);
+
+// CRON Tasks
+
+// seconds minutes heures jours ...
+cron.schedule('0 0 14 */2 * *', async () => {
+  console.log('CRON task triggered at: ', new Date());
+  await curateCartsAndSendReminders();
+}, {
+  scheduled: true,
+  timezone: "Europe/Paris"
+});

@@ -14,6 +14,7 @@ import {
   getMondayOfCurrentWeek,
   getSundayOfCurrentWeek,
 } from '../utils/dates';
+import TranslatedBasket from '../utils/translatedBasketFactory';
 
 import basketsInfos from '../assets/baskets';
 import customBasketInfos from '../assets/customBasket';
@@ -97,7 +98,36 @@ const saveBasketsFromOrder = async (order, userInfo, stripeIntentId = 'test') =>
 		console.log(e)
 		throw new Error('something went wrong')
 	}
-}
+};
+
+const updateBasketsByOrderRef = async (req, res, next) => {
+  try {
+    const basketsModel = mongoose.model('baskets', BasketSchema);
+
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+    let { orderRef, editFields } = req.body;
+
+    if (!userInfo.email) {
+      res.status(401);
+      res.send('wrong token');
+    }
+
+    if (!orderRef) {
+      res.status(400);
+      res.send('missing params');
+    }
+
+    await basketsModel.updateMany({ orderRef, userEmail: userInfo.email }, editFields);
+
+    res.status(201);
+    res.send('updated');
+  } catch (e) {
+    console.log(e);
+    res.status(500);
+    res.send('something wrong happened');
+  }
+};
 
 const findBasket = async (req, res, next) => {
   try {
@@ -226,4 +256,5 @@ export {
   saveBasket,
   saveBasketsFromOrder,
   updateBasketById,
+  updateBasketsByOrderRef,
 };

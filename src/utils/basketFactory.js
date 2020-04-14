@@ -1,31 +1,17 @@
 
+import baskets from '../assets/baskets';
+import customBasket from '../assets/customBasket';
+
 class BasketFactory {
-  baskets = {
-    fruits: {
-      name: 'Fruits',
-      type: 'fruits',
-      price: 5.99,
-    },
-    legumes: {
-      name: 'Légumes',
-      type: 'legumes',
-      price: 12.99,
-    },
-    sauces: {
-      name: 'Sauces',
-      type: 'sauces',
-      price: 23.99,
-    },
-    myfa: {
-      name: 'MYFA',
-      type: 'myfa',
-      price: 25.99,
-    }
-  };
+  baskets = [...baskets, customBasket];
 
   constructor (basketType, userInfo, order, stripeIntentId) {
+    this.structure = baskets.find(b => b.type === basketType);
+
     this.basket = {
-      ...this.baskets[basketType],
+      name: this.structure.name,
+      type: this.structure.type,
+      price: this.structure.price,
       createdAt: Date.now(),
       recipient: order.recipient,
       status: 'pending',
