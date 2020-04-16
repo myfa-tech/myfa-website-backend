@@ -79,7 +79,7 @@ const getUsers = async (req, res, next) => {
       return;
     }
 
-    const query = usersModel.find(filter);
+    const query = usersModel.find(filter).sort({ createdAt: -1 });
     query.collection(usersModel.collection);
     query.select({ password: 0 });
 
