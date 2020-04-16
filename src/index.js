@@ -31,6 +31,7 @@ const whitelist = [
   'chrome-extension://jddpdjamaalalhlegkelkmckfhhiiijl',
   'chrome-extension://mbgaenpdobndgmhfbcomnghmlnfnhdcn',
   'https://myfa-staging.netlify.com',
+  'https://myfa-staging.netlify.app',
 ];
 
 if (process.env.NODE_ENV === 'development') {

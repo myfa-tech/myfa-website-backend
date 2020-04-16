@@ -188,7 +188,7 @@ const getBaskets = async (req, res, next) => {
       return;
     }
 
-    const baskets = await basketsModel.find(filter, basketsModel);
+    const baskets = await basketsModel.find(filter, basketsModel).sort({ createdAt: -1 });
 
     res.status(200);
     res.json({ baskets });
