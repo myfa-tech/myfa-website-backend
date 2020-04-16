@@ -133,24 +133,28 @@ const sendOrderConfirmationEmail = async (user, baskets) => {
 
 const sendCartReminders = async (emails) => {
   try {
-    await mailjet.post("send", {'version': 'v3.1'})
-      .request({
-        "Messages": [
-          {
-            "From": {
-              "Email": "infos@myfa.fr",
-              "Name": "MYFA"
+    if (process.env.NODE_ENV === 'development') {
+      console.log('ENV is development - reminder mail not sent');
+    } else {
+      await mailjet.post("send", {'version': 'v3.1'})
+        .request({
+          "Messages": [
+            {
+              "From": {
+                "Email": "infos@myfa.fr",
+                "Name": "MYFA"
+              },
+              "To": emails,
+              "TemplateID": 1341411,
+              "TemplateLanguage": true,
+              "Subject": "Votre commande vous attend sur myfa.fr",
+              "Variables": {
+                "order_link": 'https://www.myfa.fr/cart/',
+              },
             },
-            "To": emails,
-            "TemplateID": 1341411,
-            "TemplateLanguage": true,
-            "Subject": "Votre commande vous attend sur myfa.fr",
-            "Variables": {
-              "order_link": 'https://www.myfa.fr/cart/',
-            },
-          },
-        ],
-      });
+          ],
+        });
+      }
 
     console.log('Reminder emails sent to :', emails);
   } catch (e) {
