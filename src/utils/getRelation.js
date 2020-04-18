@@ -13,8 +13,7 @@ const getRelation = (type) => {
     PE: 'Père',
     SO: 'Soeur',
     TA: 'Tante',
-    AU: 'Autre',
-  }
+  };
 
   return relations[type];
 };
