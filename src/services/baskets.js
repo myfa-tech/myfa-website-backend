@@ -14,10 +14,10 @@ import {
   getMondayOfCurrentWeek,
   getSundayOfCurrentWeek,
 } from '../utils/dates';
-import TranslatedBasket from '../utils/translatedBasketFactory';
 
 import basketsInfos from '../assets/baskets';
 import customBasketInfos from '../assets/customBasket';
+import { log } from './operationsLogs';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -54,6 +54,8 @@ const updateBasketById = async (req, res, next) => {
     }
 
     const basket = await basketsModel.findOneAndUpdate({ _id: id }, editFields);
+
+    log(userInfo.email, 'change', 'baskets', JSON.stringify(Object.keys(editFields)), JSON.stringify(Object.values(editFields)));
 
     if (editFields.status === 'delivered') {
       const user = await getUserByEmail(basket.userEmail);
