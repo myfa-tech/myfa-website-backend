@@ -7,7 +7,7 @@ const ramadanBaskets = [
     homeDesc: 'Jus multifruits, sucre en morceaux, dattes...',
     homeDescTranslate: 'home_page.baskets.ramadan_full_basket_home_description',
     imgAlt: 'panier ramadan complet',
-    price: 19.99, // change this
+    price: 19.99,
     priceCFA: 13500,
     description: 'Lorem ipsum',
     descriptionTranslate: 'home_page.baskets.ramadan_full_basket_description',
@@ -71,14 +71,13 @@ const ramadanBaskets = [
     homeDesc: 'Mangues, figues séchées, dattes...',
     homeDescTranslate: 'home_page.baskets.ramadan_fruits_basket_home_description',
     imgAlt: 'panier ramadan fruité',
-    price: 14.99, // change this
-    priceCFA: 8500, // change this
+    price: 12.99,
+    priceCFA: 8500,
     description: 'Lorem ipsum',
     descriptionTranslate: 'home_page.baskets.ramadan_fruits_basket_description',
     items: [
       'Mangues (1kg)',
       'Dattes séchées (500g)',
-      'Dattes non séchées (1kg)',
       'Bananes (1kg)',
       'Oranges (1kg)',
       'Raisins (300g)',
@@ -86,7 +85,6 @@ const ramadanBaskets = [
     itemsTranslate: [
       '1kg_mangoes',
       '500g_dried_dates',
-      '1kg_fresh_dates',
       '1kg_bananas',
       '1kg_oranges',
       '300g_grapes',
