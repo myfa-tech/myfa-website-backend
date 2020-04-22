@@ -9,7 +9,7 @@ const ramadanBaskets = [
     imgAlt: 'panier ramadan complet',
     price: 19.99,
     priceCFA: 13500,
-    description: 'Lorem ipsum',
+    description: 'Durant le mois du ramadan, faites profiter vos proches de ce panier gourmand. Idéal pour couper le jeûne.',
     descriptionTranslate: 'home_page.baskets.ramadan_full_basket_description',
     items: [
       'Boite de dattes de 500g',
@@ -50,7 +50,7 @@ const ramadanBaskets = [
     imgAlt: 'panier ramadan sucré',
     price: 14.99,
     priceCFA: 9800,
-    description: 'Lorem ipsum',
+    description: 'Durant le mois du ramadan, faites profiter vos proches de ce panier gourmand. Ce panier 100% sucré est idéal pour rester en forme.',
     descriptionTranslate: 'home_page.baskets.ramadan_sugar_basket_description',
     items: [
       '4 packs de sucre',
@@ -73,7 +73,7 @@ const ramadanBaskets = [
     imgAlt: 'panier ramadan fruité',
     price: 12.99,
     priceCFA: 8500,
-    description: 'Lorem ipsum',
+    description: 'Durant le mois du ramadan, faites profiter vos proches de ce panier gourmand. Ce panier se compose des fruits de saisons qu’il vous faut !',
     descriptionTranslate: 'home_page.baskets.ramadan_fruits_basket_description',
     items: [
       'Mangues (1kg)',
