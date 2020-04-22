@@ -1,14 +1,14 @@
 const ramadanBaskets = [
   {
     name: 'Panier Complet',
-    type: 'ramadanFull',
+    type: 'ramadan_full',
     label: 'Panier Complet',
     labelTranslate: 'home_page.baskets.ramadan_full_basket_title',
     homeDesc: 'Jus multifruits, sucre en morceaux, dattes...',
     homeDescTranslate: 'home_page.baskets.ramadan_full_basket_home_description',
     imgAlt: 'panier ramadan complet',
-    price: 12.99, // change this
-    priceCFA: 15000,
+    price: 19.99, // change this
+    priceCFA: 13500,
     description: 'Lorem ipsum',
     descriptionTranslate: 'home_page.baskets.ramadan_full_basket_description',
     items: [
@@ -42,7 +42,7 @@ const ramadanBaskets = [
   },
   {
     name: 'Panier Sucré',
-    type: 'ramadanSugar',
+    type: 'ramadan_sugar',
     label: 'Panier Sucré',
     labelTranslate: 'home_page.baskets.ramadan_sugar_basket_title',
     homeDesc: '4 boîtes de sucre en morceaux, lait concentré, mil',
@@ -65,7 +65,7 @@ const ramadanBaskets = [
   },
   {
     name: 'Panier Fruité',
-    type: 'ramadanFruits',
+    type: 'ramadan_fruits',
     label: 'Panier Fruité',
     labelTranslate: 'home_page.baskets.ramadan_fruits_basket_title',
     homeDesc: 'Mangues, figues séchées, dattes...',
