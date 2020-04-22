@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import cron from 'node-cron';
 
 import { confirmPayment } from './services/stripe'
-import { countBaskets, findBasket, saveBasketsFromOrder, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef } from './services/baskets'
+import { countBaskets, findBasket, saveBasketsFromOrder, getRamadanBaskets, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef } from './services/baskets'
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
@@ -99,6 +99,8 @@ const run = () => {
   app.post('/users/password/magic_link', resetPasswordSendMagicLink);
 
   app.post('/users/password/reset', resetPassword);
+
+  app.get('/ramadanbaskets/details', getRamadanBaskets);
 
   app.get('/baskets/details', getHomeBaskets);
 
