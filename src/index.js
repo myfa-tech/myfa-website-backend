@@ -15,6 +15,7 @@ import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
 import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
 import { createPayment } from './services/stripe';
+import { createMobileMoneyPayment } from './services/mobileMoney';
 import { deleteCart, getCart, createCart, updateCart } from './services/cart';
 import curateCartsAndSendReminders from './utils/curateCartsAndSendReminders';
 
@@ -109,6 +110,8 @@ const run = () => {
   app.use(verifyJWT);
 
   app.post('/stripe/pay', createPayment);
+
+  app.post('/mobile_money/orders', createMobileMoneyPayment);
 
   app.get('/baskets', findBasket);
 
