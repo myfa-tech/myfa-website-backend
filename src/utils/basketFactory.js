@@ -14,6 +14,7 @@ class BasketFactory {
       type: this.structure.type,
       price: this.structure.price,
       priceCFA: this.structure.priceCFA,
+      label: this.structure.label,
       createdAt: Date.now(),
       recipient: order.recipient,
       status: 'pending',
