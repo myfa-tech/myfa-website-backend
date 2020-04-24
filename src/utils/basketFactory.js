@@ -12,6 +12,7 @@ class BasketFactory {
     this.basket = {
       name: this.structure.name,
       type: this.structure.type,
+      label: this.structure.label,
       price: this.structure.price,
       priceCFA: this.structure.priceCFA,
       label: this.structure.label,

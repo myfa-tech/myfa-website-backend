@@ -132,28 +132,28 @@ const updateBasketsByOrderRef = async (req, res, next) => {
   }
 };
 
-const findBasket = async (req, res, next) => {
+const findBaskets = async (req, res, next) => {
   try {
     if (!req.query.ref) {
-      res.status(400)
-      res.send('missing param')
+      res.status(400);
+      res.send('missing param');
     }
 
     let token = (req.headers.authorization || '').split(' ')[1];
     let userInfo = jwt.verify(token, JWT_SECRET);
 
-    const orderRef = req.query.ref
-		const basketsModel = mongoose.model('baskets', BasketSchema)
+    const orderRef = req.query.ref;
+		const basketsModel = mongoose.model('baskets', BasketSchema);
 
-    const basket = await basketsModel.findOne({ orderRef }, basketsModel)
+    const baskets = await basketsModel.find({ orderRef }, basketsModel);
 
-    if (basket && !(basket.userEmail === userInfo.email || userInfo.admin)) {
+    if (baskets && !(baskets[0].userEmail === userInfo.email || userInfo.admin)) {
       console.log('forbidden token');
       res.status(401);
       res.send('wrong token');
-    } else if (basket) {
+    } else if (baskets) {
       res.status(200)
-      res.json({ basket })
+      res.json({ baskets })
     } else {
       res.status(404)
       res.send('not found')
@@ -261,7 +261,7 @@ export {
   getRamadanBaskets,
   getCustomBasket,
   countBaskets,
-  findBasket,
+  findBaskets,
   getBaskets,
   getBasketsByEmail,
   saveBasket,

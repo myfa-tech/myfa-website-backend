@@ -13,6 +13,8 @@ const Basket = mongoose.Schema({
 	status: String,
 	recipient: Recipient,
 	price: Number,
+	priceCFA: Number,
+	label: String,
 	avatar: String,
 	label: String,
 	zone: String,

@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import cron from 'node-cron';
 
 import { confirmPayment } from './services/stripe'
-import { countBaskets, findBasket, saveBasketsFromOrder, getRamadanBaskets, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef } from './services/baskets'
+import { countBaskets, findBaskets, saveBasketsFromOrder, getRamadanBaskets, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef } from './services/baskets'
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
@@ -113,7 +113,7 @@ const run = () => {
 
   app.post('/mobile_money/orders', createMobileMoneyPayment);
 
-  app.get('/baskets', findBasket);
+  app.get('/baskets', findBaskets);
 
   app.get('/users', fetchUser);
 
