@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import cron from 'node-cron';
 
 import { confirmPayment } from './services/stripe'
-import { countBaskets, findBasket, saveBasketsFromOrder, getRamadanBaskets, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef } from './services/baskets'
+import { countBaskets, findBaskets, saveBasketsFromOrder, getRamadanBaskets, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef } from './services/baskets'
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
@@ -15,6 +15,7 @@ import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
 import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
 import { createPayment } from './services/stripe';
+import { createMobileMoneyPayment } from './services/mobileMoney';
 import { deleteCart, getCart, createCart, updateCart } from './services/cart';
 import curateCartsAndSendReminders from './utils/curateCartsAndSendReminders';
 
@@ -110,7 +111,9 @@ const run = () => {
 
   app.post('/stripe/pay', createPayment);
 
-  app.get('/baskets', findBasket);
+  app.post('/mobile_money/orders', createMobileMoneyPayment);
+
+  app.get('/baskets', findBaskets);
 
   app.get('/users', fetchUser);
 

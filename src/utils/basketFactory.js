@@ -12,9 +12,9 @@ class BasketFactory {
     this.basket = {
       name: this.structure.name,
       type: this.structure.type,
+      label: this.structure.label,
       price: this.structure.price,
       priceCFA: this.structure.priceCFA,
-      label: this.structure.label,
       createdAt: Date.now(),
       recipient: order.recipient,
       status: 'pending',
