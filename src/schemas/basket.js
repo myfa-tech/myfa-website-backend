@@ -16,7 +16,6 @@ const Basket = mongoose.Schema({
 	priceCFA: Number,
 	label: String,
 	avatar: String,
-	label: String,
 	zone: String,
 	items: Object,
 	createdAt: Date,
