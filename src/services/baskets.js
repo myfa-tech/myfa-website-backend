@@ -51,7 +51,7 @@ const updateBasketById = async (req, res, next) => {
 		const basketsModel = mongoose.model('baskets', BasketSchema);
 
     if (editFields.status === 'delivered') {
-      editFields.deliveredAt = new Date();
+      editFields.deliveredAt = new Date().toLocaleDateString('fr-FR');
     }
 
     const basket = await basketsModel.findOneAndUpdate({ _id: id }, editFields);

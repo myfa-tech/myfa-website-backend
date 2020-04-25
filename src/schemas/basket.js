@@ -19,7 +19,7 @@ const Basket = mongoose.Schema({
 	zone: String,
 	items: Object,
 	createdAt: Date,
-	deliveredAt: Date,
+	deliveredAt: { type: String, default: ' ' },
 	stripeIntentId: String,
 	message: { type: String, default: ' ' },
 	comment: { type: String, default: ' ' },
