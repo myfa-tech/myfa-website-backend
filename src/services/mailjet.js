@@ -110,7 +110,7 @@ const sendOrderConfirmationEmail = async (user, baskets) => {
               "Email": "infos@myfa.fr",
               "Name": "MYFA"
             },
-            "To": [{ "Email": baskets[0].userEmail }],
+            "To": [{ "Email": baskets[0].userEmail || baskets[0].user.email }],
             "TemplateID": 1224159,
             "TemplateLanguage": true,
             "Subject": "Merci pour votre commande !",
@@ -124,7 +124,7 @@ const sendOrderConfirmationEmail = async (user, baskets) => {
         ]
       });
 
-    console.log('Confirmation email sent to :', baskets[0].userEmail);
+    console.log('Confirmation email sent to :', baskets[0].userEmail || baskets[0].user.email);
   } catch (e) {
     // @TODO: deal with error
     console.log(e);

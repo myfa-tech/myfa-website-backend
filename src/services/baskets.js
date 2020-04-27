@@ -1,6 +1,7 @@
 
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid';
 
 import { getUserByEmail } from './users';
 import { sendMessage } from './nexmo';
@@ -59,7 +60,7 @@ const updateBasketById = async (req, res, next) => {
     log(userInfo.email, 'change', 'baskets', JSON.stringify(Object.keys(editFields)), JSON.stringify(Object.values(editFields)));
 
     if (editFields.status === 'delivered') {
-      const user = await getUserByEmail(basket.userEmail);
+      const user = basket.user || await getUserByEmail(basket.userEmail);
 
       if (!!user.phone) {
         await sendMessage(basket.recipient, user, 'delivered-basket');
@@ -107,6 +108,54 @@ const saveBasketsFromOrder = async (order, userInfo, stripeIntentId = '') => {
 	}
 };
 
+const createOrderManually = async (req, res, next) => {
+  try {
+    const info = req.body;
+
+    const baskets = [];
+    const randomId = uuid();
+    const ref = randomId.substr(0, 8);
+    const order = {
+      recipient: {
+        firstname: info.recipient_firstname,
+        lastname: info.recipient_lastname,
+        phone: info.recipient_phone,
+        country: info.recipient_country,
+        zone: info.zone,
+      },
+      user: {
+        firstname: info.client_firstname,
+        lastname: info.client_lastname,
+        phone: info.client_phone,
+        country: info.client_country,
+      },
+      ref,
+      message: info.message,
+    };
+
+    for (let i=1; i<4; i++) {
+      if (!!info[`basket_type_${i}`]) {
+        baskets.push(new Basket(info[`basket_type_${i}`], order.user, order).getBasket());
+      }
+    }
+
+    const basketsModel = mongoose.model('baskets', BasketSchema);
+    let promises = [];
+
+    baskets.forEach(basket => {
+      promises.push(basketsModel.create(basket));
+    });
+
+    await Promise.all(promises);
+
+    res.status(201);
+    res.send('created');
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
+};
+
 const updateBasketsByOrderRef = async (req, res, next) => {
   try {
     const basketsModel = mongoose.model('baskets', BasketSchema);
@@ -125,7 +174,7 @@ const updateBasketsByOrderRef = async (req, res, next) => {
       res.send('missing params');
     }
 
-    await basketsModel.updateMany({ orderRef, userEmail: userInfo.email }, editFields);
+    await basketsModel.updateMany({ orderRef, $or: [{ userEmail: userInfo.email }, { 'user.email': userInfo.email }]}, editFields);
 
     res.status(201);
     res.send('updated');
@@ -151,7 +200,10 @@ const findBaskets = async (req, res, next) => {
 
     const baskets = await basketsModel.find({ orderRef }, basketsModel);
 
-    if (baskets && !(baskets[0].userEmail === userInfo.email || userInfo.admin)) {
+    if (baskets && !(baskets[0].userEmail === userInfo.email
+      || (!!baskets[0].user && baskets[0].user.email === userInfo.email)
+      || userInfo.admin)
+    ) {
       console.log('forbidden token');
       res.status(401);
       res.send('wrong token');
@@ -213,7 +265,7 @@ const getBasketsByEmail = async (req, res, next) => {
     let userInfo = jwt.verify(token, JWT_SECRET);
 
     if (userInfo.email === email || userInfo.admin) {
-      const baskets = await basketsModel.find({ userEmail: email }, basketsModel);
+      const baskets = await basketsModel.find({ $or: [{ userEmail: email }, { 'user.email': email }] }, basketsModel);
 
       if (!!baskets) {
         res.status(200);
@@ -253,7 +305,7 @@ const getRamadanBaskets = (req, res, next) => {
 
   res.status(200);
   res.send({ baskets });
-}
+};
 
 const getCustomBasket = (req, res, next) => {
   res.status(200);
@@ -262,6 +314,7 @@ const getCustomBasket = (req, res, next) => {
 
 export {
   getHomeBaskets,
+  createOrderManually,
   getRamadanBaskets,
   getCustomBasket,
   countBaskets,

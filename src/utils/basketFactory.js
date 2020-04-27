@@ -6,7 +6,7 @@ import ramadanBaskets from '../assets/ramadanBaskets';
 class BasketFactory {
   baskets = [...regularBaskets, ...ramadanBaskets, customBasket];
 
-  constructor (basketType, userInfo, order, stripeIntentId) {
+  constructor (basketType, userInfo, order, stripeIntentId = '') {
     this.structure = this.baskets.find(b => b.type === basketType);
 
     this.basket = {
@@ -19,11 +19,11 @@ class BasketFactory {
       recipient: order.recipient,
       status: 'pending',
       orderRef: order.ref,
-      items: order.baskets[basketType].items || {},
-      userEmail: userInfo.email,
+      items: this.structure.items || {},
+      user: userInfo,
       stripeIntentId,
       message: order.message,
-    }
+    };
   }
 
   getBasket = () => {

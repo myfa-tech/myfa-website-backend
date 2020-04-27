@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import Recipient from './recipient';
+import ReducedUser from './reduceduser';
 
 const Basket = mongoose.Schema({
 	// default id
@@ -9,6 +10,7 @@ const Basket = mongoose.Schema({
 	reason: String,
 	count: String,
 	userEmail: String,
+	user: ReducedUser,
 	type: String,
 	status: String,
 	recipient: Recipient,
