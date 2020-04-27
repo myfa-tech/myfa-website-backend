@@ -27,10 +27,10 @@ const makeNumber = (recipient) => {
 const sendMessage = async (infos, recipient, templateName) => {
   try {
     if (process.env.NODE_ENV !== 'development') {
-      let message = createMessage(templateName, infos);
+      let message = await createMessage(templateName, infos);
       let recipientNumber = makeNumber(recipient);
 
-      console.log('SMS sent to :', recipientNumber);
+      console.log(`SMS [${templateName}] sent to : ${recipient.firstname} ${recipient.lastname} (${recipientNumber})`);
 
       await nexmo.message.sendSms('MYFA', recipientNumber, message);
     } else {
