@@ -27,6 +27,12 @@ const createPayment = async (req, res, next) => {
     let userInfo = jwt.verify(token, JWT_SECRET);
     const { order, user, success_url } = req.body;
 
+    if (userInfo.email !== user.email) {
+      res.status(401);
+      res.send('Wrong token');
+      return;
+    }
+
     let session = { id: 'test' };
 
     if (!order.isTest) {
@@ -46,7 +52,7 @@ const createPayment = async (req, res, next) => {
       });
     }
 
-    saveBasketsFromOrder(order, userInfo, session.payment_intent);
+    saveBasketsFromOrder(order, user, session.payment_intent);
 
     res.status(201);
     res.send({ id: session.id });
@@ -100,7 +106,7 @@ const confirmPayment = async (req, res, next) => {
 const notifyOfPayment = async (stripeIntentId) => {
 	const basketsModel = mongoose.model('baskets', basketSchema);
 	const baskets = await basketsModel.find({ stripeIntentId });
-	const user = await getUserByEmail(baskets[0].userEmail);
+	const user = await getUserByEmail(baskets[0].userEmail || baskets[0].user.email);
 
 	await sendOrderConfirmationEmail(user, baskets);
 	await sendMessage(user, baskets[0].recipient, 'paid-basket');

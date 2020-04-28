@@ -11,7 +11,7 @@ const createMessage = async (templateId, infos) => {
       Bonjour,\n\nNous vous confirmons que votre ${getRelation(infos.relation) || 'proche'} a bien reçu son panier.\n\nMerci pour votre confiance et à bientôt.\n\nL'équipe MYFA
     `;
   } else if (templateId === 'delivered-basket-message') {
-    const user = await getUserByEmail(infos.userEmail);
+    const user = await getUserByEmail(infos.userEmail || infos.user.email);
 
     return `
       Bonjour,\n
