@@ -1,4 +1,4 @@
-import getRelation from '../utils/getRelation';
+
 import { getUserByEmail } from '../services/users';
 
 const createMessage = async (templateId, infos) => {
@@ -8,10 +8,20 @@ const createMessage = async (templateId, infos) => {
     `;
   } else if (templateId === 'delivered-basket') {
     return `
-      Bonjour,\n\nNous vous confirmons que votre ${getRelation(infos.relation) || 'proche'} a bien reçu son panier.\n\nMerci pour votre confiance et à bientôt.\n\nL'équipe MYFA
+      Bonjour,\n\nNous vous confirmons que ${infos.firstname} ${infos.lastname} a bien reçu son panier.\n\nMerci pour votre confiance et à bientôt.\n\nL'équipe MYFA
     `;
   } else if (templateId === 'delivered-basket-message') {
-    const user = await getUserByEmail(infos.userEmail || infos.user.email);
+    let user = {};
+
+    if (!!infos.userEmail) {
+      user = await getUserByEmail(infos.userEmail);
+    } else {
+      user = await getUserByEmail(infos.user.email);
+    }
+
+    if (!user) {
+      user = infos.user;
+    }
 
     return `
       Bonjour,\n

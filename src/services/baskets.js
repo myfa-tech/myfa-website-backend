@@ -65,7 +65,7 @@ const updateBasketById = async (req, res, next) => {
       if (!!user.phone) {
         await sendMessage(basket.recipient, user, 'delivered-basket');
 
-        if (!!basket.message) {
+        if (!!basket.message && basket.message !== '' && basket.message !== ' ') {
           await sendMessage(basket, basket.recipient, 'delivered-basket-message');
         }
       }
