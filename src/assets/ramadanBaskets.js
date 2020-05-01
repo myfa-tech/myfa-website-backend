@@ -68,7 +68,7 @@ const ramadanBaskets = [
     type: 'ramadan_fruits',
     label: 'Panier Fruité',
     labelTranslate: 'home_page.baskets.ramadan_fruits_basket_title',
-    homeDesc: 'Mangues, figues séchées, dattes...',
+    homeDesc: 'Mangues, bananes, dattes, raisins...',
     homeDescTranslate: 'home_page.baskets.ramadan_fruits_basket_home_description',
     imgAlt: 'panier ramadan fruité',
     price: 12.99,
