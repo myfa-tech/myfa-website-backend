@@ -31,7 +31,7 @@ const ramadanBaskets = [
       '250g_margarine',
       '1_potage',
       '1_10_tea_bags',
-      '200g_beef_pate',
+      '75g_beef_pate',
       '1_350_mil',
       '8pcs_vqr',
       '1l_juice',
