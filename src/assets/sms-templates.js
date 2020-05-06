@@ -24,7 +24,7 @@ const createMessage = async (templateId, infos) => {
     }
 
     return `
-      Bonjour,\n\nVotre proche ${user.firstname} ${user.lastname} vous a adresse ce message :\n\n${infos.message}\n\nA bientot,\n\nL'equipe MYFA
+      Bonjour,\n\nVotre proche ${user.firstname} ${user.lastname} vous a adresse ce message :\n\n"${infos.message}"\n\nA bientot,\n\nL'equipe MYFA
     `;
   }
 };
