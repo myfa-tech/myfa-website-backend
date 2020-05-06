@@ -17,9 +17,9 @@ const fetchStocks = async (req, res, next) => {
     const stocks = results[1];
 
     const items = baskets.reduce((acc, curr) => {
-      if (curr.type === 'myfa') {
+      if (curr.type === 'myfa' && typeof curr.items[0] !== 'string') {
         return Object.values(curr.items).reduce(
-          (basketAcc, basketCurr) => console.log(basketCurr) || [...basketAcc, ...basketCurr.map(it => it.label)], acc
+          (basketAcc, basketCurr) => [...basketAcc, ...basketCurr.map(it => it.label)], acc
         );
       } else {
         return [...acc, ...curr.items];
@@ -48,7 +48,10 @@ const fetchStocks = async (req, res, next) => {
       }
     });
 
-    res.status(200).send(stocks);
+    const stocksToReturn = stocks.map((stock, index) => (typeof stock.need === 'undefined') ?
+      ({ ...stock._doc, need: 0 }) : stock);
+
+    res.status(200).send(stocksToReturn);
   } catch (e) {
     console.log(e);
   }
