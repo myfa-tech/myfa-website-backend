@@ -19,7 +19,7 @@ const fetchStocks = async (req, res, next) => {
     const items = baskets.reduce((acc, curr) => {
       if (curr.type === 'myfa') {
         return Object.values(curr.items).reduce(
-          (basketAcc, basketCurr) => [...basketAcc, ...basketCurr.map(it => it.label)], acc
+          (basketAcc, basketCurr) => console.log(basketCurr) || [...basketAcc, ...basketCurr.map(it => it.label)], acc
         );
       } else {
         return [...acc, ...curr.items];
