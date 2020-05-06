@@ -26,16 +26,16 @@ const makeNumber = (recipient) => {
 
 const sendMessage = async (infos, recipient, templateName) => {
   try {
-    if (process.env.NODE_ENV !== 'development') {
+    // if (process.env.NODE_ENV !== 'development') {
       let message = await createMessage(templateName, infos);
       let recipientNumber = makeNumber(recipient);
 
       console.log(`SMS [${templateName}] sent to : ${recipient.firstname} ${recipient.lastname} (${recipientNumber})`);
 
       await nexmo.message.sendSms('MYFA', recipientNumber, message);
-    } else {
-      console.log(`Dev mode. SMS to ${recipient.phone} not sent`);
-    }
+    // } else {
+    //   console.log(`Dev mode. SMS to ${recipient.phone} not sent`);
+    // }
   } catch (e) {
     // @TODO: deal with error
     console.log(e);
