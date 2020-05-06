@@ -300,6 +300,18 @@ const getHomeBaskets = (req, res, next) => {
   res.send({ baskets });
 };
 
+const getBasketsByStatus = async (statuses = []) => {
+  try {
+    const basketsModel = mongoose.model('baskets', BasketSchema);
+    const baskets = await basketsModel.find({ status: { $in: statuses }}, basketsModel);
+
+    return baskets;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+};
+
 const getRamadanBaskets = (req, res, next) => {
   const baskets = [...ramadanBasketsInfos];
 
@@ -318,6 +330,7 @@ export {
   getRamadanBaskets,
   getCustomBasket,
   countBaskets,
+  getBasketsByStatus,
   findBaskets,
   getBaskets,
   getBasketsByEmail,

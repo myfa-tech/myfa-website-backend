@@ -77,14 +77,14 @@ const ramadanBaskets = [
     descriptionTranslate: 'home_page.baskets.ramadan_fruits_basket_description',
     items: [
       'Mangues (1kg)',
-      'Dattes séchées (500g)',
+      'Dattes (500g)',
       'Bananes (1kg)',
       'Oranges (1kg)',
       'Raisins (300g)',
     ],
     itemsTranslate: [
       '1kg_mangoes',
-      '500g_dried_dates',
+      '500g_dattes',
       '1kg_bananas',
       '1kg_oranges',
       '300g_grapes',
