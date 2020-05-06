@@ -10,7 +10,7 @@ import { countBaskets, findBaskets, saveBasketsFromOrder, getRamadanBaskets, get
 import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers'
 import { fetchKPIs } from './services/kpis'
-import { fetchStocks } from './services/stocks'
+import { fetchStocks, updateStock } from './services/stocks'
 import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword, resetPassword, resetPasswordSendMagicLink } from './services/users'
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
@@ -149,6 +149,8 @@ const run = () => {
   app.put('/dashboard/goals', updateGoalById);
 
   app.get('/dashboard/stocks', fetchStocks);
+
+  app.put('/dashboard/stocks', updateStock);
 
   app.get('/dashboard/users', getUsers);
 

@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
 
 import StockSchema from '../schemas/stocks';
 import { getBasketsByStatus } from './baskets';
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const fetchStocks = async (req, res, next) => {
   try {
@@ -51,4 +54,26 @@ const fetchStocks = async (req, res, next) => {
   }
 };
 
-export { fetchStocks };
+const updateStock = async (req, res, next) => {
+  try {
+    let token = (req.headers.authorization || '').split(' ')[1];
+    let userInfo = jwt.verify(token, JWT_SECRET);
+
+    if (!userInfo.admin) {
+      res.status(401);
+      res.send('wrong token');
+    }
+
+    let { label, have } = req.body;
+		const stocksModel = mongoose.model('stocks', StockSchema);
+
+    await stocksModel.update({ label }, { have });
+
+    res.status(201).send('updated');
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
+};
+
+export { fetchStocks, updateStock };
