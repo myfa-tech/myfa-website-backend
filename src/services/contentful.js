@@ -17,7 +17,10 @@ const getArticles = async () => {
 };
 
 const getSingleArticle = async (id) => {
-  const article = await contentful.getEntry(id);
+  const article = await contentful.getEntries({
+    'fields.path': id,
+    'content_type': 'article',
+  });
   return article;
 };
 
