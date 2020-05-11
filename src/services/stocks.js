@@ -48,8 +48,21 @@ const fetchStocks = async (req, res, next) => {
       }
     });
 
-    const stocksToReturn = stocks.map((stock, index) => (typeof stock.need === 'undefined') ?
-      ({ ...stock._doc, need: 0 }) : stock);
+    const stocksToReturn = stocks.map((stock, index) => {
+      const smallBaskets = ['fruits', 'ramadan_fruits', 'ramadan_sugar'];
+
+      if (typeof stock.need === 'undefined') {
+        if (stock.label === 'grand panier') {
+          return ({ ...stock._doc, need: baskets.filter(b => !smallBaskets.includes(b.type)).length });
+        } else if (stock.label === 'petit panier') {
+          return ({ ...stock._doc, need: baskets.filter(b => smallBaskets.includes(b.type)).length });
+        } else {
+          return ({ ...stock._doc, need: 0 });
+        }
+      } else {
+        return stock;
+      }
+    });
 
     res.status(200).send(stocksToReturn);
   } catch (e) {
