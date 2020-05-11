@@ -19,6 +19,7 @@ import { createPayment } from './services/stripe';
 import { createMobileMoneyPayment } from './services/mobileMoney';
 import { deleteCart, getCart, createCart, updateCart } from './services/cart';
 import curateCartsAndSendReminders from './utils/curateCartsAndSendReminders';
+import { fetchArticles, fetchSingleArticle } from './services/contentful';
 
 dotenv.config();
 
@@ -107,6 +108,10 @@ const run = () => {
   app.get('/baskets/details', getHomeBaskets);
 
   app.get('/baskets/custom-basket/details', getCustomBasket);
+
+  app.get('/blog/articles', fetchArticles);
+
+  app.get('/blog/articles/:id', fetchSingleArticle);
 
   app.use(verifyJWT);
 
