@@ -5,7 +5,7 @@ const availableBases = [
 
 const availableFruits = [
   { id: 'bana', type: 'fruits', label: 'Bananes (1kg)', labelTranslate: '1kg_bananas' },
-  { id: 'noco', type: 'fruits', label: '1 Noix de coco', labelTranslate: '1kg_plantain' },
+  { id: 'noco', type: 'fruits', label: '1 Noix de coco', labelTranslate: '1_coconut' },
   { id: 'mang', type: 'fruits', label: 'Mangues (1kg)', labelTranslate: '1kg_mangos' },
   { id: 'oran', type: 'fruits', label: 'Oranges (1kg)', labelTranslate: '1kg_oranges' },
 ];
