@@ -28,7 +28,7 @@ const fetchArticles = async (req, res, next) => {
   try {
     const articles = await getArticles();
 
-    res.status(201).send({ articles });
+    res.status(200).send({ articles });
   } catch (e) {
     console.log(e);
     res.status(500).end();
@@ -40,7 +40,7 @@ const fetchSingleArticle = async (req, res, next) => {
     const id = req.params.id;
     const article = await getSingleArticle(id);
 
-    res.status(201).send({ article });
+    res.status(200).send({ article });
   } catch (e) {
     console.log(e);
     res.status(500).end();
