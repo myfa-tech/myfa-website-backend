@@ -35,6 +35,16 @@ const createPayment = async (req, res, next) => {
 
     let session = { id: 'test' };
 
+    let images = {
+      'legumes': 'veggies.jpg',
+      'fruits': 'fruits.jpg',
+      'myfa': 'myfa.jpg',
+      'sauces': 'sauces.jpg',
+      'ramadan_full': 'ramadan-full.jpg',
+      'ramadan_fruits': 'ramadan-fruits.jpg',
+      'ramadan_sugar': 'ramadan-sugar.jpg',
+    };
+
     if (!order.isTest) {
       session = await stripe.checkout.sessions.create({
         customer_email: user.email,
@@ -42,7 +52,7 @@ const createPayment = async (req, res, next) => {
         line_items: Object.keys(order.baskets).map(key => ({
           name: order.baskets[key].label,
           description: order.baskets[key].description,
-          images: [`https://www.myfa.fr/${order.baskets[key].img}`],
+          images: [`https://www.myfa.fr/${images[key]}`],
           amount: getPrice(order.baskets[key].singlePrice),
           currency: 'eur',
           quantity: order.baskets[key].qty,
