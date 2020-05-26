@@ -20,6 +20,7 @@ import { createMobileMoneyPayment } from './services/mobileMoney';
 import { deleteCart, getCart, createCart, updateCart } from './services/cart';
 import curateCartsAndSendReminders from './utils/curateCartsAndSendReminders';
 import { fetchArticles, fetchSingleArticle } from './services/contentful';
+import { getJobFile } from './services/jobs';
 
 dotenv.config();
 
@@ -64,6 +65,7 @@ const unless = (paths, middleware) => {
 
 app.use(unless([
   '/stripe/confirm_payment',
+  '/jobs/stage_myfa_bizdev.pdf',
 ], cors(corsOptions)));
 
 app.use((req, res, next) => {
@@ -112,6 +114,8 @@ const run = () => {
   app.get('/blog/articles', fetchArticles);
 
   app.get('/blog/articles/:id', fetchSingleArticle);
+
+  app.get('/jobs/:filename', getJobFile);
 
   app.use(verifyJWT);
 
