@@ -171,17 +171,7 @@ const addContactToList = async (req, res, listName) => {
       return;
     }
 
-    let listId = getContactsListId(listName);
-    let contactEmail = req.body.email;
-
-    await mailjet.post('contactslist', {'version': 'v3'})
-      .id(listId)
-      .action('managecontact')
-      .request({
-        'Email': contactEmail,
-        'Action': 'addforce',
-        'IsExcludedFromCampaigns': 'false',
-      });
+    await saveContact(listName, req.body.email);
 
     res.status(201);
     res.send('saved');
@@ -189,6 +179,20 @@ const addContactToList = async (req, res, listName) => {
     // @TODO: deal with error
     console.log(e);
   }
+};
+
+const saveContact = async (listName, email) => {
+  let listId = getContactsListId(listName);
+  let contactEmail = email;
+
+  await mailjet.post('contactslist', {'version': 'v3'})
+    .id(listId)
+    .action('managecontact')
+    .request({
+      'Email': contactEmail,
+      'Action': 'addforce',
+      'IsExcludedFromCampaigns': 'false',
+    });
 };
 
 const sendEmailToFinance = async () => {
@@ -213,6 +217,7 @@ const sendEmailToFinance = async () => {
 
 export {
   addContactToList,
+  saveContact,
   sendEmailAddressConfirmationEmail,
   sendEmailToFinance,
   sendOrderConfirmationEmail,

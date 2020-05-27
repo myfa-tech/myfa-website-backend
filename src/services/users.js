@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Facebook } from 'fb';
 
-import { sendEmailAddressConfirmationEmail, sendWelcomeEmail, sendResetPasswordEmail } from './mailjet';
+import { sendEmailAddressConfirmationEmail, sendWelcomeEmail, sendResetPasswordEmail, saveContact } from './mailjet';
 import {
   getFirstDayOfCurrentMonth,
   getLastDayOfCurrentMonth,
@@ -204,6 +204,10 @@ const saveUser = async (req, res, next) => {
     let token = jwt.sign({ email: user.email }, JWT_SECRET);
 
     if (NODE_ENV !== 'development') {
+      if (!!user.newsletter) {
+        await saveContact('newsletter', user.email);
+      }
+
       sendWelcomeEmail(user);
       sendEmailAddressConfirmationEmail(user);
     } else {
