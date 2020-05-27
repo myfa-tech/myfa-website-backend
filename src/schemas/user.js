@@ -14,6 +14,7 @@ const UserSchema = mongoose.Schema({
   country: String,
   FBAccess: Boolean,
   GoogleAccess: Boolean,
+  newsletter: Boolean,
   cgu: Boolean,
   emailConfirmed: Boolean,
   recipients: [Recipient],
