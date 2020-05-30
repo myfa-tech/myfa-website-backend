@@ -86,18 +86,11 @@ const updateBasketById = async (req, res, next) => {
 
 const saveBasketsFromOrder = async (order, userInfo, stripeIntentId = '') => {
 	try {
-    const baskets = order.baskets.map(basket => {
-      baskets.push(new Basket(basket, userInfo, { ref, message }, stripeIntentId).getBasket());
-    });
+    const baskets = order.baskets.map(basket => new Basket(basket, userInfo, { ref: order.ref }, stripeIntentId).getBasket());
 
 		const basketsModel = mongoose.model('baskets', BasketSchema);
-    let promises = [];
 
-    baskets.forEach(basket => {
-      promises.push(basketsModel.create(basket));
-    });
-
-    await Promise.all(promises);
+    await basketsModel.create(baskets);
 	} catch (e) {
 		console.log(e)
 		throw new Error('something went wrong')
@@ -136,13 +129,8 @@ const createOrderManually = async (req, res, next) => {
     }
 
     const basketsModel = mongoose.model('baskets', BasketSchema);
-    let promises = [];
 
-    baskets.forEach(basket => {
-      promises.push(basketsModel.create(basket));
-    });
-
-    await Promise.all(promises);
+    await basketsModel.create(baskets);
 
     res.status(201);
     res.send('created');

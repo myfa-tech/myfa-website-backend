@@ -22,7 +22,7 @@ class BasketFactory {
       items: this.structure.items || basket.items || {},
       user: userInfo,
       stripeIntentId,
-      message: order.message,
+      message: basket.message,
     };
   }
 

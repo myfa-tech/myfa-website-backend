@@ -11,9 +11,15 @@ const createMobileMoneyPayment = async (req, res, next) => {
   try {
     let token = (req.headers.authorization || '').split(' ')[1];
     let userInfo = jwt.verify(token, JWT_SECRET);
-    const { order } = req.body;
+    const { order, user } = req.body;
 
-    await saveBasketsFromOrder(order, userInfo);
+    if (userInfo.email !== user.email) {
+      res.status(401);
+      res.send('Wrong token');
+      return;
+    }
+
+    await saveBasketsFromOrder(order, user);
 
     res.status(201);
     res.send({ success: true });
