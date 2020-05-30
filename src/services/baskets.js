@@ -86,12 +86,8 @@ const updateBasketById = async (req, res, next) => {
 
 const saveBasketsFromOrder = async (order, userInfo, stripeIntentId = '') => {
 	try {
-    const baskets = [];
-
-    Object.keys(order.baskets).forEach(basketType => {
-      for (let i=0; i<order.baskets[basketType].qty; i++) {
-        baskets.push(new Basket(basketType, userInfo, order, stripeIntentId).getBasket());
-      }
+    const baskets = order.baskets.map(basket => {
+      baskets.push(new Basket(basket, userInfo, { ref, message }, stripeIntentId).getBasket());
     });
 
 		const basketsModel = mongoose.model('baskets', BasketSchema);
