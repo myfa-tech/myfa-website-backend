@@ -42,9 +42,6 @@ const createPayment = async (req, res, next) => {
       'fruits': 'fruits.jpg',
       'myfa': 'myfa.jpg',
       'sauces': 'sauces.jpg',
-      'ramadan_full': 'ramadan-full.jpg',
-      'ramadan_fruits': 'ramadan-fruits.jpg',
-      'ramadan_sugar': 'ramadan-sugar.jpg',
     };
 
     if (!order.isTest) {

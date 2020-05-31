@@ -17,7 +17,6 @@ import {
 } from '../utils/dates';
 
 import basketsInfos from '../assets/baskets';
-import ramadanBasketsInfos from '../assets/ramadanBaskets';
 import customBasketInfos from '../assets/customBasket';
 import { log } from './operationsLogs';
 
@@ -296,13 +295,6 @@ const getBasketsByStatus = async (statuses = []) => {
   }
 };
 
-const getRamadanBaskets = (req, res, next) => {
-  const baskets = [...ramadanBasketsInfos];
-
-  res.status(200);
-  res.send({ baskets });
-};
-
 const getCustomBasket = (req, res, next) => {
   res.status(200);
   res.send({ basket: customBasketInfos });
@@ -311,7 +303,6 @@ const getCustomBasket = (req, res, next) => {
 export {
   getHomeBaskets,
   createOrderManually,
-  getRamadanBaskets,
   getCustomBasket,
   countBaskets,
   getBasketsByStatus,
