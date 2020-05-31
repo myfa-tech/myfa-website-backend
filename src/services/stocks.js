@@ -49,7 +49,7 @@ const fetchStocks = async (req, res, next) => {
     });
 
     const stocksToReturn = stocks.map((stock, index) => {
-      const smallBaskets = ['fruits', 'ramadan_fruits', 'ramadan_sugar'];
+      const smallBaskets = ['fruits', 'ramadan_fruits', 'ramadan_sugar', 'beauty'];
 
       if (typeof stock.need === 'undefined') {
         if (stock.label === 'grand panier') {

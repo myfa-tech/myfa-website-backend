@@ -6,7 +6,7 @@ const availableBases = [
 const availableFruits = [
   { id: 'bana', type: 'fruits', label: 'Bananes (1kg)', labelTranslate: '1kg_bananas' },
   { id: 'noco', type: 'fruits', label: '1 Noix de coco', labelTranslate: '1_coconut' },
-  { id: 'mang', type: 'fruits', label: 'Mangues (1kg)', labelTranslate: '1kg_mangos' },
+  { id: 'mang', type: 'fruits', label: 'Mangues (1kg)', labelTranslate: '1kg_mangoes' },
   { id: 'oran', type: 'fruits', label: 'Oranges (1kg)', labelTranslate: '1kg_oranges' },
 ];
 
@@ -39,7 +39,7 @@ const availableSupps = [
   { id: 'boat', type: 'supps', label: '2 boules d’attiéké', labelTranslate: '2_attiekes' },
   { id: 'bana', type: 'supps', label: 'Bananes (1kg)', labelTranslate: '1kg_bananas' },
   { id: 'noco', type: 'supps', label: '1 Noix de coco', labelTranslate: '1_coconut' },
-  { id: 'mang', type: 'supps', label: 'Mangues (1kg)', labelTranslate: '1kg_mangos' },
+  { id: 'mang', type: 'supps', label: 'Mangues (1kg)', labelTranslate: '1kg_mangoes' },
   { id: 'oran', type: 'supps', label: 'Oranges (1kg)', labelTranslate: '1kg_oranges' },
   { id: 'caro', type: 'supps', label: 'Carottes (1kg)', labelTranslate: '1kg_carots' },
   { id: 'igna', type: 'supps', label: 'Ignames (1kg)', labelTranslate: '1kg_yams' },

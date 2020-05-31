@@ -42,6 +42,7 @@ const createPayment = async (req, res, next) => {
       'fruits': 'fruits.jpg',
       'myfa': 'myfa.jpg',
       'sauces': 'sauces.jpg',
+      'beauty': 'beauty.jpg',
     };
 
     if (!order.isTest) {
