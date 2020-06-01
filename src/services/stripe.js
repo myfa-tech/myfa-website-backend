@@ -8,6 +8,8 @@ import { sendMessage } from './nexmo';;
 import { sendOrderConfirmationEmail } from './mailjet';
 import basketSchema from '../schemas/basket';
 import { saveBasketsFromOrder } from './baskets';
+import countBy from '../utils/countBy';
+import uniqBy from '../utils/uniqBy';
 
 dotenv.config();
 
@@ -40,22 +42,20 @@ const createPayment = async (req, res, next) => {
       'fruits': 'fruits.jpg',
       'myfa': 'myfa.jpg',
       'sauces': 'sauces.jpg',
-      'ramadan_full': 'ramadan-full.jpg',
-      'ramadan_fruits': 'ramadan-fruits.jpg',
-      'ramadan_sugar': 'ramadan-sugar.jpg',
+      'beauty': 'beauty.jpg',
     };
 
     if (!order.isTest) {
       session = await stripe.checkout.sessions.create({
         customer_email: user.email,
         payment_method_types: ['card'],
-        line_items: Object.keys(order.baskets).map(key => ({
-          name: order.baskets[key].label,
-          description: order.baskets[key].description,
-          images: [`https://www.myfa.fr/${images[key]}`],
-          amount: getPrice(order.baskets[key].singlePrice),
+        line_items: uniqBy(order.baskets, 'type').map(basket => ({
+          name: basket.label,
+          description: basket.description,
+          images: [`https://www.myfa.fr/${images[basket.type]}`],
+          amount: getPrice(basket.price),
           currency: 'eur',
-          quantity: order.baskets[key].qty,
+          quantity: countBy(order.baskets, 'type', basket.type),
         })),
         success_url,
         cancel_url: 'https://www.myfa.fr',

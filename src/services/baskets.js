@@ -17,7 +17,6 @@ import {
 } from '../utils/dates';
 
 import basketsInfos from '../assets/baskets';
-import ramadanBasketsInfos from '../assets/ramadanBaskets';
 import customBasketInfos from '../assets/customBasket';
 import { log } from './operationsLogs';
 
@@ -86,22 +85,11 @@ const updateBasketById = async (req, res, next) => {
 
 const saveBasketsFromOrder = async (order, userInfo, stripeIntentId = '') => {
 	try {
-    const baskets = [];
-
-    Object.keys(order.baskets).forEach(basketType => {
-      for (let i=0; i<order.baskets[basketType].qty; i++) {
-        baskets.push(new Basket(basketType, userInfo, order, stripeIntentId).getBasket());
-      }
-    });
+    const baskets = order.baskets.map(basket => new Basket(basket, userInfo, { ref: order.ref }, stripeIntentId).getBasket());
 
 		const basketsModel = mongoose.model('baskets', BasketSchema);
-    let promises = [];
 
-    baskets.forEach(basket => {
-      promises.push(basketsModel.create(basket));
-    });
-
-    await Promise.all(promises);
+    await basketsModel.create(baskets);
 	} catch (e) {
 		console.log(e)
 		throw new Error('something went wrong')
@@ -140,13 +128,8 @@ const createOrderManually = async (req, res, next) => {
     }
 
     const basketsModel = mongoose.model('baskets', BasketSchema);
-    let promises = [];
 
-    baskets.forEach(basket => {
-      promises.push(basketsModel.create(basket));
-    });
-
-    await Promise.all(promises);
+    await basketsModel.create(baskets);
 
     res.status(201);
     res.send('created');
@@ -312,13 +295,6 @@ const getBasketsByStatus = async (statuses = []) => {
   }
 };
 
-const getRamadanBaskets = (req, res, next) => {
-  const baskets = [...ramadanBasketsInfos];
-
-  res.status(200);
-  res.send({ baskets });
-};
-
 const getCustomBasket = (req, res, next) => {
   res.status(200);
   res.send({ basket: customBasketInfos });
@@ -327,7 +303,6 @@ const getCustomBasket = (req, res, next) => {
 export {
   getHomeBaskets,
   createOrderManually,
-  getRamadanBaskets,
   getCustomBasket,
   countBaskets,
   getBasketsByStatus,

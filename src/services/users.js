@@ -404,8 +404,9 @@ const updateUserByEmail = async (req, res, next) => {
 
     if (userInfo.email === email || userInfo.admin) {
       await usersModel.updateOne({ email }, req.body);
+      const userUpdated = await usersModel.findOne({ email });
       res.status(201);
-      res.send({ updated: req.body });
+      res.send({ updated: userUpdated });
     } else {
       console.log('forbidden token');
       res.status(403);
