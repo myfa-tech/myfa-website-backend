@@ -110,7 +110,7 @@ const baskets = [
     imgAlt: 'panier beauté',
     price: 9.99,
     priceCFA: 6500,
-    description: 'xxxx',
+    description: 'Avec ce panier rempli de produits aux bienfaits bénéfiques pour votre santé autant que votre beauté, prendre soin de vous n’a jamais été aussi plaisant.',
     descriptionTranslate: 'home_page.baskets.beauty_basket_description',
     items: [
       '1 pot de beurre de karité',
