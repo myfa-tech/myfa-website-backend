@@ -108,8 +108,8 @@ const baskets = [
     homeDesc: 'Beurre de karité, bissap, kinkeliba...',
     homeDescTranslate: 'home_page.baskets.beauty_basket_home_description',
     imgAlt: 'panier beauté',
-    price: 9.99,
-    priceCFA: 6500,
+    price: 19.99,
+    priceCFA: 13100,
     description: 'Avec ce panier rempli de produits aux bienfaits bénéfiques pour votre santé autant que votre beauté, prendre soin de vous n’a jamais été aussi plaisant.',
     descriptionTranslate: 'home_page.baskets.beauty_basket_description',
     items: [
