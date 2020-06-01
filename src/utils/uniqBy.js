@@ -1,15 +1,16 @@
-const uniqBy = (arrayToFilter, field) => {
-  if (!!arrayToFilter) {
-    for (let i=0; i<arrayToFilter.length; i++) {
-      for (let j=0; j<arrayToFilter.length; j++) {
-        if (arrayToFilter[i][field] === arrayToFilter[j][field] && i !== j) {
-          arrayToFilter = arrayToFilter.splice(j, 1);
-        }
-      }
-    }
-  }
 
-  return [...arrayToFilter];
+const containsObjectByField = (arr, object, field) => arr.findIndex((other) => JSON.stringify(other[field]) === JSON.stringify(object[field])) >= 0;
+
+const uniqBy = (collection, field) => {
+  const newCollection = [];
+
+  collection.forEach((item) => {
+    if (!containsObjectByField(newCollection, item, field)) {
+      newCollection.push(item);
+    }
+  });
+
+  return newCollection;
 };
 
 export default uniqBy;

@@ -45,6 +45,8 @@ const createPayment = async (req, res, next) => {
       'beauty': 'beauty.jpg',
     };
 
+    console.log('************** COUNT : ', countBy(order.baskets, 'type', 'beauty'));
+
     if (!order.isTest) {
       session = await stripe.checkout.sessions.create({
         customer_email: user.email,
