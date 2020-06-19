@@ -10,14 +10,26 @@ import basketSchema from '../schemas/basket';
 import { saveBasketsFromOrder } from './baskets';
 import countBy from '../utils/countBy';
 import uniqBy from '../utils/uniqBy';
+import { usePromo } from './promo';
 
 dotenv.config();
 
 const stripe = Stripe(process.env.STRIPE_API_SECRET);
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const getPrice = (p) => {
-  let literalPrice = String(p);
+const getPrice = async (basketPrice, promo) => {
+  let price = basketPrice;
+
+  if (!!promo) {
+    let result = await usePromo(promo);
+
+    if (result.nModified > 0) {
+      // Réduction -10%
+      price -= (price / 10);
+    }
+  }
+
+  let literalPrice = String(price);
   literalPrice = literalPrice.replace('.','');
 
   return Number(literalPrice);
@@ -49,14 +61,14 @@ const createPayment = async (req, res, next) => {
       session = await stripe.checkout.sessions.create({
         customer_email: user.email,
         payment_method_types: ['card'],
-        line_items: uniqBy(order.baskets, 'type').map(basket => ({
+        line_items: await Promise.all(uniqBy(order.baskets, 'type').map(async (basket) => ({
           name: basket.label,
           description: basket.description,
           images: [`https://www.myfa.fr/${images[basket.type]}`],
-          amount: getPrice(basket.price),
+          amount: await getPrice(basket.price, order.promo),
           currency: 'eur',
           quantity: countBy(order.baskets, 'type', basket.type),
-        })),
+        }))),
         success_url,
         cancel_url: 'https://www.myfa.fr',
       });
