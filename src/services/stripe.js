@@ -16,17 +16,14 @@ dotenv.config();
 
 const stripe = Stripe(process.env.STRIPE_API_SECRET);
 const JWT_SECRET = process.env.JWT_SECRET;
+const PROMO_PERCENTAGE = 10;
 
-const getPrice = async (basketPrice, promo) => {
+const getPrice = (basketPrice, promoActivated) => {
   let price = basketPrice;
 
-  if (!!promo) {
-    let result = await usePromo(promo);
-
-    if (result.nModified > 0) {
-      // Réduction -10%
-      price -= (price / 10);
-    }
+  if (promoActivated) {
+    price -= (price / PROMO_PERCENTAGE);
+    price = price.toFixed(2);
   }
 
   let literalPrice = String(price);
@@ -40,6 +37,7 @@ const createPayment = async (req, res, next) => {
     let token = (req.headers.authorization || '').split(' ')[1];
     let userInfo = jwt.verify(token, JWT_SECRET);
     const { order, user, success_url } = req.body;
+    let promoActivated = false;
 
     if (userInfo.email !== user.email) {
       res.status(401);
@@ -57,18 +55,27 @@ const createPayment = async (req, res, next) => {
       'beauty': 'beauty.jpg',
     };
 
+    if (!!order.promo) {
+      let result = await usePromo(order.promo);
+
+      if (result.nModified > 0) {
+        // Réduction -10%
+        promoActivated = true;
+      }
+    }
+
     if (!order.isTest) {
       session = await stripe.checkout.sessions.create({
         customer_email: user.email,
         payment_method_types: ['card'],
-        line_items: await Promise.all(uniqBy(order.baskets, 'type').map(async (basket) => ({
+        line_items: uniqBy(order.baskets, 'type').map((basket) => ({
           name: basket.label,
           description: basket.description,
           images: [`https://www.myfa.fr/${images[basket.type]}`],
-          amount: await getPrice(basket.price, order.promo),
+          amount: getPrice(basket.price, promoActivated),
           currency: 'eur',
           quantity: countBy(order.baskets, 'type', basket.type),
-        }))),
+        })),
         success_url,
         cancel_url: 'https://www.myfa.fr',
       });
