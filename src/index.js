@@ -21,6 +21,7 @@ import { deleteCart, getCart, createCart, updateCart } from './services/cart';
 import curateCartsAndSendReminders from './utils/curateCartsAndSendReminders';
 import { fetchArticles, fetchSingleArticle } from './services/contentful';
 import { getJobFile } from './services/jobs';
+import { testPromoCode } from './services/promo';
 
 dotenv.config();
 
@@ -118,6 +119,8 @@ const run = () => {
   app.use(verifyJWT);
 
   app.post('/stripe/pay', createPayment);
+
+  app.get('/promos', testPromoCode);
 
   app.post('/mobile_money/orders', createMobileMoneyPayment);
 
