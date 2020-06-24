@@ -65,6 +65,7 @@ const customBasketDetails = {
   type: 'myfa',
   label: 'Panier MYFA 🙌🏾',
   labelTranslate: 'home_page.baskets.myfa_basket_title',
+  active: true,
   homeDesc: 'À vous de le composer !',
   homeDescTranslate: 'home_page.baskets.myfa_basket_home_description',
   imgAlt: 'panier myfa',

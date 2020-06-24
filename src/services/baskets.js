@@ -277,7 +277,11 @@ const countBaskets = async (req, res, next) => {
 }
 
 const getHomeBaskets = (req, res, next) => {
-  const baskets = [...basketsInfos, customBasketInfos];
+  let baskets = [...basketsInfos, customBasketInfos];
+
+  if (req.query.status === 'active') {
+    baskets = baskets.filter(b => b.active);
+  }
 
   res.status(200);
   res.send({ baskets });
