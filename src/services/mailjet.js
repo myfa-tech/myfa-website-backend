@@ -136,7 +136,7 @@ const sendCartReminders = async (emails) => {
     if (process.env.NODE_ENV === 'development') {
       console.log('ENV is development - reminder mail not sent');
     } else {
-      await mailjet.post("send", {'version': 'v3.1'})
+      const promises = emails.map(email => mailjet.post("send", {'version': 'v3.1'})
         .request({
           "Messages": [
             {
@@ -144,7 +144,7 @@ const sendCartReminders = async (emails) => {
                 "Email": "infos@myfa.fr",
                 "Name": "MYFA"
               },
-              "To": emails,
+              "To": [email],
               "TemplateID": 1341411,
               "TemplateLanguage": true,
               "Subject": "Votre commande vous attend sur myfa.fr",
@@ -153,8 +153,11 @@ const sendCartReminders = async (emails) => {
               },
             },
           ],
-        });
-      }
+        })
+      );
+
+      await Promise.all(promises);
+    }
 
     console.log('Reminder emails sent to :', emails);
   } catch (e) {
