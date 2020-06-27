@@ -23,6 +23,7 @@ import { fetchArticles, fetchSingleArticle } from './services/contentful';
 import { getJobFile } from './services/jobs';
 import { testPromoCode } from './services/promo';
 import { findRatings, saveRating } from './services/ratings';
+import curateCustomersAndSendReminders from './utils/curateCustomersAndSendReminders';
 
 dotenv.config();
 
@@ -192,8 +193,17 @@ db.once('open', run);
 
 // seconds minutes heures jours ...
 cron.schedule('0 0 14 */2 * *', async () => {
-  console.log('CRON task triggered at: ', new Date());
+  console.log('CRON task 1 triggered at: ', new Date());
   await curateCartsAndSendReminders();
+}, {
+  scheduled: true,
+  timezone: "Europe/Paris"
+});
+
+// D-31 days reminder that we exist
+cron.schedule('0 0 18 * * *', async () => {
+  console.log('CRON task 2 triggered at: ', new Date());
+  await curateCustomersAndSendReminders();
 }, {
   scheduled: true,
   timezone: "Europe/Paris"

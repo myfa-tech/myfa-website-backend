@@ -166,6 +166,73 @@ const sendCartReminders = async (emails) => {
   }
 };
 
+const sendD30Reminders = async (users) => {
+  try {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('ENV is development - reminder mail not sent');
+    } else {
+      const promises = users.map(user => mailjet.post("send", {'version': 'v3.1'})
+        .request({
+          "Messages": [
+            {
+              "From": {
+                "Email": "infos@myfa.fr",
+                "Name": "MYFA"
+              },
+              "To": [{ 'Email': user.email }],
+              "TemplateID": 1516098,
+              "TemplateLanguage": true,
+              "Subject": `${user.firstname}, tout va bien ? Rassurez-nous. 🥺`,
+              "Variables": {
+                "order_link": 'https://www.myfa.fr/cart/',
+              },
+            },
+          ],
+        })
+      );
+
+      await Promise.all(promises);
+    }
+
+    console.log('Reminder emails sent to :', users.map(u => u.email));
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+  }
+};
+
+const sendDeliveryRateReminders = async (user) => {
+  try {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('ENV is development - reminder mail not sent');
+    } else {
+      await mailjet.post("send", {'version': 'v3.1'})
+        .request({
+          "Messages": [
+            {
+              "From": {
+                "Email": "infos@myfa.fr",
+                "Name": "MYFA"
+              },
+              "To": [{ 'Email': user.email }],
+              "TemplateID": 1515911,
+              "TemplateLanguage": true,
+              "Subject": `${user.firstname}, votre avis compte ! ✅`,
+              "Variables": {
+                "firstname": user.firstname,
+              },
+            },
+          ],
+        });
+    }
+
+    console.log('Rating emails sent to :', user.email);
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+  }
+};
+
 const addContactToList = async (req, res, listName) => {
   try {
     if (!req.body.email) {
@@ -223,6 +290,8 @@ export {
   saveContact,
   sendEmailAddressConfirmationEmail,
   sendEmailToFinance,
+  sendDeliveryRateReminders,
+  sendD30Reminders,
   sendOrderConfirmationEmail,
   sendWelcomeEmail,
   sendCartReminders,
