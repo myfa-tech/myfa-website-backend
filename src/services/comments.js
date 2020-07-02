@@ -1,13 +1,16 @@
+import mongoose from 'mongoose';
+
+import CommentSchema from '../schemas/comment';
 
 const findComments = async (req, res, next) => {
   try {
-    const size = req.query.size || 10;
-    const from = ((req.query.page || 1) - 1) * size;
+    const size = Number(req.query.size) || 10;
+    const from = ((Number(req.query.page) || 1) - 1) * size;
 
 		const commentsModel = mongoose.model('comments', CommentSchema);
 
     const results = await Promise.all([
-      commentsModel.find({}, basketsModel),
+      commentsModel.find({}, commentsModel).sort({ createdAt: -1 }).skip(from).limit(size),
       commentsModel.estimatedDocumentCount(),
     ]);
 
@@ -15,7 +18,7 @@ const findComments = async (req, res, next) => {
 
     if (totalPages > 0) {
       res.status(200)
-      res.json({ comments, totalPages })
+      res.json({ comments: results[0], totalPages })
     } else {
       res.status(404)
       res.send('not found')
@@ -25,3 +28,5 @@ const findComments = async (req, res, next) => {
 		throw new Error('something went wrong')
 	}
 }
+
+export { findComments };
