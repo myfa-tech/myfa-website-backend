@@ -168,9 +168,9 @@ const sendCartReminders = async (emails) => {
 
 const sendD30Reminders = async (users) => {
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('ENV is development - reminder mail not sent');
-    } else {
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log('ENV is development - reminder mail not sent');
+    // } else {
       const promises = users.map(user => mailjet.post("send", {'version': 'v3.1'})
         .request({
           "Messages": [
@@ -192,7 +192,7 @@ const sendD30Reminders = async (users) => {
       );
 
       await Promise.all(promises);
-    }
+    // }
 
     console.log('Reminder emails sent to :', users.map(u => u.email));
   } catch (e) {
