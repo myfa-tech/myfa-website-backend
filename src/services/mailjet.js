@@ -203,9 +203,9 @@ const sendD30Reminders = async (users) => {
 
 const sendDeliveryRateReminders = async (user) => {
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('ENV is development - reminder mail not sent');
-    } else {
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log('ENV is development - reminder mail not sent');
+    // } else {
       await mailjet.post("send", {'version': 'v3.1'})
         .request({
           "Messages": [
@@ -224,7 +224,7 @@ const sendDeliveryRateReminders = async (user) => {
             },
           ],
         });
-    }
+    // }
 
     console.log('Rating emails sent to :', user.email);
   } catch (e) {
