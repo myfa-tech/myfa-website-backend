@@ -22,7 +22,7 @@ import curateCartsAndSendReminders from './utils/curateCartsAndSendReminders';
 import { fetchArticles, fetchSingleArticle } from './services/contentful';
 import { getJobFile } from './services/jobs';
 import { testPromoCode } from './services/promo';
-import { findComments } from './services/comments';
+import { findRatings, saveRating } from './services/ratings';
 
 dotenv.config();
 
@@ -111,7 +111,9 @@ const run = () => {
 
   app.get('/baskets/custom-basket/details', getCustomBasket);
 
-  app.get('/comments', findComments);
+  app.get('/ratings', findRatings);
+
+  app.post('/ratings', saveRating);
 
   app.get('/blog/articles', fetchArticles);
 

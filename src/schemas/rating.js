@@ -2,12 +2,13 @@ import mongoose from 'mongoose';
 
 import ReducedUser from './reduceduser';
 
-const Comment = mongoose.Schema({
+const Rating = mongoose.Schema({
 	// default id
 	user: ReducedUser,
   createdAt: Date,
   rating: Number,
-  text: String,
+  comment: String,
+  subject: String,
 });
 
-export default Comment;
+export default Rating;
