@@ -5,13 +5,13 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cron from 'node-cron';
 
-import { confirmPayment } from './services/stripe'
-import { countBaskets, findBaskets, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef, createOrderManually } from './services/baskets'
+import { confirmPayment } from './services/stripe';
+import { countBaskets, findBaskets, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef, createOrderManually } from './services/baskets';
 import { addContactToList } from './services/mailjet';
-import { login } from './services/dashboardUsers'
-import { fetchKPIs } from './services/kpis'
-import { fetchStocks, updateStock } from './services/stocks'
-import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword, resetPassword, resetPasswordSendMagicLink } from './services/users'
+import { login } from './services/dashboardUsers';
+import { fetchKPIs } from './services/kpis';
+import { fetchStocks, updateStock } from './services/stocks';
+import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword, resetPassword, resetPasswordSendMagicLink } from './services/users';
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
 import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
@@ -22,6 +22,7 @@ import curateCartsAndSendReminders from './utils/curateCartsAndSendReminders';
 import { fetchArticles, fetchSingleArticle } from './services/contentful';
 import { getJobFile } from './services/jobs';
 import { testPromoCode } from './services/promo';
+import { findRatings, saveRating } from './services/ratings';
 
 dotenv.config();
 
@@ -109,6 +110,10 @@ const run = () => {
   app.get('/baskets/details', getHomeBaskets);
 
   app.get('/baskets/custom-basket/details', getCustomBasket);
+
+  app.get('/ratings', findRatings);
+
+  app.post('/ratings', saveRating);
 
   app.get('/blog/articles', fetchArticles);
 
