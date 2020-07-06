@@ -316,7 +316,7 @@ const getBasketsByStatus = async (statuses = []) => {
 
 const getDminus30Baskets = async () => {
   const basketsModel = mongoose.model('baskets', BasketSchema);
-  const today = new Date(new Date(2020, 5, 22).setHours(0, 0, 0, 0)); // new Date(new Date().setHours(0, 0, 0, 0));
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
   const minus30 = new Date(new Date(today).setDate(new Date(today).getDate() - 31));
   const dayAfter = new Date(new Date(minus30).setDate(new Date(minus30).getDate() + 1));
 
