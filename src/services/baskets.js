@@ -19,6 +19,7 @@ import {
 import basketsInfos from '../assets/baskets';
 import customBasketInfos from '../assets/customBasket';
 import { log } from './operationsLogs';
+import { sendDeliveryRateReminders } from './mailjet';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -60,6 +61,8 @@ const updateBasketById = async (req, res, next) => {
 
     if (editFields.status === 'delivered') {
       const user = basket.user || await getUserByEmail(basket.userEmail);
+
+      await sendDeliveryRateReminders(user);
 
       if (!!user.phone) {
         await sendMessage(basket.recipient, user, 'delivered-basket');
@@ -238,7 +241,7 @@ const getBaskets = async (req, res, next) => {
 		console.log(e);
 		throw new Error('something went wrong');
 	}
-}
+};
 
 const getBasketsByEmail = async (req, res, next) => {
   try {
@@ -266,7 +269,19 @@ const getBasketsByEmail = async (req, res, next) => {
 		console.log(e);
 		throw new Error('something went wrong');
 	}
-}
+};
+
+const getUserLatestBasket = async (email) => {
+  try {
+		const basketsModel = mongoose.model('baskets', BasketSchema);
+    const basket = await basketsModel.findOne({ 'user.email': email }, basketsModel).sort({ createdAt: -1 });
+
+    return basket;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
 
 const countBaskets = async (req, res, next) => {
   const basketsModel = mongoose.model('baskets', BasketSchema);
@@ -299,6 +314,19 @@ const getBasketsByStatus = async (statuses = []) => {
   }
 };
 
+const getDminus30Baskets = async () => {
+  const basketsModel = mongoose.model('baskets', BasketSchema);
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const minus30 = new Date(new Date(today).setDate(new Date(today).getDate() - 31));
+  const dayAfter = new Date(new Date(minus30).setDate(new Date(minus30).getDate() + 1));
+
+  let createdAt = { $gte: minus30, $lte: dayAfter };
+
+  const baskets = await basketsModel.find({ createdAt }, basketsModel);
+
+  return baskets;
+};
+
 const getCustomBasket = (req, res, next) => {
   res.status(200);
   res.send({ basket: customBasketInfos });
@@ -310,9 +338,11 @@ export {
   getCustomBasket,
   countBaskets,
   getBasketsByStatus,
+  getUserLatestBasket,
   findBaskets,
   getBaskets,
   getBasketsByEmail,
+  getDminus30Baskets,
   saveBasket,
   saveBasketsFromOrder,
   updateBasketById,
