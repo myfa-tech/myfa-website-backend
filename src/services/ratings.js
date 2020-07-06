@@ -15,12 +15,7 @@ const findRatings = async (req, res, next) => {
     ]);
 
     let totalPages = Math.ceil(results[1] / size);
-
-    console.log(results[0]);
-
     let ratings = results[0].map(({ _doc: rating}) => ({ ...rating, user: { ...rating.user._doc, lastname: `${rating.user._doc.lastname.substr(0, 1)}.` }}));
-
-    console.log(ratings);
 
     if (totalPages > 0) {
       res.status(200);
