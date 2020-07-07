@@ -47,12 +47,11 @@ const packs = [
     label: 'Pack Familial - Riz local',
     labelTranslate: 'home_page.packs.local_rice_pack_title',
     active: true,
-    homeDesc: 'xxxx xxxx xxxxxxxxx...', // @TODO : change descriptions
+    homeDesc: 'xxxx xxxx xxxxxxxxx...',
     homeDescTranslate: 'home_page.packs.local_rice_pack_home_description',
     imgAlt: 'pack riz local',
     price: 113.99,
     priceCFA: 74633,
-    // @TODO : change description
     description: 'xxxx xxxx xxx xx xxxxxx xxxxxxxx xxxxx xx xxxxx xxxxxxx xxxx x x xxx xxxxxxx xxxx xxxxxx xxxxxx xxxxx xxxxxx xxxxx xxxx x xxxx xx x  xxx xxxxxxx xxx xxxxx x  xxxx x xxxx xx x  xxx xxxxxxx xxx xxxxx x  xxxx x xxxx xx x',
     descriptionTranslate: 'home_page.packs.local_rice_pack_description',
     itemsTranslate: [
@@ -71,12 +70,11 @@ const packs = [
     label: 'Pack Familial - Riz attieke',
     labelTranslate: 'home_page.packs.rice_attieke_pack_title',
     active: true,
-    homeDesc: 'xxx xxx xxx xxxxx...', // @TODO : change descriptions
+    homeDesc: 'xxx xxx xxx xxxxx...',
     homeDescTranslate: 'home_page.packs.rice_attieke_pack_home_description',
     imgAlt: 'pack riz local',
     price: 123.99,
     priceCFA: 81133,
-    // @TODO : change description
     description: 'xxxx xxxx xxx xx xxxxxx xxxxxxxx xxxxx xx xxxxx xxxxxxx xxxx x x xxx xxxxxxx xxxx xxxxxx xxxxxx xxxxx xxxxxx xxxxx xxxx x xxxx xx x  xxx xxxxxxx xxx xxxxx x  xxxx x xxxx xx x  xxx xxxxxxx xxx xxxxx x  xxxx x xxxx xx x',
     descriptionTranslate: 'home_page.packs.rice_attieke_pack_description',
     itemsTranslate: [
