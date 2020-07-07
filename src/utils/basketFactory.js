@@ -1,9 +1,10 @@
 
-import regularBaskets from '../assets/baskets';
-import customBasket from '../assets/customBasket';
+import pleasureBaskets from '../assets/pleasureBaskets';
+import packs from '../assets/packs';
+import ramadanBaskets from '../assets/ramadanBaskets';
 
 class BasketFactory {
-  baskets = [...regularBaskets, customBasket];
+  baskets = [...pleasureBaskets, ...packs, ...ramadanBaskets];
 
   constructor (basket, userInfo, order, stripeIntentId = '') {
     this.structure = this.baskets.find(b => b.type === basket.type);

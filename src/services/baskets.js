@@ -301,10 +301,10 @@ const getPleasureBaskets = (req, res, next) => {
 };
 
 const getPacks = (req, res, next) => {
-  let packs = packs.filter(b => b.active);
+  let activePacks = packs.filter(b => b.active);
 
   res.status(200);
-  res.send({ packs });
+  res.send({ packs: activePacks });
 };
 
 const getBasketsByStatus = async (statuses = []) => {
