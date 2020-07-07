@@ -16,8 +16,10 @@ import {
   getSundayOfCurrentWeek,
 } from '../utils/dates';
 
-import basketsInfos from '../assets/baskets';
-import customBasketInfos from '../assets/customBasket';
+import pleasureBaskets from '../assets/pleasureBaskets';
+import ramadanBaskets from '../assets/ramadanBaskets';
+import packs from '../assets/packs';
+
 import { log } from './operationsLogs';
 import { sendDeliveryRateReminders } from './mailjet';
 
@@ -171,7 +173,7 @@ const updateBasketsByOrderRef = async (req, res, next) => {
   }
 };
 
-const findBaskets = async (req, res, next) => {
+const findOrderBaskets = async (req, res, next) => {
   try {
     if (!req.query.ref) {
       res.status(400);
@@ -291,15 +293,18 @@ const countBaskets = async (req, res, next) => {
   res.send({ count });
 }
 
-const getHomeBaskets = (req, res, next) => {
-  let baskets = [...basketsInfos, customBasketInfos];
-
-  if (req.query.status === 'active') {
-    baskets = baskets.filter(b => b.active);
-  }
+const getPleasureBaskets = (req, res, next) => {
+  let baskets = pleasureBaskets.filter(b => b.active);
 
   res.status(200);
   res.send({ baskets });
+};
+
+const getPacks = (req, res, next) => {
+  let packs = packs.filter(b => b.active);
+
+  res.status(200);
+  res.send({ packs });
 };
 
 const getBasketsByStatus = async (statuses = []) => {
@@ -312,6 +317,13 @@ const getBasketsByStatus = async (statuses = []) => {
     console.log(e);
     return [];
   }
+};
+
+const getAllBaskets = async (req, res, next) => {
+  let baskets = [...pleasureBaskets, ...ramadanBaskets, ...packs];
+
+  res.status(200);
+  res.send({ baskets });
 };
 
 const getDminus30Baskets = async () => {
@@ -327,19 +339,15 @@ const getDminus30Baskets = async () => {
   return baskets;
 };
 
-const getCustomBasket = (req, res, next) => {
-  res.status(200);
-  res.send({ basket: customBasketInfos });
-};
-
 export {
-  getHomeBaskets,
+  getPleasureBaskets,
   createOrderManually,
-  getCustomBasket,
   countBaskets,
+  getAllBaskets,
+  getPacks,
   getBasketsByStatus,
   getUserLatestBasket,
-  findBaskets,
+  findOrderBaskets,
   getBaskets,
   getBasketsByEmail,
   getDminus30Baskets,

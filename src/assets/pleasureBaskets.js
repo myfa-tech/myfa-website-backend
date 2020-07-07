@@ -1,0 +1,48 @@
+const baskets = [
+  {
+    name: 'Fruits',
+    type: 'fruits',
+    label: 'Panier Fruits 🍌',
+    labelTranslate: 'home_page.baskets.fruits_basket_title',
+    active: true,
+    homeDesc: 'Bananes, oranges, noix de coco...',
+    homeDescTranslate: 'home_page.baskets.fruits_basket_home_description',
+    imgAlt: 'panier fruits',
+    price: 5.99,
+    priceCFA: 3900,
+    description: 'Le panier Fruits rassemble jusqu\'à 6 kilos de saveurs dont vous pouvez faire profiter vos proches.',
+    descriptionTranslate: 'home_page.baskets.fruits_basket_description',
+    itemsTranslate: [
+      { label: 'bananas', qty: 1 },
+      { label: 'oranges', qty: 1 },
+      { label: 'coconut', qty: 1 },
+      { label: 'pineapple', qty: 1 },
+      { label: 'mangoes', qty: 1 },
+      { label: 'avocados', qty: 1 },
+    ],
+  },
+  {
+    name: 'Beauté',
+    type: 'beauty',
+    label: 'Panier Beauté ✨',
+    labelTranslate: 'home_page.baskets.beauty_basket_title',
+    active: true,
+    homeDesc: 'Beurre de karité, bissap, kinkeliba...',
+    homeDescTranslate: 'home_page.baskets.beauty_basket_home_description',
+    imgAlt: 'panier beauté',
+    price: 19.99,
+    priceCFA: 13100,
+    description: 'Avec ce panier rempli de produits aux bienfaits bénéfiques pour votre santé autant que votre beauté, prendre soin de vous n’a jamais été aussi plaisant.',
+    descriptionTranslate: 'home_page.baskets.beauty_basket_description',
+    itemsTranslate: [
+      { label: 'karite', qty: 1 },
+      { label: 'cocoa_butter', qty: 1 },
+      { label: 'bissap', qty: 2 },
+      { label: 'kinkeliba', qty: 1 },
+      { label: 'black_soap', qty: 2 },
+      { label: 'honey', qty: 1 },
+    ],
+  },
+];
+
+export default baskets;

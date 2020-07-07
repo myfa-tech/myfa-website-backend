@@ -1,0 +1,75 @@
+const packs = [
+  {
+    name: 'Légumes',
+    type: 'legumes',
+    label: 'Pack Légumes 🧅',
+    labelTranslate: 'home_page.packs.legumes_pack_title',
+    active: true,
+    homeDesc: 'Oignons, carottes, Ignames...',
+    homeDescTranslate: 'home_page.packs.legumes_pack_home_description',
+    imgAlt: 'pack légumes',
+    price: 12.99,
+    priceCFA: 8500,
+    description: 'Chez MYFA, nous tenons à mettre en valeur les cultures vivrières qui rentrent dans la consommation locale. Avec ce panier, vous rendez heureux vos proches et les vendeurs/ producteurs avec qui nous sommes en contact direct ! 😉',
+    descriptionTranslate: 'home_page.packs.legumes_pack_description',
+    itemsTranslate: [
+      { label: 'carots', qty: 1 },
+      { label: 'potatoes', qty: 2 },
+      { label: 'onions', qty: 1 },
+      { label: 'yam', qty: 1 },
+      { label: 'red_cabbage', qty: 1 },
+      { label: 'french_beans', qty: 1 },
+    ],
+  },
+  {
+    name: 'Familial - Riz local',
+    type: 'local_rice',
+    label: 'Pack Familial - Riz local',
+    labelTranslate: 'home_page.packs.local_rice_pack_title',
+    active: true,
+    homeDesc: 'Oignons, carottes, Ignames...', // @TODO : change descriptions
+    homeDescTranslate: 'home_page.packs.local_rice_pack_home_description',
+    imgAlt: 'pack riz local',
+    price: 113.99,
+    priceCFA: 74633,
+    // @TODO : change description
+    description: 'Chez MYFA, nous tenons à mettre en valeur les cultures vivrières qui rentrent dans la consommation locale. Avec ce panier, vous rendez heureux vos proches et les vendeurs/ producteurs avec qui nous sommes en contact direct ! 😉',
+    descriptionTranslate: 'home_page.packs.local_rice_pack_description',
+    itemsTranslate: [
+      { label: 'tomato_puree', qty: 1 },
+      { label: 'milk_pouder', qty: 3 },
+      { label: 'oil', qty: 5 },
+      { label: 'sugar', qty: 3 },
+      { label: 'black_pepper', qty: 1 },
+      { label: 'hot_chili', qty: 1 },
+      { label: 'local_rice_25', qty: 2 },
+    ],
+  },
+  {
+    name: 'Familial - Riz Attieke',
+    type: 'rice_attieke',
+    label: 'Pack Familial - Riz attieke',
+    labelTranslate: 'home_page.packs.rice_attieke_pack_title',
+    active: true,
+    homeDesc: 'Oignons, carottes, Ignames...', // @TODO : change descriptions
+    homeDescTranslate: 'home_page.packs.rice_attieke_pack_home_description',
+    imgAlt: 'pack riz local',
+    price: 123.99,
+    priceCFA: 81133,
+    // @TODO : change description
+    description: 'Chez MYFA, nous tenons à mettre en valeur les cultures vivrières qui rentrent dans la consommation locale. Avec ce panier, vous rendez heureux vos proches et les vendeurs/ producteurs avec qui nous sommes en contact direct ! 😉',
+    descriptionTranslate: 'home_page.packs.rice_attieke_pack_description',
+    itemsTranslate: [
+      { label: 'tomato_puree', qty: 1 },
+      { label: 'milk_pouder', qty: 3 },
+      { label: 'oil', qty: 5 },
+      { label: 'sugar', qty: 3 },
+      { label: 'black_pepper', qty: 1 },
+      { label: 'hot_chili', qty: 1 },
+      { label: 'local_rice_25', qty: 2 },
+      { label: 'attieke', qty: 10 },
+    ],
+  },
+];
+
+export default packs;
