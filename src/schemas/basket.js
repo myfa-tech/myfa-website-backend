@@ -6,6 +6,7 @@ import ReducedUser from './reduceduser';
 const Basket = mongoose.Schema({
 	// default id
 	orderRef: String,
+	category: String,
 	name: String,
 	reason: String,
 	count: String,

@@ -2,6 +2,7 @@ const baskets = [
   {
     name: 'Fruits',
     type: 'fruits',
+    category: 'baskets',
     label: 'Panier Fruits 🍌',
     labelTranslate: 'home_page.baskets.fruits_basket_title',
     active: true,
@@ -24,6 +25,7 @@ const baskets = [
   {
     name: 'Beauté',
     type: 'beauty',
+    category: 'baskets',
     label: 'Panier Beauté ✨',
     labelTranslate: 'home_page.baskets.beauty_basket_title',
     active: true,
@@ -46,6 +48,7 @@ const baskets = [
   {
     name: 'Chocolat',
     type: 'chocolate',
+    category: 'baskets',
     label: 'Panier Chocolat 🍫',
     labelTranslate: 'home_page.baskets.chocolate_basket_title',
     active: true,

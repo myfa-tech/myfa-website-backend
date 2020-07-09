@@ -2,6 +2,7 @@ const packs = [
   {
     name: 'Légumes',
     type: 'veggies',
+    category: 'packs',
     label: 'Pack Légumes 🧅',
     labelTranslate: 'home_page.packs.veggies_pack_title',
     active: true,
@@ -24,6 +25,7 @@ const packs = [
   {
     name: 'Matinal',
     type: 'morning',
+    category: 'packs',
     label: 'Pack Matinal',
     labelTranslate: 'home_page.packs.morning_pack_title',
     active: true,
@@ -38,12 +40,13 @@ const packs = [
       { label: 'spread_chocolate', qty: 2 },
       { label: 'coffee', qty: 2 },
       { label: 'margarine', qty: 2 },
-      { label: 'honey_ci', qty: 2 },
+      { label: 'honey', qty: 2 },
     ],
   },
   {
     name: 'Familial - Riz local',
     type: 'local_rice',
+    category: 'packs',
     label: 'Pack Familial - Riz local',
     labelTranslate: 'home_page.packs.local_rice_pack_title',
     active: true,
@@ -56,7 +59,7 @@ const packs = [
     descriptionTranslate: 'home_page.packs.local_rice_pack_description',
     itemsTranslate: [
       { label: 'tomato_puree', qty: 1 },
-      { label: 'milk_pouder', qty: 3 },
+      { label: 'milk_powder', qty: 3 },
       { label: 'oil', qty: 5 },
       { label: 'sugar', qty: 3 },
       { label: 'black_pepper', qty: 1 },
@@ -67,6 +70,7 @@ const packs = [
   {
     name: 'Familial - Riz Attieke',
     type: 'rice_attieke',
+    category: 'packs',
     label: 'Pack Familial - Riz attieke',
     labelTranslate: 'home_page.packs.rice_attieke_pack_title',
     active: true,
@@ -79,7 +83,7 @@ const packs = [
     descriptionTranslate: 'home_page.packs.rice_attieke_pack_description',
     itemsTranslate: [
       { label: 'tomato_puree', qty: 1 },
-      { label: 'milk_pouder', qty: 3 },
+      { label: 'milk_powder', qty: 3 },
       { label: 'oil', qty: 5 },
       { label: 'sugar', qty: 3 },
       { label: 'black_pepper', qty: 1 },

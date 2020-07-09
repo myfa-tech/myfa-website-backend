@@ -48,7 +48,7 @@ const createPayment = async (req, res, next) => {
     let session = { id: 'test' };
 
     let images = {
-      'legumes': 'veggies.jpg',
+      'veggies': 'veggies.jpg',
       'fruits': 'fruits.jpg',
       'myfa': 'myfa.jpg',
       'sauces': 'sauces.jpg',
