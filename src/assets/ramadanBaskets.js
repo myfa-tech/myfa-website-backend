@@ -68,3 +68,5 @@ const baskets = [
     ],
   },
 ];
+
+export default baskets;
