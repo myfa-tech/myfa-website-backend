@@ -65,6 +65,43 @@ const sendEmailAddressConfirmationEmail = async (user) => {
   }
 };
 
+const sendUserBasketComment = async (req, res, next) => {;
+  try {
+    const { firstname, lastname, email, comment, basketType } = req.body;
+
+    await mailjet.post('send', {'version': 'v3.1'})
+      .request({
+        'Messages': [
+          {
+            'From': {
+              'Email': 'infos@myfa.fr',
+              'Name': 'MYFA'
+            },
+            'To': [{ 'Email': 'infos@myfa.fr' }],
+            'TemplateID': 1557971,
+            'TemplateLanguage': true,
+            'Subject': 'Commentaire utilisateur',
+            'Variables': {
+              'user_firstname': firstname,
+              'user_lastname': lastname,
+              'user_email': email,
+              'user_comment': comment,
+              'basket_type': basketType,
+            },
+          },
+        ],
+      });
+
+    console.log('Email comment sent');
+
+    res.status(201).send('sent');
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+    res.status(500).end();
+  }
+};
+
 const sendResetPasswordEmail = async (host, user) => {
   try {
     let hash = shajs('sha256').update(`${user.firstname}--${user.email}`).digest('hex');
@@ -290,6 +327,7 @@ export {
   saveContact,
   sendEmailAddressConfirmationEmail,
   sendEmailToFinance,
+  sendUserBasketComment,
   sendDeliveryRateReminders,
   sendD30Reminders,
   sendOrderConfirmationEmail,

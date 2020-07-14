@@ -6,8 +6,8 @@ import bodyParser from 'body-parser';
 import cron from 'node-cron';
 
 import { confirmPayment } from './services/stripe';
-import { countBaskets, findBaskets, getBaskets, getBasketsByEmail, updateBasketById, getHomeBaskets, getCustomBasket, getUserCart, updateBasketsByOrderRef, createOrderManually } from './services/baskets';
-import { addContactToList } from './services/mailjet';
+import { getAllBaskets, getPacks, countBaskets, findOrderBaskets, getBaskets, getBasketsByEmail, updateBasketById, getPleasureBaskets, updateBasketsByOrderRef, createOrderManually } from './services/baskets';
+import { addContactToList, sendUserBasketComment } from './services/mailjet';
 import { login } from './services/dashboardUsers';
 import { fetchKPIs } from './services/kpis';
 import { fetchStocks, updateStock } from './services/stocks';
@@ -108,9 +108,9 @@ const run = () => {
 
   app.post('/users/password/reset', resetPassword);
 
-  app.get('/baskets/details', getHomeBaskets);
+  app.get('/baskets/pleasure', getPleasureBaskets);
 
-  app.get('/baskets/custom-basket/details', getCustomBasket);
+  app.get('/baskets/packs', getPacks);
 
   app.get('/ratings', findRatings);
 
@@ -130,7 +130,11 @@ const run = () => {
 
   app.post('/mobile_money/orders', createMobileMoneyPayment);
 
-  app.get('/baskets', findBaskets);
+  app.get('/baskets', getAllBaskets);
+
+  app.post('/baskets/comments', sendUserBasketComment);
+
+  app.get('/orders/baskets', findOrderBaskets);
 
   app.get('/users', fetchUser);
 
@@ -156,7 +160,7 @@ const run = () => {
 
   app.use(verifyAdminJWT);
 
-  app.get('/baskets/count', countBaskets);
+  app.get('/dashboard/baskets/count', countBaskets);
 
   app.get('/dashboard/kpis', fetchKPIs);
 
