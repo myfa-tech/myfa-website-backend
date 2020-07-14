@@ -52,8 +52,8 @@ const baskets = [
     active: true,
     homeDescTranslate: 'home_page.baskets.chocolate_home_description',
     imgAlt: 'panier chocolat',
-    price: 65.50,
-    priceCFA: 42900,
+    price: 59.99,
+    priceCFA: 39300,
     description: 'Dans ce panier, retrouvez toutes les saveurs chocolatées de la Côte d\'Ivoire.',
     descriptionTranslate: 'home_page.baskets.chocolate_description',
     itemsTranslate: [
