@@ -24,6 +24,7 @@ import { getJobFile } from './services/jobs';
 import { testPromoCode } from './services/promo';
 import { findRatings, saveRating } from './services/ratings';
 import curateCustomersAndSendReminders from './utils/curateCustomersAndSendReminders';
+import { getProducts } from './services/products';
 
 dotenv.config();
 
@@ -109,6 +110,8 @@ const run = () => {
   app.post('/users/password/reset', resetPassword);
 
   app.get('/baskets/pleasure', getPleasureBaskets);
+
+  app.get('/products', getProducts);
 
   app.get('/baskets/packs', getPacks);
 
