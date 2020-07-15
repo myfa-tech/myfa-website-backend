@@ -18,6 +18,7 @@ import {
 
 import pleasureBaskets from '../assets/pleasureBaskets';
 import ramadanBaskets from '../assets/ramadanBaskets';
+import customBasket from '../assets/customBasket';
 import packs from '../assets/packs';
 
 import { log } from './operationsLogs';
@@ -320,7 +321,7 @@ const getBasketsByStatus = async (statuses = []) => {
 };
 
 const getAllBaskets = async (req, res, next) => {
-  let baskets = [...pleasureBaskets, ...ramadanBaskets, ...packs];
+  let baskets = [...pleasureBaskets, ...ramadanBaskets, customBasket, ...packs];
 
   res.status(200);
   res.send({ baskets });
