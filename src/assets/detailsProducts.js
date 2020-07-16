@@ -20,7 +20,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.plantain",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'plantain',
     qty: 1,
     bestseller: false,
@@ -38,7 +38,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.sugar",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'sugar pack',
     qty: 1,
     bestseller: true,
@@ -47,7 +47,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.soup",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'soup pack',
     qty: 1,
     bestseller: false,
@@ -56,7 +56,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.tea_bag",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'tea bags',
     qty: 10,
     bestseller: false,
@@ -65,7 +65,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.vqr",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'VacheQuiRit pack',
     qty: 1,
     bestseller: false,
@@ -74,7 +74,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.juice",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: '1L juice tetrapack',
     qty: 1,
     bestseller: false,
@@ -101,7 +101,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.mil",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'milet porridge',
     qty: 1,
     bestseller: false,
@@ -110,7 +110,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.bonnet_rouge",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'bonnet rouge',
     qty: 1,
     bestseller: false,
@@ -164,7 +164,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.peanut_paste",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'peanut paste',
     qty: 1,
     bestseller: false,
@@ -173,7 +173,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.salt",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'salt',
     qty: 1,
     bestseller: false,
@@ -182,7 +182,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.pepper_powder",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'pepper powder',
     qty: 1,
     bestseller: false,
@@ -191,7 +191,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.ginger_powder",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'ginger powder',
     qty: 1,
     bestseller: false,
@@ -200,7 +200,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.garlic",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'garlice',
     qty: 4,
     bestseller: false,
@@ -317,7 +317,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.bissap",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'bissap leafs',
     qty: 1,
     bestseller: false,
@@ -344,7 +344,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.honey",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'honey',
     qty: 1,
     bestseller: false,
@@ -353,7 +353,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.margarine",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'margarine',
     qty: 1,
     bestseller: false,
@@ -362,7 +362,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.coffee",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'coffee tin',
     qty: 1,
     bestseller: false,
@@ -371,7 +371,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.spread_chocolate",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'chocolat à tartiner',
     qty: 1,
     bestseller: false,
@@ -380,7 +380,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.tomato_puree",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'tomato puree',
     qty: 1,
     bestseller: false,
@@ -389,7 +389,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.milk_powder",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'lait en poudre',
     qty: 1,
     bestseller: false,
@@ -398,7 +398,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.oil",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'cooking oil',
     qty: 1,
     bestseller: true,
@@ -407,7 +407,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.black_pepper",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'black pepper',
     qty: 1,
     bestseller: false,
@@ -425,7 +425,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.local_rice_25",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'rice bag 25 kilos',
     qty: 1,
     bestseller: true,
@@ -434,7 +434,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.local_rice_10",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'rice biag 10 kilos',
     qty: 1,
     bestseller: false,
@@ -443,7 +443,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.attieke",
-    category: 'grocery_salty',
+    category: 'grocery-salty',
     imgAlt: 'attieke',
     qty: 2,
     bestseller: false,
@@ -452,7 +452,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.mona_lysa",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'mona lysa choco',
     qty: 1,
     bestseller: false,
@@ -461,7 +461,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.white_zephyr",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'white zephyr chocolate',
     qty: 1,
     bestseller: false,
@@ -470,7 +470,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.ruby",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'ruby chocolate',
     qty: 1,
     bestseller: false,
@@ -479,7 +479,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.crispearls",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'crispearls chocolate',
     qty: 1,
     bestseller: false,
@@ -488,7 +488,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.superior_lactee",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'superior lactee chocolate',
     qty: 1,
     bestseller: false,
@@ -497,7 +497,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.caramel_almond",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'caramelized almond',
     qty: 1,
     bestseller: false,
@@ -506,7 +506,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.gold",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'gold chocolate',
     qty: 1,
     bestseller: false,
@@ -515,7 +515,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.ruben",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'ruben chocolate',
     qty: 1,
     bestseller: false,
@@ -524,7 +524,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.ocoa",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'ocoa chocolate',
     qty: 1,
     bestseller: false,
@@ -533,7 +533,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.eale_choco_tablette",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'eale chocolate tablette',
     qty: 1,
     bestseller: false,
@@ -542,7 +542,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.tabletine",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'eale small chocolate tablette',
     qty: 1,
     bestseller: false,
@@ -551,7 +551,7 @@ const products = [
   },
   {
     labelTranslate: "ingredients.tofi_mylane",
-    category: 'grocery_sweet',
+    category: 'grocery-sweet',
     imgAlt: 'tofi mylane',
     qty: 1,
     bestseller: false,

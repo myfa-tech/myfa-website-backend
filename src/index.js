@@ -24,7 +24,7 @@ import { getJobFile } from './services/jobs';
 import { testPromoCode } from './services/promo';
 import { findRatings, saveRating } from './services/ratings';
 import curateCustomersAndSendReminders from './utils/curateCustomersAndSendReminders';
-import { getProducts, getProductsByCategory } from './services/products';
+import { getProducts } from './services/products';
 
 dotenv.config();
 
@@ -112,8 +112,6 @@ const run = () => {
   app.get('/baskets/pleasure', getPleasureBaskets);
 
   app.get('/products', getProducts);
-
-  app.get('/products/:category', getProductsByCategory);
 
   app.get('/baskets/packs', getPacks);
 
