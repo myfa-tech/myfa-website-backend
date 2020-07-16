@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 import Recipient from './recipient';
 import Basket from './basket';
+import Product from './product';
 
 const Cart = mongoose.Schema({
 	// default id
@@ -15,6 +16,7 @@ const Cart = mongoose.Schema({
 	recipient: Recipient,
 	price: Number,
 	baskets: [Basket],
+	products: [Product],
 	createdAt: Date,
 });
 
