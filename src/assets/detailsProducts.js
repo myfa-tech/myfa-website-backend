@@ -1,5 +1,6 @@
 const products = [
   {
+    name: 'palm_oil',
     labelTranslate: "ingredients.palm_oil",
     category: 'grocery_salt',
     img: 'palm_oil',
@@ -10,6 +11,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'attieke',
     labelTranslate: "ingredients.attieke",
     category: 'grocery_salt',
     imgAlt: 'attieke bag',
@@ -19,6 +21,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'plantain',
     labelTranslate: "ingredients.plantain",
     category: 'grocery-salty',
     imgAlt: 'plantain',
@@ -28,6 +31,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'gombos',
     labelTranslate: "ingredients.gombos",
     category: 'veggies',
     imgAlt: 'gombo',
@@ -37,6 +41,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'sugar',
     labelTranslate: "ingredients.sugar",
     category: 'grocery-sweet',
     imgAlt: 'sugar pack',
@@ -46,6 +51,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'soup',
     labelTranslate: "ingredients.soup",
     category: 'grocery-salty',
     imgAlt: 'soup pack',
@@ -55,6 +61,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'tea_bags',
     labelTranslate: "ingredients.tea_bags",
     category: 'grocery-sweet',
     imgAlt: 'tea bags',
@@ -64,6 +71,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'vqr',
     labelTranslate: "ingredients.vqr",
     category: 'grocery-salty',
     imgAlt: 'VacheQuiRit pack',
@@ -73,6 +81,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'juice',
     labelTranslate: "ingredients.juice",
     category: 'grocery-sweet',
     imgAlt: '1L juice tetrapack',
@@ -82,6 +91,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: '1_apple',
     labelTranslate: "ingredients.1_apple",
     category: 'fruits',
     imgAlt: 'apples',
@@ -91,6 +101,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'mil',
     labelTranslate: "ingredients.mil",
     category: 'grocery-sweet',
     imgAlt: 'milet porridge',
@@ -100,6 +111,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'bonnet_rouge',
     labelTranslate: "ingredients.bonnet_rouge",
     category: 'grocery-sweet',
     imgAlt: 'bonnet rouge',
@@ -109,6 +121,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'onions',
     labelTranslate: "ingredients.onions",
     category: 'veggies',
     imgAlt: 'oignons',
@@ -118,6 +131,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'mangoes',
     labelTranslate: "ingredients.mangoes",
     category: 'fruits',
     imgAlt: 'mangues',
@@ -127,6 +141,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'maggie',
     labelTranslate: "ingredients.maggie",
     category: 'fruits',
     imgAlt: '50 Maggie cubes',
@@ -136,6 +151,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'tomatoes',
     labelTranslate: "ingredients.tomatoes",
     category: 'fruits',
     imgAlt: 'tomates',
@@ -145,6 +161,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'lemon',
     labelTranslate: "ingredients.lemon",
     category: 'fruits',
     imgAlt: 'lemon',
@@ -154,6 +171,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'peanut_paste',
     labelTranslate: "ingredients.peanut_paste",
     category: 'grocery-sweet',
     imgAlt: 'peanut paste',
@@ -163,6 +181,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'salt',
     labelTranslate: "ingredients.salt",
     category: 'grocery-salty',
     imgAlt: 'salt',
@@ -172,6 +191,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'pepper_powder',
     labelTranslate: "ingredients.pepper_powder",
     category: 'grocery-salty',
     imgAlt: 'pepper powder',
@@ -181,6 +201,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'ginger_powder',
     labelTranslate: "ingredients.ginger_powder",
     category: 'grocery-salty',
     imgAlt: 'ginger powder',
@@ -190,6 +211,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'garlic',
     labelTranslate: "ingredients.garlic",
     category: 'grocery-salty',
     imgAlt: 'garlice',
@@ -199,6 +221,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'bananas',
     labelTranslate: "ingredients.bananas",
     category: 'fruits',
     imgAlt: 'bananas',
@@ -208,6 +231,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'oranges',
     labelTranslate: "ingredients.oranges",
     category: 'fruits',
     imgAlt: 'oranges',
@@ -217,6 +241,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'coconut',
     labelTranslate: "ingredients.coconut",
     category: 'fruits',
     imgAlt: 'coconut',
@@ -226,6 +251,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'pineapple',
     labelTranslate: "ingredients.pineapple",
     category: 'fruits',
     imgAlt: 'pineapple',
@@ -235,6 +261,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'avocados',
     labelTranslate: "ingredients.avocados",
     category: 'fruits',
     imgAlt: 'avocados',
@@ -244,6 +271,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'carots',
     labelTranslate: "ingredients.carots",
     category: 'veggies',
     imgAlt: 'carots',
@@ -253,6 +281,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'potatoes',
     labelTranslate: "ingredients.potatoes",
     category: 'veggies',
     imgAlt: 'potatoes',
@@ -262,6 +291,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'yam',
     labelTranslate: "ingredients.yam",
     category: 'veggies',
     imgAlt: 'yam',
@@ -271,6 +301,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'red_cabbage',
     labelTranslate: "ingredients.red_cabbage",
     category: 'veggies',
     imgAlt: 'red cabbage',
@@ -280,6 +311,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'french_beans',
     labelTranslate: "ingredients.french_beans",
     category: 'veggies',
     imgAlt: 'french beance',
@@ -289,6 +321,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'karite',
     labelTranslate: "ingredients.karite",
     category: 'healthy',
     imgAlt: 'karite', // @TODO : VERIFY THIS
@@ -298,6 +331,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'cocoa_butter',
     labelTranslate: "ingredients.cocoa_butter",
     category: 'healthy',
     imgAlt: 'cocoa butter',
@@ -307,6 +341,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'bissap',
     labelTranslate: "ingredients.bissap",
     category: 'grocery-sweet',
     imgAlt: 'bissap leafs',
@@ -316,6 +351,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'kinkeliba',
     labelTranslate: "ingredients.kinkeliba",
     category: 'healthy',
     imgAlt: 'kinkeliba leafs',
@@ -325,6 +361,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'black_soap',
     labelTranslate: "ingredients.black_soap",
     category: 'healthy',
     imgAlt: 'black soap',
@@ -334,6 +371,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'honey',
     labelTranslate: "ingredients.honey",
     category: 'grocery-sweet',
     imgAlt: 'honey',
@@ -343,6 +381,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'margarine',
     labelTranslate: "ingredients.margarine",
     category: 'grocery-salty',
     imgAlt: 'margarine',
@@ -352,6 +391,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'coffee',
     labelTranslate: "ingredients.coffee",
     category: 'grocery-sweet',
     imgAlt: 'coffee tin',
@@ -361,6 +401,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'spread_chocolate',
     labelTranslate: "ingredients.spread_chocolate",
     category: 'grocery-sweet',
     imgAlt: 'chocolat à tartiner',
@@ -370,6 +411,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'tomato_puree',
     labelTranslate: "ingredients.tomato_puree",
     category: 'grocery-salty',
     imgAlt: 'tomato puree',
@@ -379,6 +421,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'milk_powder',
     labelTranslate: "ingredients.milk_powder",
     category: 'grocery-sweet',
     imgAlt: 'lait en poudre',
@@ -388,6 +431,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'oil',
     labelTranslate: "ingredients.oil",
     category: 'grocery-salty',
     imgAlt: 'cooking oil',
@@ -397,6 +441,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'black_pepper',
     labelTranslate: "ingredients.black_pepper",
     category: 'grocery-salty',
     imgAlt: 'black pepper',
@@ -406,6 +451,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'hot_chili',
     labelTranslate: "ingredients.hot_chili",
     category: 'veggies',
     imgAlt: 'piment fort',
@@ -415,6 +461,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'local_rice_25',
     labelTranslate: "ingredients.local_rice_25",
     category: 'grocery-salty',
     imgAlt: 'rice bag 25 kilos',
@@ -424,6 +471,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'local_rice_10',
     labelTranslate: "ingredients.local_rice_10",
     category: 'grocery-salty',
     imgAlt: 'rice biag 10 kilos',
@@ -433,6 +481,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'attieke',
     labelTranslate: "ingredients.attieke",
     category: 'grocery-salty',
     imgAlt: 'attieke',
@@ -442,6 +491,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'white_zephyr',
     labelTranslate: "ingredients.white_zephyr",
     category: 'grocery-sweet',
     imgAlt: 'white zephyr chocolate',
@@ -451,6 +501,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'ruby',
     labelTranslate: "ingredients.ruby",
     category: 'grocery-sweet',
     imgAlt: 'ruby chocolate',
@@ -460,6 +511,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'superior_lactee',
     labelTranslate: "ingredients.superior_lactee",
     category: 'grocery-sweet',
     imgAlt: 'superior lactee chocolate',
@@ -469,6 +521,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'caramel_almond',
     labelTranslate: "ingredients.caramel_almond",
     category: 'grocery-sweet',
     imgAlt: 'caramelized almond',
@@ -478,6 +531,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'gold',
     labelTranslate: "ingredients.gold",
     category: 'grocery-sweet',
     imgAlt: 'gold chocolate',
@@ -487,6 +541,7 @@ const products = [
     priceCFA: 14475,
   },
   {
+    name: 'ocoa',
     labelTranslate: "ingredients.ocoa",
     category: 'grocery-sweet',
     imgAlt: 'ocoa chocolate',
