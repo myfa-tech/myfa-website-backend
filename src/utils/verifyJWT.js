@@ -2,6 +2,8 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
+import { fetchUserByEmail } from '../services/dashboardUsers';
+
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -18,12 +20,14 @@ const verifyJWT = (req, res, next) => {
   }
 }
 
-const verifyAdminJWT = (req, res, next) => {
+const verifyAdminJWT = async (req, res, next) => {
   try {
     let token = (req.headers.authorization || '').split(' ')[1];
     let userInfo = jwt.verify(token, JWT_SECRET);
 
-    if (!userInfo.admin) {
+    let user = await fetchUserByEmail(userInfo.email);
+
+    if (!userInfo.admin || !user || !Object.keys(user).length) {
       throw new Error('wrong token');
     }
 
