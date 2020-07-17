@@ -4,6 +4,12 @@ import Recipient from './recipient';
 import Basket from './basket';
 import Product from './product';
 
+const Products = mongoose.Schema({
+	items: [Product],
+	recipient: Recipient,
+	message: String,
+});
+
 const Cart = mongoose.Schema({
 	// default id
 	orderRef: String,
@@ -13,10 +19,9 @@ const Cart = mongoose.Schema({
 	userEmail: String,
 	type: String,
 	status: String,
-	recipient: Recipient,
 	price: Number,
 	baskets: [Basket],
-	products: [Product],
+	products: Products,
 	createdAt: Date,
 });
 
