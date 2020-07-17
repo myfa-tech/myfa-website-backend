@@ -27,7 +27,13 @@ const getPrice = (basketPrice, promoActivated) => {
   }
 
   let literalPrice = String(price);
-  literalPrice = literalPrice.replace('.','');
+  let parts = literalPrice.split('.');
+
+  if (parts[1].length === 1) {
+    parts[1] = parts[1] + '0';
+  }
+
+  literalPrice = parts[0] + parts[1];
 
   return Number(literalPrice);
 };
@@ -47,12 +53,16 @@ const createPayment = async (req, res, next) => {
 
     let session = { id: 'test' };
 
-    let images = {
-      'veggies': 'veggies.jpg',
-      'fruits': 'fruits.jpg',
-      'myfa': 'myfa.jpg',
-      'sauces': 'sauces.jpg',
-      'beauty': 'beauty.jpg',
+    const getImage = (img) => {
+      let images = {
+        'veggies': 'veggies.jpg',
+        'fruits': 'fruits.jpg',
+        'myfa': 'myfa.jpg',
+        'sauces': 'sauces.jpg',
+        'beauty': 'beauty.jpg',
+      };
+
+      return images[img] || 'default-product.png';
     };
 
     if (!!order.promo) {
@@ -64,24 +74,42 @@ const createPayment = async (req, res, next) => {
       }
     }
 
+    let lineItems = [];
+
+    if (order.baskets) {
+      lineItems = uniqBy(order.baskets, 'type').map((basket) => ({
+        name: basket.label,
+        description: basket.description,
+        images: [`https://www.myfa.fr/${getImage(basket.type)}`],
+        amount: getPrice(basket.price, promoActivated),
+        currency: 'eur',
+        quantity: countBy(order.baskets, 'type', basket.type),
+      }));
+    }
+
+    if (order.products && order.products.items) {
+      lineItems = [...lineItems, ...order.products.items.map(product => ({
+        name: product.name,
+        description: '',
+        images: [`https://www.myfa.fr/${getImage(product.name)}`],
+        amount: getPrice(product.price, promoActivated),
+        currency: 'eur',
+        quantity: 1,
+      }))];
+    }
+
     if (!order.isTest) {
       session = await stripe.checkout.sessions.create({
         customer_email: user.email,
         payment_method_types: ['card'],
-        line_items: uniqBy(order.baskets, 'type').map((basket) => ({
-          name: basket.label,
-          description: basket.description,
-          images: [`https://www.myfa.fr/${images[basket.type]}`],
-          amount: getPrice(basket.price, promoActivated),
-          currency: 'eur',
-          quantity: countBy(order.baskets, 'type', basket.type),
-        })),
+        line_items: lineItems,
         success_url,
         cancel_url: 'https://www.myfa.fr',
       });
     }
 
     saveBasketsFromOrder(order, user, session.payment_intent);
+    // @TODO: saveProductsAsDetailsBasket(order, user, session.payment_intent);
 
     res.status(201);
     res.send({ id: session.id });
