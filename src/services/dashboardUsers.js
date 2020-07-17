@@ -31,6 +31,19 @@ const getUserByEmail = async (req, res, next) => {
 	}
 };
 
+const fetchUserByEmail = async (email) => {
+  try {
+		const usersModel = mongoose.model('dashboardusers', UserSchema);
+
+    const user = await usersModel.findOne({ email }, usersModel);
+
+    return user;
+	} catch (e) {
+    console.log(e);
+    return null;
+	}
+};
+
 const login = async (req, res, next) => {
   try {
     if (!req.body.email || !req.body.password) {
@@ -62,4 +75,4 @@ const login = async (req, res, next) => {
   }
 }
 
-export { getUserByEmail, login };
+export { fetchUserByEmail, getUserByEmail, login };
