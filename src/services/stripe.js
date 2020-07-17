@@ -7,7 +7,7 @@ import { getUserByEmail } from './users';
 import { sendMessage } from './nexmo';;
 import { sendOrderConfirmationEmail } from './mailjet';
 import basketSchema from '../schemas/basket';
-import { saveBasketsFromOrder } from './baskets';
+import { saveBasketsFromOrder, saveProductsAsDetailsBasket } from './baskets';
 import countBy from '../utils/countBy';
 import uniqBy from '../utils/uniqBy';
 import { usePromo } from './promo';
@@ -102,7 +102,7 @@ const createPayment = async (req, res, next) => {
     }
 
     saveBasketsFromOrder(order, user, session.payment_intent);
-    // @TODO: saveProductsAsDetailsBasket(order, user, session.payment_intent);
+    saveProductsAsDetailsBasket(order, user, session.payment_intent);
 
     res.status(201);
     res.send({ id: session.id });
