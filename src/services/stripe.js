@@ -90,7 +90,7 @@ const createPayment = async (req, res, next) => {
     if (order.products && order.products.items) {
       lineItems = [...lineItems, ...order.products.items.map(product => ({
         name: product.name,
-        description: '',
+        description: 'produit au détails',
         images: [`https://www.myfa.fr/${getImage(product.name)}`],
         amount: getPrice(product.price, promoActivated),
         currency: 'eur',
