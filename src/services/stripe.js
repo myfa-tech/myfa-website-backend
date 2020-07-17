@@ -11,6 +11,7 @@ import { saveBasketsFromOrder } from './baskets';
 import countBy from '../utils/countBy';
 import uniqBy from '../utils/uniqBy';
 import { usePromo } from './promo';
+import imagesRefs from '../assets/imagesRefs';
 
 dotenv.config();
 
@@ -54,15 +55,7 @@ const createPayment = async (req, res, next) => {
     let session = { id: 'test' };
 
     const getImage = (img) => {
-      let images = {
-        'veggies': 'veggies.jpg',
-        'fruits': 'fruits.jpg',
-        'myfa': 'myfa.jpg',
-        'sauces': 'sauces.jpg',
-        'beauty': 'beauty.jpg',
-      };
-
-      return images[img] || 'default-product.png';
+      return imagesRefs[img] || 'default-product.png';
     };
 
     if (!!order.promo) {
