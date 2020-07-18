@@ -129,7 +129,7 @@ const products = [
   {
     name: 'maggie',
     labelTranslate: "ingredients.maggie",
-    category: 'fruits',
+    category: 'grocery-salty',
     imgAlt: '50 Maggie cubes',
     bestseller: false,
     price: 22.10,
