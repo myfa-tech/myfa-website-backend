@@ -469,7 +469,7 @@ const products = [
     priceCFA: 14475,
   },
   {
-    name: 'caramel_almond',
+    name: 'almonds',
     labelTranslate: "ingredients.caramel_almond",
     category: 'grocery-sweet',
     imgAlt: 'caramelized almond',
