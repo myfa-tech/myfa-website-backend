@@ -18,6 +18,8 @@ dotenv.config();
 const stripe = Stripe(process.env.STRIPE_API_SECRET);
 const JWT_SECRET = process.env.JWT_SECRET;
 const PROMO_PERCENTAGE = 10;
+const DELIVERY_PRICE = 400;
+const DELIVERY_LIMIT = 15;
 
 const getPrice = (basketPrice, promoActivated) => {
   let price = basketPrice;
@@ -68,12 +70,13 @@ const createPayment = async (req, res, next) => {
     }
 
     let lineItems = [];
+    let basePath = 'https://myfa-staging.netlify.app';
 
     if (order.baskets) {
       lineItems = uniqBy(order.baskets, 'type').map((basket) => ({
         name: basket.label,
         description: basket.description,
-        images: [`https://www.myfa.fr/${getImage(basket.type)}`],
+        images: [`${basePath}/${getImage(basket.type)}`],
         amount: getPrice(basket.price, promoActivated),
         currency: 'eur',
         quantity: countBy(order.baskets, 'type', basket.type),
@@ -84,11 +87,23 @@ const createPayment = async (req, res, next) => {
       lineItems = [...lineItems, ...order.products.items.map(product => ({
         name: product.name,
         description: 'produit au détails',
-        images: [`https://www.myfa.fr/${getImage(product.name)}`],
+        images: [`${basePath}/${getImage(product.name)}`],
         amount: getPrice(product.price, promoActivated),
         currency: 'eur',
         quantity: 1,
       }))];
+
+      let productsPrice = order.products.items.map(p => p.price).reduce((acc, cur) => acc + cur, 0);
+
+      if (productsPrice < DELIVERY_LIMIT) {
+        lineItems.push({
+          name: 'Frais de livraison',
+          images: [`${basePath}/delivery.png`],
+          amount: DELIVERY_PRICE,
+          currency: 'eur',
+          quantity: 1,
+        });
+      }
     }
 
     if (!order.isTest) {
@@ -97,7 +112,7 @@ const createPayment = async (req, res, next) => {
         payment_method_types: ['card'],
         line_items: lineItems,
         success_url,
-        cancel_url: 'https://www.myfa.fr',
+        cancel_url: `${basePath}`,
       });
     }
 
