@@ -7,16 +7,19 @@ import { getUserByEmail } from './users';
 import { sendMessage } from './nexmo';;
 import { sendOrderConfirmationEmail } from './mailjet';
 import basketSchema from '../schemas/basket';
-import { saveBasketsFromOrder } from './baskets';
+import { saveBasketsFromOrder, saveProductsAsDetailsBasket } from './baskets';
 import countBy from '../utils/countBy';
 import uniqBy from '../utils/uniqBy';
 import { usePromo } from './promo';
+import imagesRefs from '../assets/imagesRefs';
 
 dotenv.config();
 
 const stripe = Stripe(process.env.STRIPE_API_SECRET);
 const JWT_SECRET = process.env.JWT_SECRET;
 const PROMO_PERCENTAGE = 10;
+const DELIVERY_PRICE = 400;
+const DELIVERY_LIMIT = 15;
 
 const getPrice = (basketPrice, promoActivated) => {
   let price = basketPrice;
@@ -27,7 +30,13 @@ const getPrice = (basketPrice, promoActivated) => {
   }
 
   let literalPrice = String(price);
-  literalPrice = literalPrice.replace('.','');
+  let parts = literalPrice.split('.');
+
+  if (parts[1].length === 1) {
+    parts[1] = parts[1] + '0';
+  }
+
+  literalPrice = parts[0] + parts[1];
 
   return Number(literalPrice);
 };
@@ -47,12 +56,8 @@ const createPayment = async (req, res, next) => {
 
     let session = { id: 'test' };
 
-    let images = {
-      'veggies': 'veggies.jpg',
-      'fruits': 'fruits.jpg',
-      'myfa': 'myfa.jpg',
-      'sauces': 'sauces.jpg',
-      'beauty': 'beauty.jpg',
+    const getImage = (img) => {
+      return imagesRefs[img] || 'default-product.png';
     };
 
     if (!!order.promo) {
@@ -64,24 +69,55 @@ const createPayment = async (req, res, next) => {
       }
     }
 
+    let lineItems = [];
+    let basePath = 'https://www.myfa.fr';
+
+    if (order.baskets) {
+      lineItems = uniqBy(order.baskets, 'type').map((basket) => ({
+        name: basket.label,
+        description: basket.description,
+        images: [`${basePath}/${getImage(basket.type)}`],
+        amount: getPrice(basket.price, promoActivated),
+        currency: 'eur',
+        quantity: countBy(order.baskets, 'type', basket.type),
+      }));
+    }
+
+    if (order.products && order.products.items) {
+      lineItems = [...lineItems, ...order.products.items.map(product => ({
+        name: product.name,
+        description: 'produit au détails',
+        images: [`${basePath}/${getImage(product.name)}`],
+        amount: getPrice(product.price, promoActivated),
+        currency: 'eur',
+        quantity: 1,
+      }))];
+
+      let productsPrice = order.products.items.map(p => p.price).reduce((acc, cur) => acc + cur, 0);
+
+      if (productsPrice < DELIVERY_LIMIT) {
+        lineItems.push({
+          name: 'Frais de livraison',
+          images: [`${basePath}/delivery.png`],
+          amount: DELIVERY_PRICE,
+          currency: 'eur',
+          quantity: 1,
+        });
+      }
+    }
+
     if (!order.isTest) {
       session = await stripe.checkout.sessions.create({
         customer_email: user.email,
         payment_method_types: ['card'],
-        line_items: uniqBy(order.baskets, 'type').map((basket) => ({
-          name: basket.label,
-          description: basket.description,
-          images: [`https://www.myfa.fr/${images[basket.type]}`],
-          amount: getPrice(basket.price, promoActivated),
-          currency: 'eur',
-          quantity: countBy(order.baskets, 'type', basket.type),
-        })),
+        line_items: lineItems,
         success_url,
-        cancel_url: 'https://www.myfa.fr',
+        cancel_url: `${basePath}`,
       });
     }
 
     saveBasketsFromOrder(order, user, session.payment_intent);
+    saveProductsAsDetailsBasket(order, user, session.payment_intent);
 
     res.status(201);
     res.send({ id: session.id });

@@ -19,7 +19,7 @@ class BasketFactory {
       recipient: basket.recipient,
       status: 'pending',
       orderRef: order.ref,
-      items: this.structure.items || basket.items || {},
+      itemsTranslate: this.structure.itemsTranslate,
       promo: basket.promo,
       user: userInfo,
       stripeIntentId,

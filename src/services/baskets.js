@@ -15,11 +15,11 @@ import {
   getMondayOfCurrentWeek,
   getSundayOfCurrentWeek,
 } from '../utils/dates';
-
 import pleasureBaskets from '../assets/pleasureBaskets';
 import ramadanBaskets from '../assets/ramadanBaskets';
 import customBasket from '../assets/customBasket';
 import packs from '../assets/packs';
+import DetailsBasket from '../utils/detailsBasketFactory';
 
 import { log } from './operationsLogs';
 import { sendDeliveryRateReminders } from './mailjet';
@@ -96,6 +96,19 @@ const saveBasketsFromOrder = async (order, userInfo, stripeIntentId = '') => {
 		const basketsModel = mongoose.model('baskets', BasketSchema);
 
     await basketsModel.create(baskets);
+	} catch (e) {
+		console.log(e)
+		throw new Error('something went wrong')
+	}
+};
+
+const saveProductsAsDetailsBasket = async (order, userInfo, stripeIntentId = '') => {
+  try {
+    const basket = new DetailsBasket(order, userInfo, stripeIntentId).getBasket();
+
+		const basketsModel = mongoose.model('baskets', BasketSchema);
+
+    await basketsModel.create(basket);
 	} catch (e) {
 		console.log(e)
 		throw new Error('something went wrong')
@@ -354,6 +367,7 @@ export {
   getDminus30Baskets,
   saveBasket,
   saveBasketsFromOrder,
+  saveProductsAsDetailsBasket,
   updateBasketById,
   updateBasketsByOrderRef,
 };
