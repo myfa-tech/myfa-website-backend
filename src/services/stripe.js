@@ -70,7 +70,7 @@ const createPayment = async (req, res, next) => {
     }
 
     let lineItems = [];
-    let basePath = 'https://myfa-staging.netlify.app';
+    let basePath = 'https://www.myfa.fr';
 
     if (order.baskets) {
       lineItems = uniqBy(order.baskets, 'type').map((basket) => ({
