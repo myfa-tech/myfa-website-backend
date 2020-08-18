@@ -93,9 +93,10 @@ const createPayment = async (req, res, next) => {
         quantity: 1,
       }))];
 
+      let basketsNumber = order.baskets.length;
       let productsPrice = order.products.items.map(p => p.price).reduce((acc, cur) => acc + cur, 0);
 
-      if (productsPrice < DELIVERY_LIMIT) {
+      if (productsPrice < DELIVERY_LIMIT && basketsNumber === 0) {
         lineItems.push({
           name: 'Frais de livraison',
           images: [`${basePath}/delivery.png`],
