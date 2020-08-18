@@ -12,6 +12,7 @@ import countBy from '../utils/countBy';
 import uniqBy from '../utils/uniqBy';
 import { usePromo } from './promo';
 import imagesRefs from '../assets/imagesRefs';
+import get from '../utils/get';
 
 dotenv.config();
 
@@ -117,8 +118,13 @@ const createPayment = async (req, res, next) => {
       });
     }
 
-    saveBasketsFromOrder(order, user, session.payment_intent);
-    saveProductsAsDetailsBasket(order, user, session.payment_intent);
+    if (!!get(order, 'baskets.length', 0)) {
+      saveBasketsFromOrder(order, user, session.payment_intent);
+    }
+
+    if (!!get(order, 'products.items.length', 0)) {
+      saveProductsAsDetailsBasket(order, user, session.payment_intent);
+    }
 
     res.status(201);
     res.send({ id: session.id });
