@@ -12,57 +12,11 @@ const mailjet = Mailjet.connect(
 const getContactsListId = (name) => {
   let lists = {
     'newsletter': 12950,
+    'contact+NL': 10242968,
+    'contact+NoNL': 10242971,
   };
 
   return lists[name];
-};
-
-const sendWelcomeEmail = async (recipient) => {
-  try {
-    await mailjet.post('send').request({
-      FromEmail: 'infos@myfa.fr',
-      FromName: 'MYFA',
-      Subject: `${recipient.firstname}, bienvenue dans la MYFA !`,
-      'Mj-TemplateID': '1219463',
-      'Mj-TemplateLanguage': 'true',
-      Recipients: [{ Email: recipient.email }],
-    });
-  } catch (e) {
-    // @TODO: deal with error
-    console.log(e);
-  }
-};
-
-const sendEmailAddressConfirmationEmail = async (user) => {
-  let hash = shajs('sha256').update(user.firstname).digest('hex')
-  let link = `https://www.myfa.fr/email_confirmation?${user.email}&${hash}`;
-
-  try {
-    await mailjet.post('send', {'version': 'v3.1'})
-      .request({
-        'Messages': [
-          {
-            'From': {
-              'Email': 'infos@myfa.fr',
-              'Name': 'MYFA'
-            },
-            'To': [{ 'Email': user.email }],
-            'TemplateID': 1255237,
-            'TemplateLanguage': true,
-            'Subject': `${user.firstname}, confirmez votre adresse email`,
-            'Variables': {
-              'firstname': user.firstname,
-              'confirmation_link': link,
-            },
-          },
-        ],
-      });
-
-    console.log('Email confirmation sent to :', user.email);
-  } catch (e) {
-    // @TODO: deal with error
-    console.log(e);
-  }
 };
 
 const sendUserBasketComment = async (req, res, next) => {;
@@ -278,7 +232,9 @@ const addContactToList = async (req, res, listName) => {
       return;
     }
 
-    await saveContact(listName, req.body.email);
+    const { email, firstname, lastname, confirmationLink } = req.body;
+
+    await saveContact(listName, email, firstname, lastname, confirmationLink);
 
     res.status(201);
     res.send('saved');
@@ -288,18 +244,31 @@ const addContactToList = async (req, res, listName) => {
   }
 };
 
-const saveContact = async (listName, email) => {
+const saveContact = async (listName, email, firstname, lastname, confirmationLink) => {
   let listId = getContactsListId(listName);
-  let contactEmail = email;
+
+  let requestBody = {
+    'Email': email,
+    'Action': 'addforce',
+    'IsExcludedFromCampaigns': 'false',
+  };
+
+  if (!!firstname) {
+    requestBody['firstname'] = firstname;
+  }
+
+  if (!!lastname) {
+    requestBody['lastname'] = lastname;
+  }
+
+  if (!!confirmationLink) {
+    requestBody['confirmation_link'] = confirmationLink;
+  }
 
   await mailjet.post('contactslist', {'version': 'v3'})
     .id(listId)
     .action('managecontact')
-    .request({
-      'Email': contactEmail,
-      'Action': 'addforce',
-      'IsExcludedFromCampaigns': 'false',
-    });
+    .request(requestBody);
 };
 
 const sendEmailToFinance = async () => {
@@ -325,13 +294,11 @@ const sendEmailToFinance = async () => {
 export {
   addContactToList,
   saveContact,
-  sendEmailAddressConfirmationEmail,
   sendEmailToFinance,
   sendUserBasketComment,
   sendDeliveryRateReminders,
   sendD30Reminders,
   sendOrderConfirmationEmail,
-  sendWelcomeEmail,
   sendCartReminders,
   sendResetPasswordEmail,
 };
