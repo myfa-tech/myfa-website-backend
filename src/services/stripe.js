@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 import { getUserByEmail } from './users';
 import { sendMessage } from './nexmo';;
-import { sendOrderConfirmationEmail } from './mailjet';
+import { sendOrderConfirmationEmail, removeContactFromList } from './mailjet';
 import basketSchema from '../schemas/basket';
 import { saveBasketsFromOrder, saveProductsAsDetailsBasket } from './baskets';
 import countBy from '../utils/countBy';
@@ -125,6 +125,8 @@ const createPayment = async (req, res, next) => {
     if (!!get(order, 'products.items.length', 0)) {
       saveProductsAsDetailsBasket(order, user, session.payment_intent);
     }
+
+    removeContactFromList(user.email, 'contact+NoNL');
 
     res.status(201);
     res.send({ id: session.id });

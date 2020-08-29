@@ -244,6 +244,28 @@ const addContactToList = async (req, res, listName) => {
   }
 };
 
+const removeContactFromList = async (email, listName) => {
+  try {
+    let listId = getContactsListId(listName);
+
+    await mailjet
+      .post('contact', { 'version': 'v3' })
+      .id(email)
+      .action('managecontactslists')
+      .request({
+        'ContactsLists': [
+          {
+            'Action': 'remove',
+            'ListID': listId,
+          },
+        ],
+      });
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+  }
+};
+
 const saveContact = async (listName, email, firstname, lastname, confirmationLink) => {
   let listId = getContactsListId(listName);
 
@@ -293,6 +315,7 @@ const sendEmailToFinance = async () => {
 
 export {
   addContactToList,
+  removeContactFromList,
   saveContact,
   sendEmailToFinance,
   sendUserBasketComment,
