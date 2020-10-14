@@ -127,6 +127,7 @@ const createPayment = async (req, res, next) => {
     }
 
     removeContactFromList(user.email, 'contact+NoNL');
+    removeContactFromList(user.email, 'prospectFB');
 
     res.status(201);
     res.send({ id: session.id });

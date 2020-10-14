@@ -14,6 +14,7 @@ const getContactsListId = (name) => {
     'newsletter': 12950,
     'contact+NL': 10242968,
     'contact+NoNL': 10242971,
+    'prospectFB': 10243305,
   };
 
   return lists[name];
