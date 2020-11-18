@@ -2,6 +2,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
+import { sendRequestConfirmationEmail } from '../services/mailjet';
 import RequestSchema from '../schemas/request';
 
 dotenv.config();
@@ -19,11 +20,11 @@ const saveRequest = async (req, res, next) => {
 
     const createdRequest = await requestsModel.findOne({ 'user.firstname': request.user.firstname, 'user.lastname': request.user.lastname });
 
-    if (NODE_ENV !== 'development') {
-      await saveContact('new-request', request.user.email);
-    } else {
-      console.log('NODE_ENV is development - request confirmed email not sent');
-    }
+    // if (NODE_ENV !== 'development') {
+      await sendRequestConfirmationEmail(request.user);
+    // } else {
+    //   console.log('NODE_ENV is development - request confirmed email not sent');
+    // }
 
     console.log({ 'request created': createdRequest });
 

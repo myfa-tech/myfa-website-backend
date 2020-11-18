@@ -15,6 +15,7 @@ const getContactsListId = (name) => {
     'contact+NL': 10242968,
     'contact+NoNL': 10242971,
     'prospectFB': 10243305,
+    'new-request': 10250880,
   };
 
   return lists[name];
@@ -294,6 +295,25 @@ const saveContact = async (listName, email, firstname, lastname, confirmationLin
     .request(requestBody);
 };
 
+const sendRequestConfirmationEmail = async (user) => {
+  try {
+    await mailjet.post('send').request({
+      FromEmail: 'infos@myfa.fr',
+      FromName: "L'équipe MYFA",
+      Subject: `${user.firstname}, votre demande est bien enregistrée. On s'appelle prochainement ☎️`,
+      'Mj-TemplateID': '1907350',
+      'Mj-TemplateLanguage': 'true',
+      Recipients: [{ Email: user.email }],
+      Variables: {
+        "firstname": user.firstname,
+      },
+    });
+  } catch (e) {
+    // @TODO: deal with error
+    console.log(e);
+  }
+};
+
 const sendEmailToFinance = async () => {
   try {
     const recipientEmail = 'meschberger.alexandre@gmail.com';
@@ -319,6 +339,7 @@ export {
   removeContactFromList,
   saveContact,
   sendEmailToFinance,
+  sendRequestConfirmationEmail,
   sendUserBasketComment,
   sendDeliveryRateReminders,
   sendD30Reminders,
