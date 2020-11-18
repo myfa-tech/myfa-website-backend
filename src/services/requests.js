@@ -17,7 +17,7 @@ const saveRequest = async (req, res, next) => {
 
     await requestsModel.create(request);
 
-    console.log({ 'request created': request });
+    const createdRequest = await requestsModel.findOne({ 'user.firstname': request.user.firstname, 'user.lastname': request.user.lastname });
 
     if (NODE_ENV !== 'development') {
       await saveContact('new-request', request.user.email);
@@ -25,8 +25,10 @@ const saveRequest = async (req, res, next) => {
       console.log('NODE_ENV is development - request confirmed email not sent');
     }
 
+    console.log({ 'request created': createdRequest });
+
     res.status(201);
-    res.send({ request });
+    res.send({ request: createdRequest });
 	} catch (e) {
 		console.log(e);
 		throw new Error('something went wrong');
@@ -40,9 +42,7 @@ const updateRequest = async (req, res, next) => {
 
 		request.createdAt = Date.now();
 
-    console.log({ 'request updated': request });
-
-    await requestsModel.updateOne({ id: request.id }, request);
+    await requestsModel.updateOne({ _id: request._id }, request);
 
     res.status(201);
     res.send({ request });
