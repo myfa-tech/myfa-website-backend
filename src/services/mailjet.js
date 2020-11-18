@@ -297,16 +297,27 @@ const saveContact = async (listName, email, firstname, lastname, confirmationLin
 
 const sendRequestConfirmationEmail = async (user) => {
   try {
-    await mailjet.post('send').request({
-      FromEmail: 'infos@myfa.fr',
-      FromName: "L'équipe MYFA",
-      Subject: `${user.firstname}, votre demande est bien enregistrée. On s'appelle prochainement ☎️`,
-      'Mj-TemplateID': '1907350',
-      'Mj-TemplateLanguage': 'true',
-      Recipients: [{ Email: user.email }],
-      Variables: {
-        "firstname": user.firstname,
-      },
+    await mailjet.post('send', { 'version': 'v3.1' }).request({
+      "Messages": [
+				{
+          "From": {
+              "Email": "infos@myfa.fr",
+              "Name": "L'équipe MYFA"
+          },
+          "To": [
+              {
+                  "Email": user.email,
+                  "Name": user.firstname,
+              }
+          ],
+          TemplateID: 1907350,
+          TemplateLanguage: true,
+          "Subject": `${user.firstname}, votre demande est bien enregistrée. On s'appelle prochainement ☎️`,
+          "Variables": {
+            firstname: user.firstname,
+          }
+				}
+		  ]
     });
   } catch (e) {
     // @TODO: deal with error
