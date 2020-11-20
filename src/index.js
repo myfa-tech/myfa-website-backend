@@ -25,7 +25,7 @@ import { testPromoCode } from './services/promo';
 import { findRatings, saveRating } from './services/ratings';
 import curateCustomersAndSendReminders from './utils/curateCustomersAndSendReminders';
 import { getProducts } from './services/products';
-import { saveRequest, updateRequest } from './services/requests';
+import { getRequests, saveRequest, updateRequest } from './services/requests';
 
 dotenv.config();
 
@@ -171,6 +171,8 @@ const run = () => {
   app.get('/dashboard/baskets/count', countBaskets);
 
   app.get('/dashboard/kpis', fetchKPIs);
+
+  app.get('/dashboard/requests', getRequests);
 
   app.get('/dashboard/goals', fetchGoals);
 

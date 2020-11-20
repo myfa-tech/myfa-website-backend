@@ -11,6 +11,8 @@ const User = mongoose.Schema({
 const Request = mongoose.Schema({
 	// default id
   user: User,
+  status: String,
+  createdAt: Date,
   type: String,
   details: String,
   contact: User,
