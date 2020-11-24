@@ -62,7 +62,10 @@ const saveRequest = async (req, res, next) => {
 
     await requestsModel.create(request);
 
-    const createdRequest = await requestsModel.findOne({ 'user.firstname': request.user.firstname, 'user.lastname': request.user.lastname });
+    const createdRequest = await requestsModel
+      .find({ 'user.email': request.user.email })
+      .sort({ createdAt: -1 })
+      .limit(1);
 
     if (NODE_ENV !== 'development') {
       await sendRequestConfirmationEmail(request.user);
@@ -75,7 +78,7 @@ const saveRequest = async (req, res, next) => {
     console.log({ 'request created': createdRequest });
 
     res.status(201);
-    res.send({ request: createdRequest });
+    res.send({ request: createdRequest[0] });
 	} catch (e) {
 		console.log(e);
 		throw new Error('something went wrong');
