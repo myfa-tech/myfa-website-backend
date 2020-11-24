@@ -64,13 +64,13 @@ const saveRequest = async (req, res, next) => {
 
     const createdRequest = await requestsModel.findOne({ 'user.firstname': request.user.firstname, 'user.lastname': request.user.lastname });
 
-    // if (NODE_ENV !== 'development') {
-      // await sendRequestConfirmationEmail(request.user);
-      // await postNewRequestMessage(request);
-    // } else {
-    //   console.log('NODE_ENV is development - request confirmed email not sent');
+    if (NODE_ENV !== 'development') {
+      await sendRequestConfirmationEmail(request.user);
+      await postNewRequestMessage(request);
+    } else {
+      console.log('NODE_ENV is development - request confirmed email not sent');
       await postNewRequestMessage(request, { test: true });
-    // }
+    }
 
     console.log({ 'request created': createdRequest });
 
