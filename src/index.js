@@ -14,7 +14,7 @@ import { fetchStocks, updateStock } from './services/stocks';
 import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword, resetPassword, resetPasswordSendMagicLink } from './services/users';
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
-import { getFinanceRequests, removeFinanceRequest, saveRequest, updateFinanceRequestById } from './services/finance';
+import { getFinanceRequests, removeFinanceRequest, updateFinanceRequestById } from './services/finance';
 import { createPayment } from './services/stripe';
 import { createMobileMoneyPayment } from './services/mobileMoney';
 import { deleteCart, getCart, createCart, updateCart } from './services/cart';
@@ -25,6 +25,7 @@ import { testPromoCode } from './services/promo';
 import { findRatings, saveRating } from './services/ratings';
 import curateCustomersAndSendReminders from './utils/curateCustomersAndSendReminders';
 import { getProducts } from './services/products';
+import { getRequests, saveRequest, updateRequest } from './services/requests';
 
 dotenv.config();
 
@@ -125,6 +126,10 @@ const run = () => {
 
   app.get('/jobs/:filename', getJobFile);
 
+  app.post('/requests', saveRequest);
+
+  app.put('/requests', updateRequest);
+
   app.use(verifyJWT);
 
   app.post('/stripe/pay', createPayment);
@@ -167,6 +172,8 @@ const run = () => {
 
   app.get('/dashboard/kpis', fetchKPIs);
 
+  app.get('/dashboard/requests', getRequests);
+
   app.get('/dashboard/goals', fetchGoals);
 
   app.put('/dashboard/goals', updateGoalById);
@@ -185,7 +192,7 @@ const run = () => {
 
   app.get('/dashboard/finance/requests', getFinanceRequests);
 
-  app.post('/dashboard/finance/requests', saveRequest);
+  // app.post('/dashboard/finance/requests', saveRequest);
 
   app.put('/dashboard/finance/requests', updateFinanceRequestById);
 
