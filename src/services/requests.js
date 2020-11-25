@@ -90,8 +90,6 @@ const updateRequest = async (req, res, next) => {
     const request = req.body;
 		const requestsModel = mongoose.model('requests', RequestSchema);
 
-		request.createdAt = Date.now();
-
     await requestsModel.updateOne({ _id: request._id }, request);
 
     res.status(201);
