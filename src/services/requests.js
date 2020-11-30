@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-import { sendRequestConfirmationEmail } from '../services/mailjet';
+import { sendRequestConfirmationEmail, sendThankYouForOrderingEmail } from '../services/mailjet';
 import RequestSchema from '../schemas/request';
 import { postNewRequestMessage } from './slack';
 
@@ -87,13 +87,22 @@ const saveRequest = async (req, res, next) => {
 
 const updateRequest = async (req, res, next) => {
   try {
-    const request = req.body;
+    const fieldsToChange = req.body;
 		const requestsModel = mongoose.model('requests', RequestSchema);
 
-    await requestsModel.updateOne({ _id: request._id }, request);
+    await requestsModel.updateOne({ _id: fieldsToChange._id }, fieldsToChange);
+    const requestEdited = await requestsModel.findById(fieldsToChange._id);
+
+    if (fieldsToChange.status === 'delivered') {
+      if (NODE_ENV !== 'development') {
+        await sendThankYouForOrderingEmail(requestEdited.user);
+      } else {
+        console.log(`DEV mode - email not sent to : ${requestEdited.user.email}`);
+      }
+    }
 
     res.status(201);
-    res.send({ request });
+    res.send({ request: requestEdited });
   } catch (e) {
     console.log(e);
 		throw new Error('something went wrong');

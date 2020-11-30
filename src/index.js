@@ -3,28 +3,31 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import cron from 'node-cron';
 
-import { confirmPayment } from './services/stripe';
-import { getAllBaskets, getPacks, countBaskets, findOrderBaskets, getBaskets, getBasketsByEmail, updateBasketById, getPleasureBaskets, updateBasketsByOrderRef, createOrderManually } from './services/baskets';
-import { addContactToList, sendUserBasketComment } from './services/mailjet';
+import { countBaskets, getBaskets, createOrderManually } from './services/baskets';
+import { addContactToList } from './services/mailjet';
 import { login } from './services/dashboardUsers';
 import { fetchKPIs } from './services/kpis';
-import { fetchStocks, updateStock } from './services/stocks';
-import { confirmUserEmail, deleteUser, fetchUser, getUsers, loginFBUser, loginGoogleUser, loginUser, saveUser, updateUserByEmail, updateUserPassword, verifyUserPassword, resetPassword, resetPasswordSendMagicLink } from './services/users';
+import {
+  confirmUserEmail,
+  deleteUser,
+  fetchUser,
+  getUsers,
+  loginFBUser,
+  loginGoogleUser,
+  loginUser,
+  saveUser,
+  updateUserByEmail,
+  updateUserPassword,
+  verifyUserPassword,
+  resetPassword,
+  resetPasswordSendMagicLink
+} from './services/users';
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
-import { getFinanceRequests, removeFinanceRequest, updateFinanceRequestById } from './services/finance';
-import { createPayment } from './services/stripe';
-import { createMobileMoneyPayment } from './services/mobileMoney';
-import { deleteCart, getCart, createCart, updateCart } from './services/cart';
-import curateCartsAndSendReminders from './utils/curateCartsAndSendReminders';
 import { fetchArticles, fetchSingleArticle } from './services/contentful';
 import { getJobFile } from './services/jobs';
-import { testPromoCode } from './services/promo';
 import { findRatings, saveRating } from './services/ratings';
-import curateCustomersAndSendReminders from './utils/curateCustomersAndSendReminders';
-import { getProducts } from './services/products';
 import { getRequests, saveRequest, updateRequest } from './services/requests';
 
 dotenv.config();
@@ -69,16 +72,11 @@ const unless = (paths, middleware) => {
 };
 
 app.use(unless([
-  '/stripe/confirm_payment',
   '/jobs/stage_myfa_bizdev.pdf',
 ], cors(corsOptions)));
 
 app.use((req, res, next) => {
-  if (req.originalUrl === '/stripe/confirm_payment') {
-    next();
-  } else {
-    bodyParser.json()(req, res, next);
-  }
+  bodyParser.json()(req, res, next);
 });
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
@@ -89,8 +87,6 @@ db.on('error', console.error.bind(console, 'connection error:')); // Add Sentry
 
 const run = () => {
   app.use(express.static('public'));
-
-  app.post('/stripe/confirm_payment', bodyParser.raw({ type: 'application/json' }), confirmPayment);
 
   app.post('/newsletter/member', (req, res, next) => addContactToList(req, res, 'newsletter'));
 
@@ -110,12 +106,6 @@ const run = () => {
 
   app.post('/users/password/reset', resetPassword);
 
-  app.get('/baskets/pleasure', getPleasureBaskets);
-
-  app.get('/products', getProducts);
-
-  app.get('/baskets/packs', getPacks);
-
   app.get('/ratings', findRatings);
 
   app.post('/ratings', saveRating);
@@ -132,37 +122,13 @@ const run = () => {
 
   app.use(verifyJWT);
 
-  app.post('/stripe/pay', createPayment);
-
-  app.get('/promos', testPromoCode);
-
-  app.post('/mobile_money/orders', createMobileMoneyPayment);
-
-  app.get('/baskets', getAllBaskets);
-
-  app.post('/baskets/comments', sendUserBasketComment);
-
-  app.get('/orders/baskets', findOrderBaskets);
-
   app.get('/users', fetchUser);
-
-  app.get('/cart', getCart);
-
-  app.post('/cart', createCart);
-
-  app.put('/cart', updateCart);
-
-  app.delete('/cart', deleteCart);
 
   app.put('/users', updateUserByEmail);
 
   app.post('/users/password/verify', verifyUserPassword);
 
   app.put('/users/password', updateUserPassword);
-
-  app.get('/users/baskets', getBasketsByEmail);
-
-  app.put('/users/baskets', updateBasketsByOrderRef);
 
   app.put('/users/delete', deleteUser);
 
@@ -178,47 +144,13 @@ const run = () => {
 
   app.put('/dashboard/goals', updateGoalById);
 
-  app.get('/dashboard/stocks', fetchStocks);
-
-  app.put('/dashboard/stocks', updateStock);
-
   app.get('/dashboard/users', getUsers);
 
   app.post('/dashboard/orders/manually', createOrderManually);
 
   app.get('/dashboard/baskets', getBaskets);
 
-  app.put('/dashboard/baskets', updateBasketById);
-
-  app.get('/dashboard/finance/requests', getFinanceRequests);
-
-  // app.post('/dashboard/finance/requests', saveRequest);
-
-  app.put('/dashboard/finance/requests', updateFinanceRequestById);
-
-  app.delete('/dashboard/finance/requests', removeFinanceRequest);
-
   app.listen(PORT, () => console.log(`Magic is happening on port ${PORT}`));
 };
 
 db.once('open', run);
-
-// CRON Tasks
-
-// seconds minutes heures jours ...
-cron.schedule('0 0 14 */2 * *', async () => {
-  console.log('CRON task 1 triggered at: ', new Date());
-  await curateCartsAndSendReminders();
-}, {
-  scheduled: true,
-  timezone: "Europe/Paris"
-});
-
-// D-31 days reminder that we exist
-cron.schedule('0 0 18 * * *', async () => {
-  console.log('CRON task 2 triggered at: ', new Date());
-  await curateCustomersAndSendReminders();
-}, {
-  scheduled: true,
-  timezone: "Europe/Paris"
-});
