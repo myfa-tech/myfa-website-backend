@@ -21,43 +21,6 @@ const getContactsListId = (name) => {
   return lists[name];
 };
 
-const sendUserBasketComment = async (req, res, next) => {;
-  try {
-    const { firstname, lastname, email, comment, basketType } = req.body;
-
-    await mailjet.post('send', {'version': 'v3.1'})
-      .request({
-        'Messages': [
-          {
-            'From': {
-              'Email': 'infos@myfa.fr',
-              'Name': 'MYFA'
-            },
-            'To': [{ 'Email': 'infos@myfa.fr' }],
-            'TemplateID': 1557971,
-            'TemplateLanguage': true,
-            'Subject': 'Commentaire utilisateur',
-            'Variables': {
-              'user_firstname': firstname,
-              'user_lastname': lastname,
-              'user_email': email,
-              'user_comment': comment,
-              'basket_type': basketType,
-            },
-          },
-        ],
-      });
-
-    console.log('Email comment sent');
-
-    res.status(201).send('sent');
-  } catch (e) {
-    // @TODO: deal with error
-    console.log(e);
-    res.status(500).end();
-  }
-};
-
 const sendResetPasswordEmail = async (host, user) => {
   try {
     let hash = shajs('sha256').update(`${user.firstname}--${user.email}`).digest('hex');
@@ -90,136 +53,25 @@ const sendResetPasswordEmail = async (host, user) => {
   }
 };
 
-const sendOrderConfirmationEmail = async (user, baskets) => {
+const sendThankYouForOrderingEmail = async (user) => {
   try {
-    let orderPrice = baskets.reduce((acc, curr) => acc + curr.price, 0);
-    let date = new Date(baskets[0].createdAt).toLocaleDateString('fr-FR');
-
     await mailjet.post("send", {'version': 'v3.1'})
       .request({
         "Messages": [
           {
             "From": {
               "Email": "infos@myfa.fr",
-              "Name": "MYFA"
+              "Name": "L'équipe MYFA"
             },
-            "To": [{ "Email": baskets[0].userEmail || baskets[0].user.email }],
-            "TemplateID": 1224159,
+            "To": [{ "Email": user.email }],
+            "TemplateID": 1974918,
             "TemplateLanguage": true,
-            "Subject": "Merci pour votre commande !",
-            "Variables": {
-              "customerName": user.firstname,
-              "price": `${orderPrice} €`,
-              "createdAt": `${date}`,
-              "ref": `${baskets[0].orderRef}`,
-            }
+            "Subject": `${user.firstname}, merci d'avoir utilisé MYFA !`,
           }
         ]
       });
 
-    console.log('Confirmation email sent to :', baskets[0].userEmail || baskets[0].user.email);
-  } catch (e) {
-    // @TODO: deal with error
-    console.log(e);
-  }
-};
-
-const sendCartReminders = async (emails) => {
-  try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('ENV is development - reminder mail not sent');
-    } else {
-      const promises = emails.map(email => mailjet.post("send", {'version': 'v3.1'})
-        .request({
-          "Messages": [
-            {
-              "From": {
-                "Email": "infos@myfa.fr",
-                "Name": "MYFA"
-              },
-              "To": [email],
-              "TemplateID": 1341411,
-              "TemplateLanguage": true,
-              "Subject": "Votre commande vous attend sur myfa.fr",
-              "Variables": {
-                "order_link": 'https://www.myfa.fr/cart/',
-              },
-            },
-          ],
-        })
-      );
-
-      await Promise.all(promises);
-    }
-
-    console.log('Reminder emails sent to :', emails);
-  } catch (e) {
-    // @TODO: deal with error
-    console.log(e);
-  }
-};
-
-const sendD30Reminders = async (users) => {
-  try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('ENV is development - reminder mail not sent');
-    } else {
-      const promises = users.map(user => mailjet.post("send", {'version': 'v3.1'})
-        .request({
-          "Messages": [
-            {
-              "From": {
-                "Email": "infos@myfa.fr",
-                "Name": "MYFA"
-              },
-              "To": [{ 'Email': user.email }],
-              "TemplateID": 1516098,
-              "TemplateLanguage": true,
-              "Subject": `${user.firstname}, tout va bien ? Rassurez-nous. 🥺`,
-              "Variables": {
-                "order_link": 'https://www.myfa.fr/cart/',
-              },
-            },
-          ],
-        })
-      );
-
-      await Promise.all(promises);
-    }
-
-    console.log('Reminder emails sent to :', users.map(u => u.email));
-  } catch (e) {
-    // @TODO: deal with error
-    console.log(e);
-  }
-};
-
-const sendDeliveryRateReminders = async (user) => {
-  try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('ENV is development - reminder mail not sent');
-    } else {
-      await mailjet.post("send", {'version': 'v3.1'})
-        .request({
-          "Messages": [
-            {
-              "From": {
-                "Email": "infos@myfa.fr",
-                "Name": "MYFA"
-              },
-              "To": [{ 'Email': user.email }],
-              "TemplateID": 1515911,
-              "TemplateLanguage": true,
-              "Subject": `${user.firstname}, votre avis compte ! ✅`,
-              "Variables": {
-                "firstname": user.firstname,
-              },
-            },
-          ],
-        });
-    }
-
-    console.log('Rating emails sent to :', user.email);
+    console.log('Confirmation email sent to :', user.email);
   } catch (e) {
     // @TODO: deal with error
     console.log(e);
@@ -325,36 +177,11 @@ const sendRequestConfirmationEmail = async (user) => {
   }
 };
 
-const sendEmailToFinance = async () => {
-  try {
-    const recipientEmail = 'meschberger.alexandre@gmail.com';
-
-    await mailjet.post('send').request({
-      FromEmail: 'infos@myfa.fr',
-      FromName: 'MYFA',
-      Subject: 'Alexandre, tu as une demande en attente sur le dashboard 🔔',
-      'Mj-TemplateID': '1258515',
-      'Mj-TemplateLanguage': 'true',
-      Recipients: [{ Email: recipientEmail }],
-    });
-
-    console.log('Finance request sent to Alex');
-  } catch (e) {
-    // @TODO: deal with error
-    console.log(e);
-  }
-};
-
 export {
   addContactToList,
   removeContactFromList,
   saveContact,
-  sendEmailToFinance,
   sendRequestConfirmationEmail,
-  sendUserBasketComment,
-  sendDeliveryRateReminders,
-  sendD30Reminders,
-  sendOrderConfirmationEmail,
-  sendCartReminders,
+  sendThankYouForOrderingEmail,
   sendResetPasswordEmail,
 };
