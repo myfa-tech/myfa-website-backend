@@ -4,7 +4,6 @@ import Recipient from './recipient';
 
 const UserKPIs = mongoose.Schema({
   // default id
-  wallet: Number,
   spent: Number,
   services: {
     relatives: Number,
@@ -23,6 +22,7 @@ const UserSchema = mongoose.Schema({
   bday: Date, // should be a timestamp
   country: String,
   FBAccess: Boolean,
+  wallet: Number,
   GoogleAccess: Boolean,
   kpis: UserKPIs,
   newsletter: Boolean,

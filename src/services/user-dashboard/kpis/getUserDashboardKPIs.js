@@ -8,12 +8,14 @@ import startOfYear from 'date-fns/startOfYear';
 import endOfYear from 'date-fns/endOfYear';
 
 import RequestSchema from '../../../schemas/request';
+import UserSchema from '../../../schemas/user';
 
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const requestModel = mongoose.model('requests', RequestSchema);
+const userModel = mongoose.model('users', UserSchema);
 
 const getUserDasboardKPIs = async (req, res, next) => {
   const params = req.query;
@@ -64,9 +66,11 @@ const getUserDasboardKPIs = async (req, res, next) => {
     }
   });
 
+  promises.push(userModel.find({ email: userInfo.email }, { wallet: 1, _id: 0 }));
+
   const responses = await Promise.all(promises);
 
-  const enhancedResponses = responses.reduce((acc, curr) => ({ ...acc, ...curr[0] }), {});
+  const enhancedResponses = responses.reduce((acc, curr) => ({ ...acc, ...(curr[0]._doc || curr[0])  }), {});
 
   res.status(200).send(enhancedResponses);
 };

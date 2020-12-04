@@ -74,9 +74,9 @@ const unless = (paths, middleware) => {
   };
 };
 
-// app.use(unless([
-//   '/jobs/stage_myfa_bizdev.pdf',
-// ], cors(corsOptions)));
+app.use(unless([
+  '/jobs/stage_myfa_bizdev.pdf',
+], cors(corsOptions)));
 
 app.use((req, res, next) => {
   bodyParser.json()(req, res, next);
