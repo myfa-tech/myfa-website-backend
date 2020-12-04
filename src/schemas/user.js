@@ -2,6 +2,16 @@ import mongoose from 'mongoose';
 
 import Recipient from './recipient';
 
+const UserKPIs = mongoose.Schema({
+  // default id
+  wallet: Number,
+  spent: Number,
+  services: {
+    relatives: Number,
+    self: Number,
+  },
+});
+
 const UserSchema = mongoose.Schema({
   // defualt id
   firstname: String,
@@ -14,6 +24,7 @@ const UserSchema = mongoose.Schema({
   country: String,
   FBAccess: Boolean,
   GoogleAccess: Boolean,
+  kpis: UserKPIs,
   newsletter: Boolean,
   cgu: Boolean,
   emailConfirmed: Boolean,

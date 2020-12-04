@@ -29,6 +29,9 @@ import { fetchArticles, fetchSingleArticle } from './services/contentful';
 import { getJobFile } from './services/jobs';
 import { findRatings, saveRating } from './services/ratings';
 import { getRequests, saveRequest, updateRequest } from './services/requests';
+import getUserDashboardKPIs from './services/user-dashboard/kpis/getUserDashboardKPIs'
+import logIn from './services/user/logIn';
+import signIn from './services/user/signIn';
 
 dotenv.config();
 
@@ -71,9 +74,9 @@ const unless = (paths, middleware) => {
   };
 };
 
-app.use(unless([
-  '/jobs/stage_myfa_bizdev.pdf',
-], cors(corsOptions)));
+// app.use(unless([
+//   '/jobs/stage_myfa_bizdev.pdf',
+// ], cors(corsOptions)));
 
 app.use((req, res, next) => {
   bodyParser.json()(req, res, next);
@@ -92,19 +95,19 @@ const run = () => {
 
   app.post('/dashboard/login', login);
 
-  app.post('/users', saveUser);
+  app.post('/users', signIn);
 
-  app.post('/users/login', loginUser);
+  app.post('/users/login', logIn);
 
-  app.post('/users/facebook-login', loginFBUser);
+  // app.post('/users/facebook-login', loginFBUser);
 
-  app.post('/users/google-login', loginGoogleUser);
+  // app.post('/users/google-login', loginGoogleUser);
 
   app.post('/users/email/confirm', confirmUserEmail);
 
-  app.post('/users/password/magic_link', resetPasswordSendMagicLink);
+  // app.post('/users/password/magic_link', resetPasswordSendMagicLink);
 
-  app.post('/users/password/reset', resetPassword);
+  // app.post('/users/password/reset', resetPassword);
 
   app.get('/ratings', findRatings);
 
@@ -131,6 +134,8 @@ const run = () => {
   app.put('/users/password', updateUserPassword);
 
   app.put('/users/delete', deleteUser);
+
+  app.get('/user-dashboard/kpis', getUserDashboardKPIs);
 
   app.use(verifyAdminJWT);
 

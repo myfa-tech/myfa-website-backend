@@ -14,6 +14,7 @@ const Request = mongoose.Schema({
   status: String,
   createdAt: Date,
   type: String,
+  price: Number,
   details: String,
   contact: User,
 });
