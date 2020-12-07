@@ -70,7 +70,17 @@ const getUserDasboardKPIs = async (req, res, next) => {
 
   const responses = await Promise.all(promises);
 
-  const enhancedResponses = responses.reduce((acc, curr) => ({ ...acc, ...(curr[0]._doc || curr[0])  }), {});
+  const enhancedResponses = responses.reduce((acc, curr, index) => {
+    let appen = curr[0];
+
+    if (!appen) {
+      appen = { [rules[index].id]: 0 };
+    } else if (curr[0]._doc) {
+      appen = curr[0]._doc;
+    }
+
+    return { ...acc, ...appen };
+  }, {});
 
   res.status(200).send(enhancedResponses);
 };
