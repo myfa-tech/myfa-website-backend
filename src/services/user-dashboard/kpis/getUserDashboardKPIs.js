@@ -9,6 +9,12 @@ import endOfYear from 'date-fns/endOfYear';
 
 import RequestSchema from '../../../schemas/request';
 import UserSchema from '../../../schemas/user';
+import getSatisfiedRelativedKPI from './utils/getSatisfiedRelativedKPI';
+import getRelativesServicesKPI from './utils/getRelativesServicesKPI';
+import getSelfServicesKPI from './utils/getSelfServicesKPI';
+import getSpentKPI from './utils/getSpentKPI';
+import getWalletKPI from './utils/getWalletKPI';
+import getSpendingSectorsKPI from './utils/getSpendingSectorsKPI';
 
 dotenv.config();
 
@@ -20,7 +26,6 @@ const userModel = mongoose.model('users', UserSchema);
 const getUserDasboardKPIs = async (req, res, next) => {
   const params = req.query;
 
-  const promises = [];
   let token = (req.headers.authorization || '').split(' ')[1];
   let userInfo = jwt.verify(token, JWT_SECRET);
 
@@ -40,47 +45,16 @@ const getUserDasboardKPIs = async (req, res, next) => {
     periodLimitHigh = endOfMonth(date);
   }
 
-  const rules = [
-    { collection: 'requests', filter: { 'user.email': userInfo.email, status: { $in: ['paid', 'delivered', 'preparing'] }, createdAt: { $gte: periodLimitLow, $lte: periodLimitHigh } }, id: 'spent', type: 'sum', model: requestModel },
-    { collection: 'requests', filter: { 'user.email': userInfo.email, status: { $in: ['paid', 'delivered', 'preparing'] }, type: { $in: ['Alimentaire', 'Cadeau', 'Santé'] }, createdAt: { $gte: periodLimitLow, $lte: periodLimitHigh } }, id: 'relatives_services', type: 'count', model: requestModel },
-    { collection: 'requests', filter: { 'user.email': userInfo.email, status: { $in: ['paid', 'delivered', 'preparing'] }, type: {$regex : "Batiment.*"}, createdAt: { $gte: periodLimitLow, $lte: periodLimitHigh } }, id: 'self_services', type: 'count', model: requestModel },
-  ];
+  const responses = await Promise.all([
+    getSatisfiedRelativedKPI(userInfo.email, periodLimitLow, periodLimitHigh),
+    getRelativesServicesKPI(userInfo.email, periodLimitLow, periodLimitHigh),
+    getSelfServicesKPI(userInfo.email, periodLimitLow, periodLimitHigh),
+    getSpentKPI(userInfo.email, periodLimitLow, periodLimitHigh),
+    getWalletKPI(userInfo.email),
+    getSpendingSectorsKPI(userInfo.email, periodLimitLow, periodLimitHigh),
+  ]);
 
-  rules.forEach(rule => {
-    if (rule.type === 'count') {
-      const agg = rule.model.aggregate([{ $match: rule.filter }]);
-      promises.push(agg.count(rule.id).exec());
-    } else if (rule.type === 'sum') {
-      const agg = rule.model.aggregate([
-        {
-          $match: rule.filter,
-        },
-        {
-          $group: {
-            _id: 1,
-            spent: { $sum: '$price' },
-          },
-        },
-      ]);
-      promises.push(agg.exec());
-    }
-  });
-
-  promises.push(userModel.find({ email: userInfo.email }, { wallet: 1, _id: 0 }));
-
-  const responses = await Promise.all(promises);
-
-  const enhancedResponses = responses.reduce((acc, curr, index) => {
-    let appen = curr[0];
-
-    if (!appen) {
-      appen = { [rules[index].id]: 0 };
-    } else if (curr[0]._doc) {
-      appen = curr[0]._doc;
-    }
-
-    return { ...acc, ...appen };
-  }, {});
+  const enhancedResponses = responses.reduce((acc, curr) => ({ ...acc, ...curr }), {});
 
   res.status(200).send(enhancedResponses);
 };
