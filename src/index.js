@@ -32,6 +32,7 @@ import { getRequests, saveRequest, updateRequest } from './services/requests';
 import getUserDashboardKPIs from './services/user-dashboard/kpis/getUserDashboardKPIs'
 import logIn from './services/user/logIn';
 import signIn from './services/user/signIn';
+import getUserRequests from './services/user-dashboard/requests/getUserRequests';
 
 dotenv.config();
 
@@ -128,6 +129,8 @@ const run = () => {
   app.get('/users', fetchUser);
 
   app.put('/users', updateUserByEmail);
+
+  app.get('/users/requests', getUserRequests);
 
   app.post('/users/password/verify', verifyUserPassword);
 
