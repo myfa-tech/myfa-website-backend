@@ -13,15 +13,9 @@ import {
   deleteUser,
   fetchUser,
   getUsers,
-  loginFBUser,
-  loginGoogleUser,
-  loginUser,
-  saveUser,
   updateUserByEmail,
   updateUserPassword,
   verifyUserPassword,
-  resetPassword,
-  resetPasswordSendMagicLink
 } from './services/users';
 import { verifyAdminJWT, verifyJWT } from './utils/verifyJWT';
 import { fetchGoals, updateGoalById } from './services/kpiGoals';
@@ -87,7 +81,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 const db = mongoose.connection;
 
-db.on('error', console.error.bind(console, 'connection error:')); // Add Sentry
+db.on('error', console.error.bind(console, 'connection error:'));
 
 const run = () => {
   app.use(express.static('public'));
@@ -100,15 +94,7 @@ const run = () => {
 
   app.post('/users/login', logIn);
 
-  // app.post('/users/facebook-login', loginFBUser);
-
-  // app.post('/users/google-login', loginGoogleUser);
-
   app.post('/users/email/confirm', confirmUserEmail);
-
-  // app.post('/users/password/magic_link', resetPasswordSendMagicLink);
-
-  // app.post('/users/password/reset', resetPassword);
 
   app.get('/ratings', findRatings);
 
